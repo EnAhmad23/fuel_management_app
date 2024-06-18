@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Views/Widgets/home_page_card.dart';
 import 'package:fuel_management_app/Views/Widgets/operationTable.dart';
 import 'package:fuel_management_app/Views/add.dart';
+import 'package:fuel_management_app/Views/add_subconsumer.dart';
+import 'package:fuel_management_app/Views/showConsumers.dart';
+import 'package:fuel_management_app/Views/show_subconsumer.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -52,6 +55,13 @@ class HomePage extends StatelessWidget {
                 ),
                 children: [
                   ListTile(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ShowConsumers(),
+                          ));
+                    },
                     title: Text(
                       'عرض',
                       style: Theme.of(context)
@@ -67,7 +77,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Add(),
+                            builder: (context) => const Add(),
                           ));
                     },
                     title: Text(
@@ -96,6 +106,13 @@ class HomePage extends StatelessWidget {
                 ),
                 children: [
                   ListTile(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ShowSubconsumer(),
+                          ));
+                    },
                     title: Text(
                       'عرض',
                       style: Theme.of(context)
@@ -111,7 +128,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Add(),
+                            builder: (context) => const AddSubconsumer(),
                           ));
                     },
                     title: Text(
