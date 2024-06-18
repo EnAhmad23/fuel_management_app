@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fuel_management_app/Views/add.dart';
+import 'package:fuel_management_app/Views/login_page.dart';
+import 'package:fuel_management_app/Views/showConsumers.dart';
+import 'package:fuel_management_app/Views/add_subconsumer.dart';
+import 'package:fuel_management_app/Views/home_page.dart';
+import 'package:fuel_management_app/Views/show_subconsumer.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return ScreenUtilInit(
+      designSize: const Size(1265.6, 684.8),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      // Use builder only if you need to use library outside ScreenUtilInit context
+      builder: (_, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'First Method',
+          // You can use the library anywhere in the app even in theme
+          theme: ThemeData(
+            primaryIconTheme: const IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.white),
+            // iconTheme: const IconThemeData(color: Colors.white),
+            textTheme: TextTheme(
+              bodyLarge:
+                  TextStyle(fontSize: 25.0.sp, fontWeight: FontWeight.w700),
+              bodyMedium:
+                  TextStyle(fontSize: 20.0.sp, fontWeight: FontWeight.w400),
+              bodySmall:
+                  TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w700),
+            ),
+          ),
+          home: child,
+        );
+      },
+      child: const LoginPage(),
+    );
+  }
+}
