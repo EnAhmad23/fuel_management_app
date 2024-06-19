@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Views/Widgets/subconsumer_table.dart';
+
+import 'Widgets/subconsumer_table.dart';
 
 class ShowSubconsumer extends StatelessWidget {
   const ShowSubconsumer({super.key});
