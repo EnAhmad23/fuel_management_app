@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Views/Widgets/consumers_table.dart';
+
+import 'Widgets/consumers_table.dart';
 
 class ShowConsumers extends StatelessWidget {
   const ShowConsumers({super.key});
@@ -51,7 +52,7 @@ class ShowConsumers extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: Card(
-                            shape: OutlineInputBorder(
+                            shape: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey),
                             ),
                             elevation: 5,

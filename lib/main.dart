@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Views/add.dart';
-import 'package:fuel_management_app/Views/login_page.dart';
-import 'package:fuel_management_app/Views/showConsumers.dart';
-import 'package:fuel_management_app/Views/add_subconsumer.dart';
-import 'package:fuel_management_app/Views/home_page.dart';
-import 'package:fuel_management_app/Views/show_subconsumer.dart';
+import 'package:fuel_management_app/Model/DBModel.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'UI/home_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized;
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
+  await DBModel().intiDataBase();
   runApp(const MyApp());
 }
 

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Views/Widgets/home_page_card.dart';
-import 'package:fuel_management_app/Views/Widgets/operationTable.dart';
-import 'package:fuel_management_app/Views/add.dart';
-import 'package:fuel_management_app/Views/add_subconsumer.dart';
-import 'package:fuel_management_app/Views/showConsumers.dart';
-import 'package:fuel_management_app/Views/show_subconsumer.dart';
+import 'package:fuel_management_app/UI/add.dart';
+import 'package:fuel_management_app/UI/add_subconsumer.dart';
+import 'package:fuel_management_app/UI/showConsumers.dart';
+import 'package:fuel_management_app/UI/show_subconsumer.dart';
+
+import 'Widgets/home_page_card.dart';
+import 'Widgets/operationTable.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -333,8 +334,13 @@ class HomePage extends StatelessWidget {
                 child: Card(
                   child: Column(
                     children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
                       Padding(
-                        padding: EdgeInsets.all(10.w),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 30.w,
+                        ),
                         child: const Align(
                           alignment: Alignment.centerRight,
                           child: Text('اخر العمليات'),

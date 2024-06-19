@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
+import 'package:fuel_management_app/UI/Widgets/my_button.dart';
 
 class Add extends StatelessWidget {
   const Add({super.key});
@@ -50,31 +52,29 @@ class Add extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(30.0),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'اسم المستهلك',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'الرجاء إدخال اسم المستهلك';
-                          }
-                          return null;
-                        },
+                      child: MyTextFormField(
+                        labelText: 'اسم المستهلك',
+                        hintText: 'أدخل اسم المستهلك',
                       ),
+                      // TextFormField(
+                      //   decoration: const InputDecoration(
+                      //     labelText: 'اسم المستهلك',
+                      //     border: OutlineInputBorder(),
+                      //   ),
+                      //   validator: (value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       return 'الرجاء إدخال اسم المستهلك';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
                     ),
                     SizedBox(
-                      height: 30.h,
+                      height: 20.h,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                        ),
-                        child: const Text('إنشاء'),
-                      ),
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: MyButton(text: 'إنشاء'),
                     ),
                   ],
                 ),

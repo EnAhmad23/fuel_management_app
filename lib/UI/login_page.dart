@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'Widgets/myTextFormField.dart';
+
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
@@ -28,31 +30,15 @@ class LoginPage extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 30),
-                        TextFormField(
-                          style: const TextStyle(fontSize: 18),
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            label: Text(
-                              'إسم المستخدم',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ),
-                          textDirection: TextDirection.rtl,
-                          textAlign: TextAlign.right,
+                        MyTextFormField(
+                          labelText: 'إسم المستخدم',
+                          hintText: 'ادخل إسم المستخدم ',
                         ),
                         SizedBox(height: 40.h),
-                        TextFormField(
-                          style: TextStyle(fontSize: 18.sp),
+                        MyTextFormField(
+                          labelText: 'كلمة المرور',
                           obscureText: true,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            label: Text(
-                              'كلمة المرور',
-                              style: TextStyle(fontSize: 18.sp),
-                            ),
-                          ),
-                          textDirection: TextDirection.rtl,
-                          textAlign: TextAlign.right,
+                          hintText: 'أدخل كلمة المرور',
                         ),
                         const SizedBox(height: 30),
                         Align(
