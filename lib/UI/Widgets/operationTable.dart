@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fuel_management_app/Model/operation.dart';
+import 'package:fuel_management_app/Model/operationT.dart';
 
 class OperationTable extends StatelessWidget {
   const OperationTable({super.key, required this.operations});
-  final List<Operation> operations;
+  final List<OperationT> operations;
   @override
   Widget build(BuildContext context) {
     return DataTable(
@@ -26,20 +26,20 @@ class OperationTable extends StatelessWidget {
       rows: operations.map((operation) {
         return DataRow(cells: [
           DataCell(Text('${operation.id}')),
-          DataCell(Text(operation.subConsumerDetails)),
-          DataCell(Text(operation.consumerName)),
-          DataCell(Text(operation.receiverName)),
-          DataCell(Text(operation.type, textAlign: TextAlign.center)),
+          DataCell(Text(operation.subConsumerDetails ?? '')),
+          DataCell(Text(operation.consumerName ?? '')),
+          DataCell(Text(operation.receiverName ?? '')),
+          DataCell(Text(operation.type ?? '', textAlign: TextAlign.center)),
           DataCell(Container(
-            color: operation.checked ? Colors.red[700] : null,
+            color: operation.checked ?? false ? Colors.red[700] : null,
             child: Text(
-              operation.dischangeNumber,
+              operation.dischangeNumber ?? '',
               textAlign: TextAlign.center,
             ),
           )),
-          DataCell(Text(operation.foulType, textAlign: TextAlign.center)),
+          DataCell(Text(operation.foulType ?? '', textAlign: TextAlign.center)),
           DataCell(Text('${operation.amount}', textAlign: TextAlign.center)),
-          DataCell(Text(operation.newDate, textAlign: TextAlign.center)),
+          DataCell(Text(operation.newDate ?? '', textAlign: TextAlign.center)),
           DataCell(
             Row(
               children: [

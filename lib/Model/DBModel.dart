@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:fuel_management_app/Model/operation.dart';
+import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -80,13 +80,102 @@ CREATE TABLE users (
     log('create database');
   }
 
-  getLastTen() async {
+  Future<List<Map<String, Object?>>> getLastTenOp() async {
     Database? database = await db;
-    List<Map> re = await database!.query(
+    List<Map<String, Object?>> re = await database!.query(
       'operations',
       limit: 10,
       orderBy: 'date DESC',
     );
     return re;
+  }
+
+  Future<List<Map<String, Object?>>> getAllOp() async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.query(
+      'operations',
+    );
+    return re;
+  }
+
+  getNumOfOp(int subconsumerId) async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re =
+        await database!.rawQuery('''SELECT COUNT(*) AS operation_count
+    FROM operations
+    WHERE sub_consumer_id = ?
+      AND type = 'صرف';
+''', [subconsumerId]);
+    return Sqflite.firstIntValue(re) ?? 0;
+  }
+
+  Future<List<Map<String, Object?>>?> getSubconsumerForTable() async {
+    Database? database = await db;
+    List<Map<String, Object?>>? re = await database?.rawQuery("""
+      SELECT 
+    c.name AS consumer_name,
+    sc.details AS subconsumer_details,
+    sc.description AS subconsumer_description,
+    COUNT(o.id) AS number_of_operations
+FROM 
+    consumers c
+JOIN 
+    sub_consumers sc ON c.id = sc.consumer_id
+LEFT JOIN 
+    operations o ON sc.id = o.sub_consumer_id AND o.type = 'صرف'
+GROUP BY 
+    c.name, sc.details, sc.description;
+ 
+    """);
+    return re;
+  }
+
+  Future<List<Map<String, Object?>>> getConsumerForTable() async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+    SELECT 
+        c.name AS consumer_name,
+        COUNT(DISTINCT sc.id) AS number_of_subconsumers,
+        COUNT(DISTINCT o.id) AS number_of_operations
+    FROM 
+        consumers c
+    LEFT JOIN 
+        sub_consumers sc ON c.id = sc.consumer_id
+    LEFT JOIN 
+        operations o ON sc.id = o.sub_consumer_id
+    GROUP BY 
+        c.name;
+''');
+    return re;
+  }
+
+  Future<List<Map<String, Object?>>> getConsumersNames() async {
+    Database? database = await db;
+    List<Map<String, Object?>> re =
+        await database!.rawQuery('''Select name form consumers ''');
+    return re;
+  }
+
+  Future<int?> getConsumerID(String consumerName) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery(
+        '''Select id form consumers  where name = ? ''', [consumerName]);
+    return Sqflite.firstIntValue(re) ?? -1;
+  }
+
+  Future<int> addConsumer(String name) async {
+    Database? database = await db;
+    return await database!.rawInsert('''
+    insert into consumers (name) values(?)
+    ''', [name]);
+  }
+
+  Future<int> addSubonsumer(String name, String description,
+      String consumerName, int hasRecord) async {
+    Database? database = await db;
+    int? consumerID = await getConsumerID(consumerName);
+    return await database!.rawInsert('''
+    insert into sub_consumers (details,description,consumer_id,hasRecord) values(?,?,?,?)
+    ''', [name, description, consumerID, hasRecord]);
   }
 }
