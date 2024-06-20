@@ -39,7 +39,7 @@ class OperationTable extends StatelessWidget {
           )),
           DataCell(Text(operation.foulType ?? '', textAlign: TextAlign.center)),
           DataCell(Text('${operation.amount}', textAlign: TextAlign.center)),
-          DataCell(Text(operation.newDate ?? '', textAlign: TextAlign.center)),
+          DataCell(Text('${operation.newDate}', textAlign: TextAlign.center)),
           DataCell(
             Row(
               children: [

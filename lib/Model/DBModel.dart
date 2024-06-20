@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -16,6 +17,12 @@ class DBModel {
     String path = join(dataBasePath, 'fuel_managment.db');
     Database myDB = await openDatabase(path, onCreate: _onCreate, version: 1);
     return myDB;
+  }
+
+  delDatabase() async {
+    String dataBasePath = await getDatabasesPath();
+    String path = join(dataBasePath, 'fuel_managment.db');
+    await deleteDatabase(path);
   }
 
   _onCreate(Database database, int version) async {
@@ -53,11 +60,11 @@ CREATE TABLE movement_records (
 
 CREATE TABLE operations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    sub_consumer_id INTEGER NOT NULL,
+    sub_consumer_id INTEGER ,
     amount DECIMAL(8, 2),
     description TEXT,
     type TEXT CHECK(type IN ('صرف', 'وارد')),
-    foulType TEXT CHECK(foulType IN ('سيري', 'نظامي')),
+    foulType TEXT CHECK(foulType IN ('بنزين', 'سولار')),
     receiverName TEXT,
     dischangeNumber TEXT,
     date DATE,
@@ -163,12 +170,54 @@ GROUP BY
     return Sqflite.firstIntValue(re) ?? -1;
   }
 
+  Future<int?> getSubonsumerID(String? SubconsumerName) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery(
+        '''Select id form sub_consumers  where details = ? ''',
+        [SubconsumerName]);
+    return Sqflite.firstIntValue(re) ?? -1;
+  }
+
   Future<int> addConsumer(String name) async {
     Database? database = await db;
     return await database!.rawInsert('''
     insert into consumers (name) values(?)
     ''', [name]);
   }
+
+  Future<int> addOperation(Database db, OperationT operation) async {
+    return await db.rawInsert('''
+    INSERT INTO operations (
+      sub_consumer_id, 
+      amount, 
+      description, 
+      type, 
+      foulType, 
+      receiverName, 
+      dischangeNumber, 
+      date, 
+      checked, 
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, )
+  ''', [
+      // Assuming subConsumerDetails can be mapped to sub_consumer_id
+      getSubonsumerID(operation.subConsumerDetails),
+      operation.amount,
+      operation.description,
+      operation.type,
+      operation.foulType,
+      operation.receiverName,
+      operation.dischangeNumber,
+      operation.newDate!.toIso8601String(),
+      operation.checked! ? 1 : 0,
+    ]);
+  }
+
+  // Future<int> addOper(OperationT operationT) async {
+  //   Database? database = await db;
+  //   return await database!.rawInsert('''
+  //   insert into operations (name) values(?)
+  //   ''', [name]);
+  // }
 
   Future<int> addSubonsumer(String name, String description,
       String consumerName, int hasRecord) async {
@@ -177,5 +226,11 @@ GROUP BY
     return await database!.rawInsert('''
     insert into sub_consumers (details,description,consumer_id,hasRecord) values(?,?,?,?)
     ''', [name, description, consumerID, hasRecord]);
+  }
+
+  Future<List<Map<String, Object?>>> searchOp(Operation operation) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''sql''');
+    return re;
   }
 }

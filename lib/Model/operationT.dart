@@ -7,21 +7,21 @@ class OperationT {
   bool? checked;
   String? dischangeNumber;
   String? foulType;
-  int? amount;
-  String? newDate;
+  double? amount;
+  DateTime? newDate;
+  String? description;
 
-  OperationT({
-    required this.id,
-    required this.subConsumerDetails,
-    required this.consumerName,
-    required this.receiverName,
-    required this.type,
-    required this.checked,
-    required this.dischangeNumber,
-    required this.foulType,
-    required this.amount,
-    required this.newDate,
-  });
+  OperationT(
+      {required this.subConsumerDetails,
+      required this.consumerName,
+      required this.receiverName,
+      required this.type,
+      required this.checked,
+      required this.dischangeNumber,
+      required this.foulType,
+      required this.amount,
+      required this.newDate,
+      required this.description});
   OperationT.formMap(List<Map<String, Object?>> list) {
     list.map(
       (e) {
@@ -33,8 +33,8 @@ class OperationT {
         checked = e['checked'] as bool?;
         dischangeNumber = e['dischangeNumber'] as String?;
         foulType = e['foulType'] as String?;
-        amount = e['amount'] as int;
-        newDate = e['newDate'] as String?;
+        amount = e['amount'] as double;
+        newDate = e['newDate'] as DateTime?;
       },
     );
   }
