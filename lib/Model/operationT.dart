@@ -23,7 +23,7 @@ class OperationT {
       required this.amount,
       required this.newDate,
       required this.description});
-  OperationT.formMap(Map<String, Object?> e) {
+  OperationT.fromMap(Map<String, Object?> e) {
     OperationT(
         id: (e['id']) as int,
         subConsumerDetails: e['subConsumerDetails'] as String?,
