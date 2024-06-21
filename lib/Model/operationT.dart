@@ -12,7 +12,8 @@ class OperationT {
   String? description;
 
   OperationT(
-      {required this.subConsumerDetails,
+      {required this.id,
+      required this.subConsumerDetails,
       required this.consumerName,
       required this.receiverName,
       required this.type,
@@ -22,20 +23,18 @@ class OperationT {
       required this.amount,
       required this.newDate,
       required this.description});
-  OperationT.formMap(List<Map<String, Object?>> list) {
-    list.map(
-      (e) {
-        id = (e['id']) as int;
-        subConsumerDetails = e['subConsumerDetails'] as String?;
-        consumerName = e['consumerName'] as String?;
-        receiverName = e['receiverName'] as String?;
-        type = e['type'] as String?;
-        checked = e['checked'] as bool?;
-        dischangeNumber = e['dischangeNumber'] as String?;
-        foulType = e['foulType'] as String?;
-        amount = e['amount'] as double;
-        newDate = e['newDate'] as DateTime?;
-      },
-    );
+  OperationT.formMap(Map<String, Object?> e) {
+    OperationT(
+        id: (e['id']) as int,
+        subConsumerDetails: e['subConsumerDetails'] as String?,
+        consumerName: e['consumerName'] as String?,
+        receiverName: e['receiverName'] as String?,
+        type: e['type'] as String?,
+        checked: e['checked'] as bool?,
+        dischangeNumber: e['dischangeNumber'] as String?,
+        foulType: e['foulType'] as String?,
+        amount: (e['amount'] as num).toDouble(),
+        newDate: e['newDate'] as DateTime?,
+        description: e['description'] as String?);
   }
 }

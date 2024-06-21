@@ -62,7 +62,7 @@ class ShowConsumers extends StatelessWidget {
                               elevation: 5,
                               child: SingleChildScrollView(
                                 child: ConsumersTable(
-                                    consumers: dbProvider.list ??
+                                    consumers: dbProvider.consumers ??
                                         [
                                           AppConsumers(
                                               name: 'name',

@@ -105,6 +105,14 @@ CREATE TABLE users (
     return re;
   }
 
+  Future<List<Map<String, Object?>>> getOp(int opId) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+      select * from operations where id = ?
+    ''', [opId]);
+    return re;
+  }
+
   getNumOfOp(int subconsumerId) async {
     Database? database = await db;
     List<Map<String, dynamic>> re =
@@ -186,8 +194,9 @@ GROUP BY
     ''', [name]);
   }
 
-  Future<int> addOperation(Database db, OperationT operation) async {
-    return await db.rawInsert('''
+  Future<int?> addOperation(OperationT operation) async {
+    Database? database = await db;
+    return await database?.rawInsert('''
     INSERT INTO operations (
       sub_consumer_id, 
       amount, 
