@@ -6,9 +6,11 @@ class MyTextFormField extends StatelessWidget {
       {super.key,
       required this.labelText,
       this.obscureText,
-      required this.hintText});
+      required this.hintText,
+      required this.controller});
   final String labelText;
   final String hintText;
+  final TextEditingController controller;
   bool? obscureText;
 
   @override
@@ -29,6 +31,7 @@ class MyTextFormField extends StatelessWidget {
           height: 10.h,
         ),
         TextFormField(
+          controller: controller,
           obscureText: obscureText ?? false,
           style: TextStyle(fontSize: 18.sp),
           decoration: InputDecoration(

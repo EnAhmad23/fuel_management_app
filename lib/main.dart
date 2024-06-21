@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fuel_management_app/Controllers/db_provider.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'UI/home_page.dart';
 
@@ -9,7 +11,14 @@ void main() async {
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
   await DBModel().intiDataBase();
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => DbProvider(),
+      )
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

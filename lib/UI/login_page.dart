@@ -30,16 +30,16 @@ class LoginPage extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 30),
-                        MyTextFormField(
-                          labelText: 'إسم المستخدم',
-                          hintText: 'ادخل إسم المستخدم ',
-                        ),
+                        // MyTextFormField(
+                        //   labelText: 'إسم المستخدم',
+                        //   hintText: 'ادخل إسم المستخدم ',
+                        // ),
                         SizedBox(height: 40.h),
-                        MyTextFormField(
-                          labelText: 'كلمة المرور',
-                          obscureText: true,
-                          hintText: 'أدخل كلمة المرور',
-                        ),
+                        // MyTextFormField(
+                        //   labelText: 'كلمة المرور',
+                        //   obscureText: true,
+                        //   hintText: 'أدخل كلمة المرور',
+                        // ),
                         const SizedBox(height: 30),
                         Align(
                           alignment: Alignment.centerRight,

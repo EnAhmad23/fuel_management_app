@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyButton extends StatelessWidget {
-  const MyButton({super.key, required this.text});
+  const MyButton({super.key, required this.text, required this.onTap});
   final String text;
-
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       borderRadius: BorderRadius.circular(5.r),
       child: Container(
         width: 70,

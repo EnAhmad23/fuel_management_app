@@ -81,10 +81,10 @@ class AddSubconsumer extends StatelessWidget {
                           SizedBox(
                             height: 20.h,
                           ),
-                          MyTextFormField(
-                            labelText: 'اسم المستهلك',
-                            hintText: 'أدخل اسم المستهلك',
-                          ),
+                          // MyTextFormField(
+                          //   labelText: 'اسم المستهلك',
+                          //   hintText: 'أدخل اسم المستهلك',
+                          // ),
                           // TextFormField(
                           //   // controller: _detailsController,
                           //   decoration: InputDecoration(
@@ -98,10 +98,11 @@ class AddSubconsumer extends StatelessWidget {
                           SizedBox(
                             height: 20.h,
                           ),
-                          MyTextFormField(
-                            labelText: 'تفاصيل المستهلك',
-                            hintText: 'أدخل تفاصيل المستهلك',
-                          ),
+                          // MyTextFormField(
+                          //   labelText: 'تفاصيل المستهلك',
+                          //   hintText: 'أدخل تفاصيل المستهلك',
+                          // ),
+
                           // TextFormField(
                           //   // controller: _detailsController,
                           //   decoration: InputDecoration(
@@ -137,7 +138,7 @@ class AddSubconsumer extends StatelessWidget {
                           SizedBox(height: 8.h),
                           const Align(
                             alignment: Alignment.centerRight,
-                            child: MyButton(text: 'إنشاء'),
+                            // child: MyButton(text: 'إنشاء'),
                           ),
                         ],
                       ),

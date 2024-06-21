@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fuel_management_app/Controllers/db_provider.dart';
+import 'package:fuel_management_app/Model/consumer.dart';
+import 'package:provider/provider.dart';
 
 import 'Widgets/consumers_table.dart';
 
@@ -49,23 +52,30 @@ class ShowConsumers extends StatelessWidget {
                         SizedBox(
                           height: 30.h,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30.w),
-                          child: Card(
-                            shape: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            elevation: 5,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: List.generate(
-                                  12, // Number of ConsumerTable widgets
-                                  (index) =>
-                                      const ConsumersTable(consumers: []),
-                                ),
+                        Consumer<DbProvider>(builder: (context, dbProvider, x) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
+                            child: Card(
+                              shape: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              elevation: 5,
+                              child: SingleChildScrollView(
+                                child: ConsumersTable(
+                                    consumers: dbProvider.list ??
+                                        [
+                                          AppConsumers(
+                                              name: 'name',
+                                              subConsumerCount: -1,
+                                              operationsCount: -1,
+                                              id: -1),
+                                        ]),
                               ),
                             ),
-                          ),
+                          );
+                        }),
+                        SizedBox(
+                          height: 30.h,
                         ),
                       ],
                     ),

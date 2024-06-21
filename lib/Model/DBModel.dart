@@ -139,8 +139,9 @@ GROUP BY
 
   Future<List<Map<String, Object?>>> getConsumerForTable() async {
     Database? database = await db;
-    List<Map<String, Object?>> re = await database!.rawQuery('''
+    List<Map<String, Object?>> result = await database!.rawQuery('''
     SELECT 
+        c.id as consumer_id,
         c.name AS consumer_name,
         COUNT(DISTINCT sc.id) AS number_of_subconsumers,
         COUNT(DISTINCT o.id) AS number_of_operations
@@ -152,8 +153,8 @@ GROUP BY
         operations o ON sc.id = o.sub_consumer_id
     GROUP BY 
         c.name;
-''');
-    return re;
+  ''');
+    return result;
   }
 
   Future<List<Map<String, Object?>>> getConsumersNames() async {
