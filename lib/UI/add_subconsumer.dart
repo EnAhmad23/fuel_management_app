@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fuel_management_app/Controllers/db_provider.dart';
+import 'package:fuel_management_app/Controllers/sub_provider.dart';
+import 'package:fuel_management_app/Model/subconsumer.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
+import 'package:provider/provider.dart';
 
 class AddSubconsumer extends StatelessWidget {
   const AddSubconsumer({super.key});
@@ -30,121 +34,120 @@ class AddSubconsumer extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Form(
-                // key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 60.h,
-                      color: Colors.blue,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16.0),
-                    ),
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Text('المستهلك الرئيسي',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold)),
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          ),
-                          DropdownButtonFormField<String>(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                            ),
-                            value: null,
-                            onChanged: (String? newValue) {
-                              // setState(() {
-                              //   _selectedConsumer = newValue!;
-                              // });
-                            },
-                            // items: _consumers.map<DropdownMenuItem<String>>((String value) {
-                            //   return DropdownMenuItem<String>(
-                            //     value: value,
-                            //     child: Text(value),
-                            //   );
-                            // }).toList(),
-                            // validator: (value) =>
-                            //     value == null ? 'Please select a consumer' : null,
-                            items: [],
-                          ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          // MyTextFormField(
-                          //   labelText: 'اسم المستهلك',
-                          //   hintText: 'أدخل اسم المستهلك',
-                          // ),
-                          // TextFormField(
-                          //   // controller: _detailsController,
-                          //   decoration: InputDecoration(
-                          //     labelText: 'اسم المستهلك',
-                          //     border: OutlineInputBorder(),
-                          //   ),
-                          //   // validator: (value) => value == null || value.isEmpty
-                          //   //     ? 'Please enter details'
-                          //   //     : null,
-                          // ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          // MyTextFormField(
-                          //   labelText: 'تفاصيل المستهلك',
-                          //   hintText: 'أدخل تفاصيل المستهلك',
-                          // ),
-
-                          // TextFormField(
-                          //   // controller: _detailsController,
-                          //   decoration: InputDecoration(
-                          //     labelText: 'اسم المستهلك',
-                          //     border: OutlineInputBorder(),
-                          //   ),
-                          //   // validator: (value) => value == null || value.isEmpty
-                          //   //     ? 'Please enter details'
-                          //   //     : null,
-                          // ),
-                          SizedBox(
-                            height: 30.h,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: CheckboxListTile(
-                              title: Text(
-                                'له عداد',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              // value: _hasRecord,
-                              // onChanged:
-                              //     (bool? newValue) {
-                              //   setState(() {
-                              //     _hasRecord = newValue!;
-                              //   });
-                              // }
-
-                              controlAffinity: ListTileControlAffinity.leading,
-                              value: false, onChanged: (bool? value) {},
-                            ),
-                          ),
-                          SizedBox(height: 8.h),
-                          const Align(
-                            alignment: Alignment.centerRight,
-                            // child: MyButton(text: 'إنشاء'),
-                          ),
-                        ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 60.h,
+                        color: Colors.blue,
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16.0),
                       ),
-                    ),
-                    // SizedBox(height: 16.0.h),
-                  ],
+                      SizedBox(
+                        height: 30.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        child: Consumer<DbProvider>(
+                            builder: (context, provider, x) {
+                          return Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Text('المستهلك الرئيسي',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.bold)),
+                              ),
+                              SizedBox(
+                                height: 10.h,
+                              ),
+                              Consumer<SubProvider>(
+                                builder: (context, subPro, x) {
+                                  return DropdownButtonFormField<String>(
+                                    // alignment: Alignment.centerRight,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    value: subPro.dropdownValue,
+                                    onChanged: (String? newValue) {
+                                      subPro.changeDropdownValue(newValue);
+                                    },
+                                    items: provider.consumersNames
+                                        ?.map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        alignment: Alignment.centerRight,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    validator: (value) => value == null
+                                        ? 'Please select a consumer'
+                                        : null,
+                                  );
+                                },
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              MyTextFormField(
+                                labelText: 'اسم المستهلك',
+                                hintText: 'أدخل اسم المستهلك',
+                                controller: provider.subName,
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              MyTextFormField(
+                                labelText: 'تفاصيل المستهلك',
+                                hintText: 'أدخل تفاصيل المستهلك',
+                                controller: provider.subDescription,
+                              ),
+                              SizedBox(
+                                height: 30.h,
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: CheckboxListTile(
+                                  title: Text(
+                                    'له عداد',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  value: provider.hasRcord ?? false,
+                                  onChanged: (bool? newValue) {
+                                    provider.changRecord(newValue ?? false);
+                                  },
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                ),
+                              ),
+                              SizedBox(height: 8.h),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: MyButton(
+                                  text: 'إنشاء',
+                                  onTap: () {
+                                    provider.addSubonsumer(SubConsumer(
+                                        details: provider.subName.text,
+                                        description:
+                                            provider.subDescription.text,
+                                        consumerName: 'consumerName',
+                                        hasRcord: provider.hasRcord));
+                                  },
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
+                            ],
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

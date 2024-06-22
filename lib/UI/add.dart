@@ -56,7 +56,7 @@ class Add extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(30.0),
                         child: MyTextFormField(
-                          controller: dbprovider.nameController,
+                          controller: dbprovider.consumerNameController,
                           labelText: 'اسم المستهلك',
                           hintText: 'أدخل اسم المستهلك',
                         ),
@@ -81,8 +81,8 @@ class Add extends StatelessWidget {
                         child: MyButton(
                           text: 'إنشاء',
                           onTap: () {
-                            dbprovider
-                                .addConsumer(dbprovider.nameController.text);
+                            dbprovider.addConsumer(
+                                dbprovider.consumerNameController.text);
                           },
                         ),
                       ),

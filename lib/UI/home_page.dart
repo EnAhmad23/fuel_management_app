@@ -111,42 +111,48 @@ class HomePage extends StatelessWidget {
                   color: Colors.white,
                 ),
                 children: [
-                  ListTile(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ShowSubconsumer(),
-                          ));
-                    },
-                    title: Text(
-                      'عرض',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Colors.white),
-                    ),
-                    leading: const Icon(Icons.remove_red_eye_outlined,
-                        color: Colors.white),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AddSubconsumer(),
-                          ));
-                    },
-                    title: Text(
-                      'إضافة',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Colors.white),
-                    ),
-                    leading:
-                        const Icon(Icons.person_add_alt_1, color: Colors.white),
-                  ),
+                  Consumer<DbProvider>(builder: (context, provider, x) {
+                    return ListTile(
+                      onTap: () {
+                        provider.getSubConsumerT();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ShowSubconsumer(),
+                            ));
+                      },
+                      title: Text(
+                        'عرض',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white),
+                      ),
+                      leading: const Icon(Icons.remove_red_eye_outlined,
+                          color: Colors.white),
+                    );
+                  }),
+                  Consumer<DbProvider>(builder: (context, provider, x) {
+                    return ListTile(
+                      onTap: () {
+                        provider.getConsumersNames();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddSubconsumer(),
+                            ));
+                      },
+                      title: Text(
+                        'إضافة',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white),
+                      ),
+                      leading: const Icon(Icons.person_add_alt_1,
+                          color: Colors.white),
+                    );
+                  }),
                 ],
               ),
               ExpansionTile(

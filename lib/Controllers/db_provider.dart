@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/Model/consumer.dart';
 import 'package:fuel_management_app/Model/operation.dart';
+import 'package:fuel_management_app/Model/subconsumer.dart';
 
 import '../Model/operationT.dart';
+import '../Model/subconsumerT.dart';
 
 class DbProvider extends ChangeNotifier {
   // Database? database;
@@ -13,14 +15,28 @@ class DbProvider extends ChangeNotifier {
   int? numOfOp;
   // Operation? operation;
   List<AppConsumers>? consumers;
+  List<SubConsumer>? subconsumer;
+  List<SubConsumerT>? subconsumerT;
   List<OperationT>? operations;
-  TextEditingController nameController = TextEditingController();
+  List<String>? consumersNames;
+  bool? _hasRecord;
+  TextEditingController consumerNameController = TextEditingController();
+  TextEditingController subName = TextEditingController();
+  TextEditingController subDescription = TextEditingController();
   // DbProvider() {
   //   initDB();
   // }
   // initDB() async {
   //   database = await _dbModel.db;
   // }
+  bool? get hasRcord {
+    return _hasRecord;
+  }
+
+  void changRecord(bool hasRecord) {
+    _hasRecord = hasRecord;
+    notifyListeners();
+  }
 
   Future<List<AppConsumers>?> getConsumerForTable() async {
     try {
@@ -89,8 +105,40 @@ class DbProvider extends ChangeNotifier {
     log('numOfOp = $numOfOp');
   }
 
+  Future<List<SubConsumerT>?> getSubConsumerT() async {
+    List<Map<String, Object?>> re = await _dbModel.getSubconsumerForTable();
+    List<SubConsumerT>? temp = re
+        .map(
+          (e) => SubConsumerT.fromMap(e),
+        )
+        .toList();
+    subconsumerT = temp;
+    notifyListeners();
+    log('subconsumerT length = ${subconsumerT?.length}');
+  }
+
+  Future<List<String>?> getConsumersNames() async {
+    List<Map<String, Object?>> re = await _dbModel.getConsumersNames();
+    List<String>? temp = re
+        .map(
+          (e) => e['name'] as String,
+        )
+        .toList();
+    consumersNames = temp;
+    notifyListeners();
+
+    log('consumersNames length ${consumersNames?.length}');
+    return consumersNames;
+  }
+
   Future<int> addConsumer(String name) async {
     var x = await _dbModel.addConsumer(name);
+    log('{$x}');
+    return x;
+  }
+
+  Future<int> addSubonsumer(SubConsumer subconsumer) async {
+    var x = await _dbModel.addSubonsumer(subconsumer);
     log('{$x}');
     return x;
   }

@@ -5,6 +5,8 @@ import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import 'subconsumer.dart';
+
 class DBModel {
   static Database? _db;
   Future<Database?> get db async {
@@ -124,10 +126,11 @@ CREATE TABLE users (
     return Sqflite.firstIntValue(re) ?? 0;
   }
 
-  Future<List<Map<String, Object?>>?> getSubconsumerForTable() async {
+  Future<List<Map<String, Object?>>> getSubconsumerForTable() async {
     Database? database = await db;
-    List<Map<String, Object?>>? re = await database?.rawQuery("""
-      SELECT 
+    List<Map<String, Object?>> re = await database!.rawQuery("""
+    SELECT 
+    c.id AS consumer_id,
     c.name AS consumer_name,
     sc.details AS subconsumer_details,
     sc.description AS subconsumer_description,
@@ -137,11 +140,14 @@ FROM
 JOIN 
     sub_consumers sc ON c.id = sc.consumer_id
 LEFT JOIN 
-    operations o ON sc.id = o.sub_consumer_id AND o.type = 'صرف'
+    operations o ON sc.id = o.sub_consumer_id
 GROUP BY 
-    c.name, sc.details, sc.description;
+    c.id, c.name, sc.details, sc.description;
+
+
  
     """);
+    log('${re.length}');
     return re;
   }
 
@@ -168,14 +174,16 @@ GROUP BY
   Future<List<Map<String, Object?>>> getConsumersNames() async {
     Database? database = await db;
     List<Map<String, Object?>> re =
-        await database!.rawQuery('''Select name form consumers ''');
+        await database!.rawQuery('SELECT name FROM consumers');
     return re;
   }
 
   Future<int?> getConsumerID(String consumerName) async {
     Database? database = await db;
-    List<Map<String, Object?>> re = await database!.rawQuery(
-        '''Select id form consumers  where name = ? ''', [consumerName]);
+    List<Map<String, Object?>> re = await database!.rawQuery('''SELECT id
+FROM consumers
+WHERE name = ?;
+ ''', [consumerName]);
     return Sqflite.firstIntValue(re) ?? -1;
   }
 
@@ -229,13 +237,17 @@ GROUP BY
   //   ''', [name]);
   // }
 
-  Future<int> addSubonsumer(String name, String description,
-      String consumerName, int hasRecord) async {
+  Future<int> addSubonsumer(SubConsumer subconsumer) async {
     Database? database = await db;
-    int? consumerID = await getConsumerID(consumerName);
+    int? consumerID = await getConsumerID(subconsumer.consumerName);
     return await database!.rawInsert('''
     insert into sub_consumers (details,description,consumer_id,hasRecord) values(?,?,?,?)
-    ''', [name, description, consumerID, hasRecord]);
+    ''', [
+      subconsumer.details,
+      subconsumer.description,
+      consumerID,
+      subconsumer.hasRcord! ? 1 : 0
+    ]);
   }
 
   Future<List<Map<String, Object?>>> searchOp(Operation operation) async {

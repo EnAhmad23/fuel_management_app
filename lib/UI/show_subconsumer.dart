@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fuel_management_app/Controllers/db_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'Widgets/subconsumer_table.dart';
 
@@ -47,7 +49,7 @@ class ShowSubconsumer extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 30.w, vertical: 10.h),
-                      child: const Card(
+                      child: Card(
                         shape: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                         ),
@@ -55,9 +57,12 @@ class ShowSubconsumer extends StatelessWidget {
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              SubonsumersTable(
-                                subconsumers: [],
-                              ),
+                              Consumer<DbProvider>(
+                                  builder: (context, provider, x) {
+                                return SubonsumersTable(
+                                  subconsumers: provider.subconsumerT ?? [],
+                                );
+                              }),
                             ],
                           ),
                         ),
