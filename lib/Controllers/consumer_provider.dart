@@ -3,20 +3,12 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/Model/consumer.dart';
-import 'package:fuel_management_app/Model/subconsumer.dart';
 
-import '../Model/operationT.dart';
-// ignore: unused_import
-import '../Model/subconsumerT.dart';
-
-class DbProvider extends ChangeNotifier {
+class ConProvider extends ChangeNotifier {
   // Database? database;
   final DBModel _dbModel = DBModel();
-  int? numOfOp;
-  // Operation? operation;
+
   List<AppConsumers>? consumers;
-  List<OperationT>? operations;
-  List<String>? consumersNames;
 
   TextEditingController consumerNameController = TextEditingController();
   // DbProvider() {
@@ -52,13 +44,6 @@ class DbProvider extends ChangeNotifier {
     }
   }
 
-  getNumOfOp(int subconsumerId) async {
-    int? temp = await _dbModel.getNumOfOp(subconsumerId);
-    numOfOp = temp;
-    notifyListeners();
-    log('numOfOp = $numOfOp');
-  }
-
   // Future<List<SubConsumerT>?> getSubConsumerT() async {
   //   List<Map<String, Object?>> re = await _dbModel.getSubconsumerForTable();
   //   List<SubConsumerT>? temp = re
@@ -71,28 +56,8 @@ class DbProvider extends ChangeNotifier {
   //   log('subconsumerT length = ${subconsumerT?.length}');
   // }
 
-  Future<List<String>?> getConsumersNames() async {
-    List<Map<String, Object?>> re = await _dbModel.getConsumersNames();
-    List<String>? temp = re
-        .map(
-          (e) => e['name'] as String,
-        )
-        .toList();
-    consumersNames = temp;
-    notifyListeners();
-
-    log('consumersNames length ${consumersNames?.length}');
-    return consumersNames;
-  }
-
   Future<int> addConsumer(String name) async {
     var x = await _dbModel.addConsumer(name);
-    log('{$x}');
-    return x;
-  }
-
-  Future<int> addSubonsumer(SubConsumer subconsumer) async {
-    var x = await _dbModel.addSubonsumer(subconsumer);
     log('{$x}');
     return x;
   }

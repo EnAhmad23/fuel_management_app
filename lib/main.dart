@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/db_provider.dart';
+import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,9 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (context) => SubProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => OpProvider(),
       )
     ],
     child: const MyApp(),

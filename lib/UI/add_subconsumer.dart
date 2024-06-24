@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Controllers/db_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/subconsumer.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
@@ -49,7 +48,7 @@ class AddSubconsumer extends StatelessWidget {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: Consumer<DbProvider>(
+                        child: Consumer<SubProvider>(
                             builder: (context, provider, x) {
                           return Column(
                             children: [
@@ -110,37 +109,44 @@ class AddSubconsumer extends StatelessWidget {
                               SizedBox(
                                 height: 30.h,
                               ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: CheckboxListTile(
-                                  title: Text(
-                                    'له عداد',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
+                              Consumer<SubProvider>(
+                                  builder: (context, subPro, x) {
+                                return Align(
+                                  alignment: Alignment.topRight,
+                                  child: CheckboxListTile(
+                                    title: Text(
+                                      'له عداد',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                    ),
+                                    value: subPro.hasRcord ?? false,
+                                    onChanged: (bool? newValue) {
+                                      subPro.changRecord(newValue ?? false);
+                                    },
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
                                   ),
-                                  value: provider.hasRcord ?? false,
-                                  onChanged: (bool? newValue) {
-                                    provider.changRecord(newValue ?? false);
-                                  },
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                ),
-                              ),
+                                );
+                              }),
                               SizedBox(height: 8.h),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: MyButton(
-                                  text: 'إنشاء',
-                                  onTap: () {
-                                    provider.addSubonsumer(SubConsumer(
-                                        details: provider.subName.text,
-                                        description:
-                                            provider.subDescription.text,
-                                        consumerName: 'consumerName',
-                                        hasRcord: provider.hasRcord));
-                                  },
-                                ),
-                              ),
+                              Consumer<SubProvider>(
+                                  builder: (context, subPr, x) {
+                                return Align(
+                                  alignment: Alignment.centerRight,
+                                  child: MyButton(
+                                    text: 'إنشاء',
+                                    onTap: () {
+                                      provider.addSubonsumer(SubConsumer(
+                                          details: provider.subName.text,
+                                          description:
+                                              provider.subDescription.text,
+                                          consumerName: 'consumerName',
+                                          hasRcord: subPr.hasRcord));
+                                    },
+                                  ),
+                                );
+                              }),
                               SizedBox(height: 20.h),
                             ],
                           );

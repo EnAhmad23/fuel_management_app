@@ -12,7 +12,7 @@ class OperationT {
   String? description;
 
   OperationT(
-      {required this.id,
+      {this.id,
       required this.subConsumerDetails,
       required this.consumerName,
       required this.receiverName,
