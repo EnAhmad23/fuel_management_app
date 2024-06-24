@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/db_provider.dart';
+import 'package:fuel_management_app/Controllers/login_provider.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
+import 'package:fuel_management_app/UI/login_page.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'UI/home_page.dart';
@@ -13,6 +16,7 @@ void main() async {
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
   await DBModel().intiDataBase();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -23,6 +27,9 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (context) => OpProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => LoginProvider(),
       )
     ],
     child: const MyApp(),
@@ -41,7 +48,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       // Use builder only if you need to use library outside ScreenUtilInit context
       builder: (_, child) {
-        return MaterialApp(
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'First Method',
           // You can use the library anywhere in the app even in theme
@@ -62,7 +69,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: const HomePage(),
+      child: const LoginPage(),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fuel_management_app/Model/operation.dart';
+import 'package:intl/intl.dart';
 
 import '../Model/DBModel.dart';
 import '../Model/operationT.dart';
@@ -11,9 +12,16 @@ class OpProvider extends ChangeNotifier {
   final DBModel _dbModel = DBModel();
   TextEditingController wasfCon = TextEditingController();
   TextEditingController amountCon = TextEditingController();
+  DateTime? date;
   List<OperationT>? operations;
   String? _fuelType;
   bool? _checked;
+  String get hintText {
+    return (date) == null
+        ? 'dd/mm/yy'
+        : DateFormat('yyyy-MM-dd').format(date ?? DateTime.now());
+  }
+
   setFuelType(String? value) {
     _fuelType = value;
     notifyListeners();

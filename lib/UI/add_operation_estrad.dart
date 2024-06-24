@@ -6,6 +6,7 @@ import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class AddOperationEstrad extends StatelessWidget {
@@ -60,7 +61,7 @@ class AddOperationEstrad extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child:
-                          Consumer<DbProvider>(builder: (context, provider, x) {
+                          Consumer<OpProvider>(builder: (context, provider, x) {
                         return Column(
                           children: [
                             SizedBox(
@@ -89,15 +90,26 @@ class AddOperationEstrad extends StatelessWidget {
                                         width: 300,
                                         height: 50,
                                         child: TextFormField(
-                                          decoration: const InputDecoration(
+                                          decoration: InputDecoration(
                                               // alignLabelWithHint: true,
-                                              hintText: 'dd/mm/yy',
-                                              border: OutlineInputBorder(),
+                                              hintText: provider.hintText,
+                                              border:
+                                                  const OutlineInputBorder(),
                                               suffixIcon: InkWell(
-                                                child: Icon(
+                                                child: const Icon(
                                                   Icons.calendar_today,
                                                   color: Colors.black,
                                                 ),
+                                                onTap: () async {
+                                                  provider.date =
+                                                      await showDatePicker(
+                                                    currentDate: provider.date,
+                                                    context: context,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(2000),
+                                                    lastDate: DateTime(2101),
+                                                  );
+                                                },
                                               )),
                                           readOnly: true,
                                         ),
@@ -189,7 +201,7 @@ class AddOperationEstrad extends StatelessWidget {
                           Consumer<OpProvider>(builder: (context, provider, x) {
                             return TextField(
                               style: TextStyle(fontSize: 18.sp),
-                              textDirection: TextDirection.rtl,
+                              // textDirection: TextDirection.rtl,
                               textAlign: TextAlign.right,
                               controller: provider.wasfCon,
                               maxLines: 3, // Set the number of rows

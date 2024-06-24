@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
+import 'package:fuel_management_app/Model/user.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -87,6 +88,23 @@ CREATE TABLE users (
 );
  ''');
     log('create database');
+  }
+
+  Future<List<Map<String, Object?>>> checkUser(User user) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!
+        .rawQuery('''Select id from users where username=? and password = ? 
+     ''', [user.username, user.password]);
+    log('${re.length}');
+    return re;
+  }
+
+  Future<int> addUser(String name, String password) async {
+    Database? database = await db;
+    int re = await database!
+        .rawInsert('''insert into users (username,password) values (?,?)
+     ''', [name, password]);
+    return re;
   }
 
   Future<List<Map<String, Object?>>> getLastTenOp() async {

@@ -8,9 +8,11 @@ class MyTextFormField extends StatelessWidget {
       required this.labelText,
       this.obscureText,
       required this.hintText,
-      required this.controller});
+      required this.controller,
+      this.validator});
   final String labelText;
   final String hintText;
+  String? Function(String?)? validator;
   final TextEditingController controller;
   bool? obscureText;
 
@@ -32,6 +34,7 @@ class MyTextFormField extends StatelessWidget {
           height: 10.h,
         ),
         TextFormField(
+          validator: validator,
           controller: controller,
           obscureText: obscureText ?? false,
           style: TextStyle(fontSize: 18.sp),
