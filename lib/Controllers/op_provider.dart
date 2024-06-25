@@ -41,11 +41,9 @@ class OpProvider extends ChangeNotifier {
   }
 
   dropItem(String? value) {
-    log('${value}');
+    log('$value');
     if (value != null) {
       _fuelType = value;
-    } else {
-      _fuelType = 'سولار';
     }
   }
 
