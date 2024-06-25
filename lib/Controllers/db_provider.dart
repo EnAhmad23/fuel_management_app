@@ -37,8 +37,8 @@ class DbProvider extends ChangeNotifier {
                 int.tryParse(e['number_of_subconsumers']?.toString() ?? '0') ??
                     0,
             operationsCount:
-                int.tryParse(e['number_of_operations']?.toString() ?? '0') ?? 0,
-            id: int.tryParse(e['consumer_id']?.toString() ?? '0') ?? 0,
+                int.tryParse(e['number_of_operations']?.toString() ?? '0'),
+            id: int.tryParse(e['consumer_id']?.toString() ?? '0'),
           );
         },
       ).toList();

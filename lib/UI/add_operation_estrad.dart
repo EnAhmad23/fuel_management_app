@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/db_provider.dart';
@@ -101,14 +103,14 @@ class AddOperationEstrad extends StatelessWidget {
                                                   color: Colors.black,
                                                 ),
                                                 onTap: () async {
-                                                  provider.date =
-                                                      await showDatePicker(
+                                                  var x = await showDatePicker(
                                                     currentDate: provider.date,
                                                     context: context,
                                                     initialDate: DateTime.now(),
                                                     firstDate: DateTime(2000),
                                                     lastDate: DateTime(2101),
                                                   );
+                                                  provider.setDate(x);
                                                 },
                                               )),
                                           readOnly: true,
@@ -122,7 +124,7 @@ class AddOperationEstrad extends StatelessWidget {
                                   child: MyTextFormField(
                                     labelText: 'الكمية',
                                     hintText: 'أدخل كمية الوقود',
-                                    controller: TextEditingController(),
+                                    controller: provider.amountCon,
                                   ),
                                 ),
                                 SizedBox(width: 15.w),
@@ -143,21 +145,23 @@ class AddOperationEstrad extends StatelessWidget {
                                       SizedBox(
                                         height: 10.h,
                                       ),
-                                      DropdownButtonFormField<String>(
+                                      DropdownButtonFormField<String?>(
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                         ),
-                                        value: 'بنزين',
-                                        onChanged: (value) {},
+                                        hint: const Text('اختر نوع الوقود'),
+                                        value: provider
+                                            .fuelType, // Ensure this matches one of the items in items list
+                                        onChanged: provider.dropItem,
                                         items: <String>['بنزين', 'سولار']
                                             .map<DropdownMenuItem<String>>(
-                                              (String value) =>
-                                                  DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              ),
-                                            )
-                                            .toList(),
+                                          (String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value),
+                                            );
+                                          },
+                                        ).toList(),
                                       ),
                                     ],
                                   ),
@@ -203,7 +207,7 @@ class AddOperationEstrad extends StatelessWidget {
                               style: TextStyle(fontSize: 18.sp),
                               // textDirection: TextDirection.rtl,
                               textAlign: TextAlign.right,
-                              controller: provider.wasfCon,
+                              controller: provider.description,
                               maxLines: 3, // Set the number of rows
                               decoration: const InputDecoration(
                                 hintText: '... أدخل ',
@@ -225,8 +229,10 @@ class AddOperationEstrad extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: MyButton(
                             text: 'إنشاء',
-                            onTap: () {
-                              provider.addOperationWared(
+                            onTap: () async {
+                              provider.setFuelType(provider.fuelTypeCon.text);
+                              provider.setAmount(provider.amountCon.text);
+                              await provider.addOperationWared(
                                 OperationT(
                                     subConsumerDetails: null,
                                     consumerName: null,
@@ -235,10 +241,9 @@ class AddOperationEstrad extends StatelessWidget {
                                     checked: provider.checked,
                                     dischangeNumber: null,
                                     foulType: provider.fuelType,
-                                    amount: ((provider.amountCon.text) as num)
-                                        .toDouble(),
-                                    newDate: null,
-                                    description: provider.wasfCon.text),
+                                    amount: provider.amount,
+                                    newDate: provider.date,
+                                    description: provider.description.text),
                               );
                             },
                           ),

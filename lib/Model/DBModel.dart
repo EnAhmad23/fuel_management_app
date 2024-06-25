@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/Model/user.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -208,7 +209,7 @@ WHERE name = ?;
   Future<int?> getSubonsumerID(String? SubconsumerName) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery(
-        '''Select id form sub_consumers  where details = ? ''',
+        '''Select id from sub_consumers  where details = ? ''',
         [SubconsumerName]);
     return Sqflite.firstIntValue(re) ?? -1;
   }
@@ -222,6 +223,10 @@ WHERE name = ?;
 
   Future<int?> addOperation(OperationT operation) async {
     Database? database = await db;
+
+    // Await the Future to get the actual sub_consumer_id
+    int? subConsumerId = await getSubonsumerID(operation.subConsumerDetails);
+
     return await database?.rawInsert('''
     INSERT INTO operations (
       sub_consumer_id, 
@@ -232,22 +237,49 @@ WHERE name = ?;
       receiverName, 
       dischangeNumber, 
       date, 
-      checked, 
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, )
+      checked
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   ''', [
-      // Assuming subConsumerDetails can be mapped to sub_consumer_id
-      getSubonsumerID(operation.subConsumerDetails),
+      subConsumerId,
       operation.amount,
       operation.description,
       operation.type,
       operation.foulType,
       operation.receiverName,
       operation.dischangeNumber,
-      operation.newDate!.toIso8601String(),
-      operation.checked! ? 1 : 0,
+      DateFormat('yyyy-MM-dd')
+          .format(operation.newDate!), // Format the date correctly
+      operation.checked ?? false ? 1 : 0,
     ]);
   }
 
+  Future<int?> addOperationWard(OperationT operation) async {
+    Database? database = await db;
+    return await database?.rawInsert('''
+    INSERT INTO operations (
+      sub_consumer_id, 
+      amount, 
+      description, 
+      type, 
+      foulType, 
+      receiverName, 
+      dischangeNumber, 
+      date, 
+      checked
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  ''', [
+      null,
+      operation.amount,
+      operation.description,
+      operation.type,
+      operation.foulType,
+      operation.receiverName,
+      operation.dischangeNumber,
+      DateFormat('yyyy-MM-dd')
+          .format(operation.newDate!), // Format the date correctly
+      operation.checked ?? false ? 1 : 0,
+    ]);
+  }
   // Future<int> addOper(OperationT operationT) async {
   //   Database? database = await db;
   //   return await database!.rawInsert('''

@@ -49,13 +49,19 @@ class ConsumersTable extends StatelessWidget {
               ],
             ),
           ),
-          DataCell(
-              Text('${consumer.operationsCount}', textAlign: TextAlign.center)),
-          DataCell(Text('${consumer.subConsumerCount}',
-              textAlign: TextAlign.center)),
-          DataCell(Text(consumer.name ?? '', textAlign: TextAlign.center)),
-          DataCell(Text('${consumers.indexOf(consumer) + 1}',
-              textAlign: TextAlign.center)),
+          DataCell(Center(
+              child: Text('${consumer.operationsCount}',
+                  textAlign: TextAlign.center))),
+          DataCell(Center(
+            child: Text('${consumer.subConsumerCount}',
+                textAlign: TextAlign.center),
+          )),
+          DataCell(Center(
+              child: Text(consumer.name ?? '', textAlign: TextAlign.center))),
+          DataCell(Center(
+            child: Text('${consumers.indexOf(consumer) + 1}',
+                textAlign: TextAlign.center),
+          )),
         ]);
       }).toList(),
     );

@@ -55,7 +55,9 @@ class LoginProvider extends ChangeNotifier {
     if (formKey.currentState!.validate()) {
       User? user = await authCheck();
       if (user != null) {
-        Get.to(const HomePage());
+        Get.to(
+          const HomePage(),
+        );
       } else {
         Get.snackbar(
           'خطأ',

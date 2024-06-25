@@ -30,10 +30,10 @@ class OperationT {
         consumerName: e['consumerName'] as String?,
         receiverName: e['receiverName'] as String?,
         type: e['type'] as String?,
-        checked: e['checked'] as bool?,
+        checked: (int.parse(e['checked'].toString())) == 1 ? true : false,
         dischangeNumber: e['dischangeNumber'] as String?,
         foulType: e['foulType'] as String?,
-        amount: (e['amount'] as num).toDouble(),
+        amount: double.tryParse(e['amount'].toString()) ?? 0,
         newDate: e['newDate'] as DateTime?,
         description: e['description'] as String?);
   }

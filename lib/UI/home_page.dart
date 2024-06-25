@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/db_provider.dart';
+import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/UI/add.dart';
 import 'package:fuel_management_app/UI/add_subconsumer.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // OpProvider().getLastTenOpT();
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -351,7 +353,7 @@ class HomePage extends StatelessWidget {
                 height: 20.h,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: Card(
                   child: Column(
                     children: [
@@ -369,14 +371,18 @@ class HomePage extends StatelessWidget {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 30.h),
-                        child: const Card(
-                          shape: OutlineInputBorder(
+                        child: Card(
+                          shape: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey)),
                           elevation: 5,
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                OperationTable(operations: []),
+                                Consumer<OpProvider>(
+                                    builder: (context, provider, x) {
+                                  return OperationTable(
+                                      operations: provider.lastTenOp ?? []);
+                                }),
                               ],
                             ),
                           ),

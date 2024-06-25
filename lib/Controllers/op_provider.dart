@@ -10,19 +10,60 @@ import '../Model/operationT.dart';
 
 class OpProvider extends ChangeNotifier {
   final DBModel _dbModel = DBModel();
-  TextEditingController wasfCon = TextEditingController();
+  OpProvider() {
+    getLastTenOpT();
+  }
+  TextEditingController description = TextEditingController();
   TextEditingController amountCon = TextEditingController();
-  DateTime? date;
+  TextEditingController subConsumerDetails = TextEditingController();
+  TextEditingController fuelTypeCon = TextEditingController();
+  TextEditingController consumerName = TextEditingController();
+  TextEditingController receiverName = TextEditingController();
+  TextEditingController dischangeNumber = TextEditingController();
+  DateTime? _date;
   List<OperationT>? operations;
-  String? _fuelType;
+  List<OperationT>? lastTenOp;
+  double? _amount;
+  String _fuelType = 'سولار';
   bool? _checked;
   String get hintText {
     return (date) == null
-        ? 'dd/mm/yy'
+        ? 'yyyy-MM-dd'
         : DateFormat('yyyy-MM-dd').format(date ?? DateTime.now());
   }
 
-  setFuelType(String? value) {
+  DateTime? get date {
+    return _date;
+  }
+
+  double? get amount {
+    return _amount;
+  }
+
+  dropItem(String? value) {
+    log('${value}');
+    if (value != null) {
+      _fuelType = value;
+    } else {
+      _fuelType = 'سولار';
+    }
+  }
+
+  setDate(DateTime? date) {
+    if (date != null) {
+      _date = date;
+      notifyListeners();
+    }
+  }
+
+  setAmount(String? amount) {
+    if (amount != null) {
+      _amount = double.parse(amount);
+      notifyListeners();
+    }
+  }
+
+  setFuelType(String value) {
     _fuelType = value;
     notifyListeners();
   }
@@ -40,16 +81,18 @@ class OpProvider extends ChangeNotifier {
     return _fuelType;
   }
 
-  void getLastTenOpT() async {
+  Future<List<OperationT>?> getLastTenOpT() async {
     List<Map<String, Object?>> re = await _dbModel.getLastTenOp();
     List<OperationT>? temp = re
         .map(
           (e) => OperationT.fromMap(e),
         )
         .toList();
-    operations = temp;
+    lastTenOp = temp;
     notifyListeners();
-    log('the length of operation = ${operations?.length}');
+
+    log('the length of Last = ${lastTenOp?.length}');
+    return lastTenOp;
   }
 
   void getAllOpT() async {
@@ -61,6 +104,7 @@ class OpProvider extends ChangeNotifier {
         .toList();
     operations = temp;
     notifyListeners();
+
     log('the length of operation = ${operations?.length}');
   }
 
@@ -75,7 +119,7 @@ class OpProvider extends ChangeNotifier {
   }
 
   addOperationWared(OperationT op) async {
-    var x = await _dbModel.addOperation(op);
+    var x = await _dbModel.addOperationWard(op);
     log('{$x}');
     return x;
   }
