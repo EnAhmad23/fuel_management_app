@@ -35,11 +35,12 @@ class SubProvider extends ChangeNotifier {
 
   Future<List<SubConsumerT>?> getSubConsumerT() async {
     List<Map<String, Object?>> re = await _dbModel.getSubconsumerForTable();
-    List<SubConsumerT>? temp = re
-        .map(
-          (e) => SubConsumerT.fromMap(e),
-        )
-        .toList();
+    List<SubConsumerT>? temp = re.map(
+      (e) {
+        log('${e}');
+        return SubConsumerT.fromMap(e);
+      },
+    ).toList();
     subconsumerT = temp;
     notifyListeners();
     log('subconsumerT length = ${subconsumerT?.length}');

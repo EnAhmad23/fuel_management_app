@@ -15,6 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized;
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
+
   await DBModel().intiDataBase();
 
   runApp(MultiProvider(

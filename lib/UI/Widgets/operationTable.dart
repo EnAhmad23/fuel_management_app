@@ -1,12 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
+import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
 
 class OperationTable extends StatelessWidget {
-  const OperationTable({super.key, required this.operations});
   final List<OperationT> operations;
+  const OperationTable({super.key, required this.operations});
 
   @override
   Widget build(BuildContext context) {
+    log('operations $operations');
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
@@ -15,11 +20,31 @@ class OperationTable extends StatelessWidget {
           outside: BorderSide(color: Colors.grey),
         ),
         columns: const [
-          DataColumn(label: Text('الإعدادات', textAlign: TextAlign.center)),
-          DataColumn(label: Text('التاريخ', textAlign: TextAlign.center)),
-          DataColumn(label: Text('الكمية', textAlign: TextAlign.center)),
+          DataColumn(
+              label: Text(
+            'الإعدادات',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          )),
+          DataColumn(
+              label: Center(
+                  child: Text(
+            'التاريخ',
+            style: TextStyle(fontSize: 18),
+          ))),
+          DataColumn(
+              label: Center(
+                  child: Text(
+            'الكمية',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          ))),
           DataColumn(label: Text('نوع الوقود', textAlign: TextAlign.center)),
-          DataColumn(label: Text('سند الصرف', textAlign: TextAlign.center)),
+          DataColumn(
+              label: SizedBox(
+            child: Text('سند الصرف', textAlign: TextAlign.center),
+            width: 80,
+          )),
           DataColumn(label: Text('النوع', textAlign: TextAlign.center)),
           DataColumn(label: Text('اسم المستلم')),
           DataColumn(label: Text('المستهلك الأساسي')),
@@ -27,58 +52,65 @@ class OperationTable extends StatelessWidget {
           DataColumn(label: Text('#')),
         ],
         rows: operations.map((operation) {
-          return DataRow(cells: [
-            DataCell(
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: IconButton(
-                      icon: const Icon(Icons.remove_red_eye),
-                      color: Colors.blue,
-                      onPressed: () {
-                        // Navigate to show outcome or income
-                      },
-                    ),
-                  ),
-                  Flexible(
-                    child: IconButton(
-                      icon: const Icon(Icons.edit),
+          return DataRow(
+            cells: [
+              DataCell(
+                ButtonBar(
+                  buttonPadding: const EdgeInsets.all(0),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SettingButton(
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        topLiftRadius: 5.r,
+                        topRightRadius: 0,
+                        iconColor: Colors.white),
+                    const SettingButton(
                       color: Colors.green,
-                      onPressed: () {
-                        // Navigate to edit outcome or income
-                      },
+                      icon: Icons.edit,
+                      topRightRadius: 0,
+                      iconColor: Colors.white,
+                      topLiftRadius: 0,
                     ),
-                  ),
-                  Flexible(
-                    child: IconButton(
-                      icon: const Icon(Icons.delete),
-                      color: Colors.red,
-                      onPressed: () {
-                        // Handle delete operation
-                      },
-                    ),
-                  ),
-                ],
+                    SettingButton(
+                        color: Colors.blue,
+                        icon: Icons.remove_red_eye,
+                        topRightRadius: 5.r,
+                        topLiftRadius: 0,
+                        iconColor: Colors.white),
+                  ],
+                ),
               ),
-            ),
-            DataCell(Text('${operation.newDate}', textAlign: TextAlign.center)),
-            DataCell(Text('${operation.amount}', textAlign: TextAlign.center)),
-            DataCell(
-                Text(operation.foulType ?? '_', textAlign: TextAlign.center)),
-            DataCell(Container(
-              color: operation.checked ?? false ? Colors.red[700] : null,
-              child: Text(
-                operation.dischangeNumber ?? '_',
-                textAlign: TextAlign.center,
+              DataCell(Center(
+                  child: Text('${operation.formattedDate}',
+                      textAlign: TextAlign.center))),
+              DataCell(Center(
+                  child: Text('${operation.amount}',
+                      textAlign: TextAlign.center))),
+              DataCell(
+                  Text('${operation.foulType}', textAlign: TextAlign.center)),
+              DataCell(
+                Container(
+                  width: 80,
+                  height: 50,
+                  color: operation.checked ?? false ? Colors.red[700] : null,
+                  child: Text(
+                    operation.dischangeNumber ?? '',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
-            )),
-            DataCell(Text(operation.type ?? '_', textAlign: TextAlign.center)),
-            DataCell(Text(operation.receiverName ?? '_')),
-            DataCell(Text(operation.consumerName ?? '_')),
-            DataCell(Text(operation.subConsumerDetails ?? '_')),
-            DataCell(Text('${operations.indexOf(operation) + 1}')),
-          ]);
+              DataCell(Center(
+                  child: Text(operation.type ?? '_',
+                      textAlign: TextAlign.center))),
+              DataCell(Center(child: Text(operation.receiverName ?? '_'))),
+              DataCell(Center(child: Text(operation.consumerName ?? '_'))),
+              DataCell(
+                  Center(child: Text(operation.subConsumerDetails ?? '_'))),
+              DataCell(
+                  Center(child: Text('${operations.indexOf(operation) + 1}'))),
+            ],
+          );
         }).toList(),
       ),
     );

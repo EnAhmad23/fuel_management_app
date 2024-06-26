@@ -10,8 +10,12 @@ import '../Model/operationT.dart';
 
 class OpProvider extends ChangeNotifier {
   final DBModel _dbModel = DBModel();
-  OpProvider() {
+  static final OpProvider _opProvider = OpProvider._();
+  OpProvider._() {
     getLastTenOpT();
+  }
+  factory OpProvider() {
+    return _opProvider;
   }
   TextEditingController description = TextEditingController();
   TextEditingController amountCon = TextEditingController();
@@ -61,8 +65,8 @@ class OpProvider extends ChangeNotifier {
     }
   }
 
-  setFuelType(String value) {
-    _fuelType = value;
+  setFuelType(String? value) {
+    _fuelType = value ?? 'سولار';
     notifyListeners();
   }
 
@@ -79,28 +83,30 @@ class OpProvider extends ChangeNotifier {
     return _fuelType;
   }
 
-  Future<List<OperationT>?> getLastTenOpT() async {
+  void getLastTenOpT() async {
     List<Map<String, Object?>> re = await _dbModel.getLastTenOp();
-    List<OperationT>? temp = re
-        .map(
-          (e) => OperationT.fromMap(e),
-        )
-        .toList();
-    lastTenOp = temp;
+    lastTenOp = re.map(
+      (e) {
+        print('$e');
+        OperationT operationT = OperationT.fromMap(e);
+        print(operationT.newDate);
+        return operationT;
+      },
+    ).toList();
+
     notifyListeners();
 
     log('the length of Last = ${lastTenOp?.length}');
-    return lastTenOp;
   }
 
   void getAllOpT() async {
     List<Map<String, Object?>> re = await _dbModel.getAllOp();
-    List<OperationT>? temp = re
+    operations = re
         .map(
           (e) => OperationT.fromMap(e),
         )
         .toList();
-    operations = temp;
+    log('$operations');
     notifyListeners();
 
     log('the length of operation = ${operations?.length}');

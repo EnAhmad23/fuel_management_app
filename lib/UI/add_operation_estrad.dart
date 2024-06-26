@@ -38,33 +38,32 @@ class AddOperationEstrad extends StatelessWidget {
             ),
             child: Form(
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 60.h,
-                      color: Colors.blue,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16.0),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text('إنشاء عملية استيراد جديدة',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                child: Consumer<OpProvider>(builder: (context, provider, x) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 60.h,
+                        color: Colors.blue,
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16.0),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text('إنشاء عملية استيراد جديدة',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child:
-                          Consumer<OpProvider>(builder: (context, provider, x) {
-                        return Column(
+                      SizedBox(
+                        height: 30.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        child: Column(
                           children: [
                             SizedBox(
                               width: 10.w,
@@ -152,7 +151,10 @@ class AddOperationEstrad extends StatelessWidget {
                                         hint: const Text('اختر نوع الوقود'),
                                         value: provider
                                             .fuelType, // Ensure this matches one of the items in items list
-                                        onChanged: provider.dropItem,
+                                        onChanged: (String? value) {
+                                          provider.setFuelType(
+                                              value); // Update fuelType in provider
+                                        },
                                         items: <String>['بنزين', 'سولار']
                                             .map<DropdownMenuItem<String>>(
                                           (String value) {
@@ -176,85 +178,86 @@ class AddOperationEstrad extends StatelessWidget {
                               height: 20.h,
                             ),
                           ],
+                        ),
+                      ),
+                      // 00
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 30.w,
+                        ), // Add padding as needed
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              textAlign: TextAlign.right,
+                              'وصف',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                      fontWeight: FontWeight
+                                          .bold), // Customize the style as needed
+                            ),
+                            SizedBox(
+                                height: 10
+                                    .h), // Add some space between the label and the TextField
+                            Consumer<OpProvider>(
+                                builder: (context, provider, x) {
+                              return TextField(
+                                style: TextStyle(fontSize: 18.sp),
+                                // textDirection: TextDirection.rtl,
+                                textAlign: TextAlign.right,
+                                controller: provider.description,
+                                maxLines: 3, // Set the number of rows
+                                decoration: const InputDecoration(
+                                  hintText: '... أدخل ',
+                                  border:
+                                      OutlineInputBorder(), // Add border similar to 'form-control'
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50.h,
+                      ),
+                      Consumer<OpProvider>(builder: (context, provider, x) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: MyButton(
+                              text: 'إنشاء',
+                              onTap: () async {
+                                provider.setAmount(provider.amountCon.text);
+                                await provider.addOperationWared(
+                                  OperationT(
+                                      subConsumerDetails: null,
+                                      consumerName: null,
+                                      receiverName: null,
+                                      type: 'وارد',
+                                      checked: provider.checked,
+                                      dischangeNumber: null,
+                                      foulType: provider.fuelType,
+                                      amount: provider.amount,
+                                      newDate: provider.date,
+                                      description: provider.description.text),
+                                );
+                              },
+                            ),
+                          ),
                         );
                       }),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 30.w,
-                      ), // Add padding as needed
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            textAlign: TextAlign.right,
-                            'وصف',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                    fontWeight: FontWeight
-                                        .bold), // Customize the style as needed
-                          ),
-                          SizedBox(
-                              height: 10
-                                  .h), // Add some space between the label and the TextField
-                          Consumer<OpProvider>(builder: (context, provider, x) {
-                            return TextField(
-                              style: TextStyle(fontSize: 18.sp),
-                              // textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              controller: provider.description,
-                              maxLines: 3, // Set the number of rows
-                              decoration: const InputDecoration(
-                                hintText: '... أدخل ',
-                                border:
-                                    OutlineInputBorder(), // Add border similar to 'form-control'
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50.h,
-                    ),
-                    Consumer<OpProvider>(builder: (context, provider, x) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: MyButton(
-                            text: 'إنشاء',
-                            onTap: () async {
-                              provider.setFuelType(provider.fuelTypeCon.text);
-                              provider.setAmount(provider.amountCon.text);
-                              await provider.addOperationWared(
-                                OperationT(
-                                    subConsumerDetails: null,
-                                    consumerName: null,
-                                    receiverName: null,
-                                    type: 'وارد',
-                                    checked: provider.checked,
-                                    dischangeNumber: null,
-                                    foulType: provider.fuelType,
-                                    amount: provider.amount,
-                                    newDate: provider.date,
-                                    description: provider.description.text),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    }),
-                    SizedBox(
-                      height: 30.h,
-                    )
-                  ],
-                ),
+                      SizedBox(
+                        height: 30.h,
+                      )
+                    ],
+                  );
+                }),
               ),
             ),
           ),

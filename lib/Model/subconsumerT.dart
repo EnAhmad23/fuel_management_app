@@ -15,12 +15,12 @@ class SubConsumerT {
     required this.consumerName,
     required this.numOfOP,
   });
-  SubConsumerT.fromMap(Map<String, Object?> map) {
-    SubConsumerT(
-        details: map['subconsumer_details'] as String,
-        description: map['subconsumer_description'] as String,
-        id: int.parse(map['consumer_id'] as String),
-        consumerName: map['consumer_name'] as String,
-        numOfOP: map['number_of_operations'] as int);
+  factory SubConsumerT.fromMap(Map<String, Object?> map) {
+    return SubConsumerT(
+        details: map['details'] as String,
+        description: map['description'] as String,
+        id: int.parse('${map['id']}'),
+        consumerName: map['consumerName'] as String,
+        numOfOP: int.parse('${map['numberOfOperations']}'));
   }
 }

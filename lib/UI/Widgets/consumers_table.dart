@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Model/consumer.dart';
+import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
 
 class ConsumersTable extends StatelessWidget {
   const ConsumersTable({super.key, required this.consumers});
@@ -23,29 +25,29 @@ class ConsumersTable extends StatelessWidget {
       rows: consumers.map((consumer) {
         return DataRow(cells: [
           DataCell(
-            Row(
+            ButtonBar(
+              buttonPadding: const EdgeInsets.all(0),
+              mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  color: Colors.red,
-                  onPressed: () {
-                    // Handle delete operation
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.edit),
+                SettingButton(
+                    color: Colors.red,
+                    icon: Icons.delete,
+                    topLiftRadius: 5.r,
+                    topRightRadius: 0,
+                    iconColor: Colors.white),
+                const SettingButton(
                   color: Colors.green,
-                  onPressed: () {
-                    // Navigate to edit outcome or income
-                  },
+                  icon: Icons.edit,
+                  topRightRadius: 0,
+                  iconColor: Colors.white,
+                  topLiftRadius: 0,
                 ),
-                IconButton(
-                  icon: const Icon(Icons.remove_red_eye),
-                  color: Colors.blue,
-                  onPressed: () {
-                    // Navigate to show outcome or income
-                  },
-                ),
+                SettingButton(
+                    color: Colors.blue,
+                    icon: Icons.remove_red_eye,
+                    topRightRadius: 5.r,
+                    topLiftRadius: 0,
+                    iconColor: Colors.white),
               ],
             ),
           ),

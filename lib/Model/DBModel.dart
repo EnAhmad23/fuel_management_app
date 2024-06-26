@@ -34,6 +34,7 @@ class DBModel {
   CREATE TABLE consumers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
+    is_deleted INTEGER DEFAULT 0,
     deleted_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -43,6 +44,7 @@ CREATE TABLE sub_consumers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     consumer_id INTEGER NOT NULL,
     details TEXT,
+    is_deleted INTEGER DEFAULT 0,
     description TEXT,
     hasRecord INTEGER DEFAULT 0,
     deleted_at TIMESTAMP,
@@ -67,6 +69,7 @@ CREATE TABLE operations (
     sub_consumer_id INTEGER ,
     amount DECIMAL(8, 2),
     description TEXT,
+    is_deleted INTEGER DEFAULT 0,
     type TEXT CHECK(type IN ('صرف', 'وارد')),
     foulType TEXT CHECK(foulType IN ('بنزين', 'سولار')),
     receiverName TEXT,
@@ -83,6 +86,7 @@ CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
+    is_deleted INTEGER DEFAULT 0,
     remember_token TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -93,8 +97,8 @@ CREATE TABLE users (
 
   Future<List<Map<String, Object?>>> checkUser(User user) async {
     Database? database = await db;
-    List<Map<String, Object?>> re = await database!
-        .rawQuery('''Select id from users where username=? and password = ? 
+    List<Map<String, Object?>> re = await database!.rawQuery(
+        '''Select id from users where username=? and password = ? and is_deleted=0
      ''', [user.username, user.password]);
     log('${re.length}');
     return re;
@@ -110,26 +114,22 @@ CREATE TABLE users (
 
   Future<List<Map<String, Object?>>> getLastTenOp() async {
     Database? database = await db;
-    List<Map<String, Object?>> re = await database!.query(
-      'operations',
-      limit: 10,
-      orderBy: 'date DESC',
-    );
+    List<Map<String, Object?>> re = await database!.query('operations',
+        limit: 10, orderBy: 'date DESC', where: 'is_deleted=0');
     return re;
   }
 
   Future<List<Map<String, Object?>>> getAllOp() async {
     Database? database = await db;
-    List<Map<String, Object?>> re = await database!.query(
-      'operations',
-    );
+    List<Map<String, Object?>> re =
+        await database!.query('operations', where: 'is_deleted=0');
     return re;
   }
 
   Future<List<Map<String, Object?>>> getOp(int opId) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery('''
-      select * from operations where id = ?
+      select * from operations where id = ? and is_deleted=0
     ''', [opId]);
     return re;
   }
@@ -140,7 +140,7 @@ CREATE TABLE users (
         await database!.rawQuery('''SELECT COUNT(*) AS operation_count
     FROM operations
     WHERE sub_consumer_id = ?
-      AND type = 'صرف';
+      AND type = 'صرف' and is_deleted=0;
 ''', [subconsumerId]);
     return Sqflite.firstIntValue(re) ?? 0;
   }
@@ -148,25 +148,27 @@ CREATE TABLE users (
   Future<List<Map<String, Object?>>> getSubconsumerForTable() async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery("""
-    SELECT 
-    c.id AS consumer_id,
-    c.name AS consumer_name,
-    sc.details AS subconsumer_details,
-    sc.description AS subconsumer_description,
-    COUNT(o.id) AS number_of_operations
+   SELECT 
+    sc.id,
+    c.name AS consumerName,
+    sc.details,
+    sc.description,
+    COUNT(o.id) AS numberOfOperations
 FROM 
-    consumers c
+    sub_consumers sc
 JOIN 
-    sub_consumers sc ON c.id = sc.consumer_id
+    consumers c ON sc.consumer_id = c.id
 LEFT JOIN 
     operations o ON sc.id = o.sub_consumer_id
 GROUP BY 
-    c.id, c.name, sc.details, sc.description;
+    sc.id, c.name, sc.details, sc.description
+ORDER BY 
+    sc.id;
+where  is_deleted=0
 
-
- 
     """);
     log('${re.length}');
+    log('${re}');
     return re;
   }
 
@@ -186,30 +188,34 @@ GROUP BY
         operations o ON sc.id = o.sub_consumer_id
     GROUP BY 
         c.name;
+        where is_deleted=0
   ''');
     return result;
   }
 
   Future<List<Map<String, Object?>>> getConsumersNames() async {
     Database? database = await db;
-    List<Map<String, Object?>> re =
-        await database!.rawQuery('SELECT name FROM consumers');
+    List<Map<String, Object?>> re = await database!
+        .rawQuery('SELECT name FROM consumers where is_deleted=0');
     return re;
   }
 
   Future<int?> getConsumerID(String consumerName) async {
     Database? database = await db;
-    List<Map<String, Object?>> re = await database!.rawQuery('''SELECT id
-FROM consumers
-WHERE name = ?;
- ''', [consumerName]);
-    return Sqflite.firstIntValue(re) ?? -1;
+    List<Map<String, dynamic>> re = await database!.rawQuery(
+      '''SELECT id
+       FROM consumers
+       WHERE name = ?and is_deleted=0;
+    ''',
+      [consumerName],
+    );
+    return re.isNotEmpty ? re.first['id'] as int? : null;
   }
 
   Future<int?> getSubonsumerID(String? SubconsumerName) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery(
-        '''Select id from sub_consumers  where details = ? ''',
+        '''Select id from sub_consumers  where details = ? and is_deleted=0''',
         [SubconsumerName]);
     return Sqflite.firstIntValue(re) ?? -1;
   }
@@ -290,6 +296,9 @@ WHERE name = ?;
   Future<int> addSubonsumer(SubConsumer subconsumer) async {
     Database? database = await db;
     int? consumerID = await getConsumerID(subconsumer.consumerName);
+    log('consumerName ${subconsumer.consumerName}');
+    log('$consumerID');
+
     return await database!.rawInsert('''
     insert into sub_consumers (details,description,consumer_id,hasRecord) values(?,?,?,?)
     ''', [
