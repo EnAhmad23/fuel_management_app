@@ -7,15 +7,18 @@ class SettingButton extends StatelessWidget {
       required this.icon,
       required this.iconColor,
       required this.topLiftRadius,
-      required this.topRightRadius});
+      required this.topRightRadius,
+      this.onTap});
   final Color color;
   final Color iconColor;
   final IconData icon;
   final double topLiftRadius;
   final double topRightRadius;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(

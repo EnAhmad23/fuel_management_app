@@ -125,6 +125,15 @@ class OpProvider extends ChangeNotifier {
   addOperationWared(OperationT op) async {
     var x = await _dbModel.addOperationWard(op);
     log('{$x}');
+    getAllOpT();
+    getLastTenOpT();
+    return x;
+  }
+
+  deleteOperation(int id) async {
+    var x = await _dbModel.deleteOperation(id);
+    getAllOpT();
+    getLastTenOpT();
     return x;
   }
 }

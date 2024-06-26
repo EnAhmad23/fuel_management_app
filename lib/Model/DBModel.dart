@@ -314,4 +314,28 @@ where  is_deleted=0
     List<Map<String, Object?>> re = await database!.rawQuery('''sql''');
     return re;
   }
+
+  Future<int> deleteConsumer(int id) async {
+    Database? database = await db;
+    return await database!.rawUpdate('''UPDATE consumers
+SET is_deleted = 1
+WHERE id = ?;
+''', [id]);
+  }
+
+  Future<int> deleteSubconsumer(int id) async {
+    Database? database = await db;
+    return await database!.rawUpdate('''UPDATE sub_consumers
+SET is_deleted = 1
+WHERE id = ?;
+''', [id]);
+  }
+
+  Future<int> deleteOperation(int id) async {
+    Database? database = await db;
+    return await database!.rawUpdate('''UPDATE operations
+SET is_deleted = 1
+WHERE id = ?;
+''', [id]);
+  }
 }

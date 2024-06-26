@@ -8,6 +8,7 @@ import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -246,6 +247,22 @@ class AddOperationEstrad extends StatelessWidget {
                                       amount: provider.amount,
                                       newDate: provider.date,
                                       description: provider.description.text),
+                                );
+                                provider.amountCon.clear();
+                                provider.description.clear();
+                                provider.fuelTypeCon.clear();
+                                provider.changeCheck(false);
+                                provider.setDate(null);
+                                Get.snackbar(
+                                  'تم',
+                                  'تم إضافة العملة بنجاح',
+                                  backgroundColor: Colors.green,
+                                  colorText: Colors.white,
+                                  snackStyle: SnackStyle.FLOATING,
+                                  icon: const Icon(Icons.check_circle,
+                                      color: Colors.white),
+                                  isDismissible: true,
+                                  duration: const Duration(seconds: 3),
                                 );
                               },
                             ),

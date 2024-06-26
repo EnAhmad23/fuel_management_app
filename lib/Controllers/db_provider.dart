@@ -87,13 +87,22 @@ class DbProvider extends ChangeNotifier {
 
   Future<int> addConsumer(String name) async {
     var x = await _dbModel.addConsumer(name);
+    getConsumerForTable();
     log('{$x}');
     return x;
   }
 
   Future<int> addSubonsumer(SubConsumer subconsumer) async {
     var x = await _dbModel.addSubonsumer(subconsumer);
+
     log('{$x}');
+    return x;
+  }
+
+  Future<int> deleteConsumer(int id) async {
+    var x = await _dbModel.deleteConsumer(id);
+    getConsumerForTable();
+    log('delete {$x}');
     return x;
   }
 }

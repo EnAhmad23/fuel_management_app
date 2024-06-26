@@ -143,6 +143,10 @@ class AddSubconsumer extends StatelessWidget {
                                               provider.subDescription.text,
                                           consumerName: subPr.dropdownValue!,
                                           hasRcord: subPr.hasRcord));
+                                      provider.description.clear();
+                                      provider.subName.clear();
+                                      provider.name.clear();
+                                      provider.subDescription.clear();
                                     },
                                   ),
                                 );

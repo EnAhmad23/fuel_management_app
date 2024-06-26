@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fuel_management_app/Controllers/db_provider.dart';
 import 'package:fuel_management_app/Model/consumer.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
+import 'package:provider/provider.dart';
 
 class ConsumersTable extends StatelessWidget {
   const ConsumersTable({super.key, required this.consumers});
@@ -25,31 +27,37 @@ class ConsumersTable extends StatelessWidget {
       rows: consumers.map((consumer) {
         return DataRow(cells: [
           DataCell(
-            ButtonBar(
-              buttonPadding: const EdgeInsets.all(0),
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SettingButton(
+            Consumer<DbProvider>(builder: (context, db, x) {
+              return ButtonBar(
+                buttonPadding: const EdgeInsets.all(0),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SettingButton(
                     color: Colors.red,
                     icon: Icons.delete,
                     topLiftRadius: 5.r,
                     topRightRadius: 0,
-                    iconColor: Colors.white),
-                const SettingButton(
-                  color: Colors.green,
-                  icon: Icons.edit,
-                  topRightRadius: 0,
-                  iconColor: Colors.white,
-                  topLiftRadius: 0,
-                ),
-                SettingButton(
-                    color: Colors.blue,
-                    icon: Icons.remove_red_eye,
-                    topRightRadius: 5.r,
+                    iconColor: Colors.white,
+                    onTap: () {
+                      db.deleteConsumer(consumer.id ?? 0);
+                    },
+                  ),
+                  const SettingButton(
+                    color: Colors.green,
+                    icon: Icons.edit,
+                    topRightRadius: 0,
+                    iconColor: Colors.white,
                     topLiftRadius: 0,
-                    iconColor: Colors.white),
-              ],
-            ),
+                  ),
+                  SettingButton(
+                      color: Colors.blue,
+                      icon: Icons.remove_red_eye,
+                      topRightRadius: 5.r,
+                      topLiftRadius: 0,
+                      iconColor: Colors.white),
+                ],
+              );
+            }),
           ),
           DataCell(Center(
               child: Text('${consumer.operationsCount}',

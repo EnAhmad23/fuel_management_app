@@ -70,7 +70,15 @@ class SubProvider extends ChangeNotifier {
 
   Future<int> addSubonsumer(SubConsumer subconsumer) async {
     var x = await _dbModel.addSubonsumer(subconsumer);
+    getSubConsumerT();
     log('{$x}');
+    return x;
+  }
+
+  Future<int> deleteSubconsumer(int id) async {
+    var x = await _dbModel.deleteSubconsumer(id);
+    getSubConsumerT();
+    log(' delete{$x}');
     return x;
   }
 }
