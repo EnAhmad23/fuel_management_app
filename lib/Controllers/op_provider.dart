@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fuel_management_app/Model/operation.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../Model/DBModel.dart';
@@ -17,6 +19,7 @@ class OpProvider extends ChangeNotifier {
   factory OpProvider() {
     return _opProvider;
   }
+  GlobalKey<FormState> formKey = GlobalKey();
   TextEditingController description = TextEditingController();
   TextEditingController amountCon = TextEditingController();
   TextEditingController subConsumerDetails = TextEditingController();
@@ -24,11 +27,12 @@ class OpProvider extends ChangeNotifier {
   TextEditingController consumerName = TextEditingController();
   TextEditingController receiverName = TextEditingController();
   TextEditingController dischangeNumber = TextEditingController();
+  TextEditingController dateCon = TextEditingController();
   DateTime? _date;
   List<OperationT>? operations;
   List<OperationT>? lastTenOp;
   double? _amount;
-  String _fuelType = 'سولار';
+  String? _fuelType;
   bool? _checked;
   String get hintText {
     return (date) == null
@@ -66,7 +70,7 @@ class OpProvider extends ChangeNotifier {
   }
 
   setFuelType(String? value) {
-    _fuelType = value ?? 'سولار';
+    _fuelType = value;
     notifyListeners();
   }
 
@@ -81,6 +85,33 @@ class OpProvider extends ChangeNotifier {
 
   String? get fuelType {
     return _fuelType;
+  }
+
+  String? fuelTypeValidator(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty) {
+      return 'الرجاء اخيار نوع الوقود ';
+    }
+    return null;
+  }
+
+  String? amontValidet(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty) {
+      return 'الرجاء ادخال كمية الوقود ';
+    } else if (!value.isNumericOnly) {
+      return 'الرجاء ادخال قيمة صحيحة';
+    }
+    return null;
+  }
+
+  String? dateValidet(String? value) {
+    //-------------------------------------------------checked
+    log('$value');
+    if (value == null || value.isEmpty) {
+      return 'الرجاء ادخال التاريح ';
+    }
+    return null;
   }
 
   void getLastTenOpT() async {
@@ -135,5 +166,41 @@ class OpProvider extends ChangeNotifier {
     getAllOpT();
     getLastTenOpT();
     return x;
+  }
+
+  void onTopWared() async {
+    if (formKey.currentState!.validate()) {
+      setAmount(amountCon.text);
+      var x = await addOperationWared(
+        OperationT(
+            subConsumerDetails: null,
+            consumerName: null,
+            receiverName: null,
+            type: 'وارد',
+            checked: checked,
+            dischangeNumber: null,
+            foulType: fuelType,
+            amount: amount,
+            newDate: date,
+            description: description.text),
+      );
+      amountCon.clear();
+      description.clear();
+      fuelTypeCon.clear();
+      changeCheck(false);
+      setDate(null);
+      if (x != 0) {
+        Get.snackbar(
+          'تم',
+          'تم إضافة العملة بنجاح',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackStyle: SnackStyle.FLOATING,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          isDismissible: true,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
   }
 }

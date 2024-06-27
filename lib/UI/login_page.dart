@@ -56,7 +56,9 @@ class LoginPage extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: InkWell(
-                              onTap: provider.login,
+                              onTap: () {
+                                provider.login(context);
+                              },
                               borderRadius: BorderRadius.circular(5.r),
                               child: Container(
                                 decoration: BoxDecoration(

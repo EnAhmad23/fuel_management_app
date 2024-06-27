@@ -13,6 +13,10 @@ class DbProvider extends ChangeNotifier {
   // Database? database;
   final DBModel _dbModel = DBModel();
   int? numOfOp;
+  int? numOfCon;
+  DbProvider() {
+    getNumOfConsumers();
+  }
   // Operation? operation;
   List<AppConsumers>? consumers;
   List<OperationT>? operations;
@@ -57,6 +61,12 @@ class DbProvider extends ChangeNotifier {
     numOfOp = temp;
     notifyListeners();
     log('numOfOp = $numOfOp');
+  }
+
+  void getNumOfConsumers() async {
+    numOfCon = await _dbModel.getNumOfConsumers() ?? 0;
+    log('Number of consumers -> $numOfCon');
+    notifyListeners();
   }
 
   // Future<List<SubConsumerT>?> getSubConsumerT() async {

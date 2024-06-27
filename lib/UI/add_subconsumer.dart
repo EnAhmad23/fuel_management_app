@@ -4,6 +4,7 @@ import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/subconsumer.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class AddSubconsumer extends StatelessWidget {
@@ -32,48 +33,46 @@ class AddSubconsumer extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.r),
               ),
-              child: Form(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: 60.h,
-                        color: Colors.blue,
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16.0),
-                      ),
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.w),
-                        child: Consumer<SubProvider>(
-                            builder: (context, provider, x) {
-                          return Column(
-                            children: [
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Text('المستهلك الرئيسي',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold)),
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              Consumer<SubProvider>(
-                                builder: (context, subPro, x) {
-                                  return DropdownButtonFormField<String>(
+              child: Consumer<SubProvider>(builder: (context, provider, x) {
+                return Form(
+                  key: provider.formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 60.h,
+                          color: Colors.blue,
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16.0),
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text('المستهلك الرئيسي',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold)),
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                DropdownButtonFormField<String>(
                                     // alignment: Alignment.centerRight,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                     ),
-                                    value: subPro.dropdownValue,
+                                    value: provider.dropdownValue,
                                     onChanged: (String? newValue) {
-                                      subPro.changeDropdownValue(newValue);
+                                      provider.changeDropdownValue(newValue);
                                     },
                                     items: provider.consumersNames
                                         ?.map<DropdownMenuItem<String>>(
@@ -84,82 +83,67 @@ class AddSubconsumer extends StatelessWidget {
                                         child: Text(value),
                                       );
                                     }).toList(),
-                                    validator: (value) => value == null
-                                        ? 'Please select a consumer'
-                                        : null,
-                                  );
-                                },
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              MyTextFormField(
-                                labelText: 'اسم المستهلك',
-                                hintText: 'أدخل اسم المستهلك',
-                                controller: provider.subName,
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              MyTextFormField(
-                                labelText: 'تفاصيل المستهلك',
-                                hintText: 'أدخل تفاصيل المستهلك',
-                                controller: provider.subDescription,
-                              ),
-                              SizedBox(
-                                height: 30.h,
-                              ),
-                              Consumer<SubProvider>(
-                                  builder: (context, subPro, x) {
-                                return Align(
-                                  alignment: Alignment.topRight,
-                                  child: CheckboxListTile(
-                                    title: Text(
-                                      'له عداد',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
+                                    validator: provider.conNameValidtor),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                MyTextFormField(
+                                  validator: provider.subNameValidtor,
+                                  labelText: 'اسم المستهلك',
+                                  hintText: 'أدخل اسم المستهلك',
+                                  controller: provider.subName,
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                MyTextFormField(
+                                  labelText: 'تفاصيل المستهلك',
+                                  hintText: 'أدخل تفاصيل المستهلك',
+                                  controller: provider.subDescription,
+                                  validator: provider.descriptionValidtor,
+                                ),
+                                SizedBox(
+                                  height: 30.h,
+                                ),
+                                Consumer<SubProvider>(
+                                    builder: (context, subPro, x) {
+                                  return Align(
+                                    alignment: Alignment.topRight,
+                                    child: CheckboxListTile(
+                                      title: Text(
+                                        'له عداد',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                      value: subPro.hasRcord ?? false,
+                                      onChanged: (bool? newValue) {
+                                        subPro.changRecord(newValue ?? false);
+                                      },
+                                      controlAffinity:
+                                          ListTileControlAffinity.leading,
                                     ),
-                                    value: subPro.hasRcord ?? false,
-                                    onChanged: (bool? newValue) {
-                                      subPro.changRecord(newValue ?? false);
-                                    },
-                                    controlAffinity:
-                                        ListTileControlAffinity.leading,
-                                  ),
-                                );
-                              }),
-                              SizedBox(height: 8.h),
-                              Consumer<SubProvider>(
-                                  builder: (context, subPr, x) {
-                                return Align(
-                                  alignment: Alignment.centerRight,
-                                  child: MyButton(
-                                    text: 'إنشاء',
-                                    onTap: () {
-                                      provider.addSubonsumer(SubConsumer(
-                                          details: provider.subName.text,
-                                          description:
-                                              provider.subDescription.text,
-                                          consumerName: subPr.dropdownValue!,
-                                          hasRcord: subPr.hasRcord));
-                                      provider.description.clear();
-                                      provider.subName.clear();
-                                      provider.name.clear();
-                                      provider.subDescription.clear();
-                                    },
-                                  ),
-                                );
-                              }),
-                              SizedBox(height: 20.h),
-                            ],
-                          );
-                        }),
-                      ),
-                    ],
+                                  );
+                                }),
+                                SizedBox(height: 8.h),
+                                Consumer<SubProvider>(
+                                    builder: (context, subPr, x) {
+                                  return Align(
+                                    alignment: Alignment.centerRight,
+                                    child: MyButton(
+                                      text: 'إنشاء',
+                                      onTap: provider.onTapButton,
+                                    ),
+                                  );
+                                }),
+                                SizedBox(height: 20.h),
+                              ],
+                            )),
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              }),
             ),
           ),
         ),

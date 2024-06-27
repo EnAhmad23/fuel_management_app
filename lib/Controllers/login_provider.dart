@@ -51,13 +51,13 @@ class LoginProvider extends ChangeNotifier {
     return null;
   }
 
-  login() async {
+  login(BuildContext con) async {
     if (formKey.currentState!.validate()) {
       User? user = await authCheck();
       if (user != null) {
-        Get.to(
-          const HomePage(),
-        );
+        Navigator.of(con).pushReplacement(MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ));
       } else {
         Get.snackbar(
           'خطأ',

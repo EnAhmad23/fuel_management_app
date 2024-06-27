@@ -2,12 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/Model/subconsumer.dart';
 import 'package:fuel_management_app/Model/subconsumerT.dart';
+import 'package:get/get.dart';
 
 class SubProvider extends ChangeNotifier {
   final DBModel _dbModel = DBModel();
+  GlobalKey<FormState> formKey = GlobalKey();
   int? numOfOp;
   TextEditingController name = TextEditingController();
   TextEditingController description = TextEditingController();
@@ -31,6 +34,27 @@ class SubProvider extends ChangeNotifier {
   changeDropdownValue(String? newValue) {
     dropdownValue = newValue;
     notifyListeners();
+  }
+
+  String? conNameValidtor(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'أختار اسم المستهلك الرئيسي';
+    }
+    return null;
+  }
+
+  String? subNameValidtor(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'أدخل اسم المستهلك';
+    }
+    return null;
+  }
+
+  String? descriptionValidtor(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'أدخل تفاصيل المستهلك';
+    }
+    return null;
   }
 
   Future<List<SubConsumerT>?> getSubConsumerT() async {
@@ -80,5 +104,34 @@ class SubProvider extends ChangeNotifier {
     getSubConsumerT();
     log(' delete{$x}');
     return x;
+  }
+
+  void onTapButton() {
+    if (formKey.currentState!.validate()) {
+      var done = addSubonsumer(SubConsumer(
+          details: subName.text,
+          description: subDescription.text,
+          consumerName: dropdownValue!,
+          hasRcord: hasRcord));
+      description.clear();
+      subName.clear();
+      name.clear();
+      subDescription.clear();
+      changRecord(false);
+      changeDropdownValue(null);
+
+      if (done != 0) {
+        Get.snackbar(
+          'تم',
+          'تم إضافة المستهلك بنجاح',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackStyle: SnackStyle.FLOATING,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          isDismissible: true,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
   }
 }

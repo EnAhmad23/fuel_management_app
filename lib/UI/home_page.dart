@@ -295,14 +295,16 @@ class HomePage extends StatelessWidget {
                     SizedBox(
                       width: 20.w,
                     ),
-                    HomePageCard(
-                      backgroundColor: Colors.red,
-                      icon: Icons.people_rounded,
-                      mainText: '500         vdfv',
-                      subText: '300',
-                      textColor: Colors.white,
-                      iconColor: Colors.red[700],
-                    ),
+                    Consumer<DbProvider>(builder: (context, dbPro, x) {
+                      return HomePageCard(
+                        backgroundColor: Colors.red,
+                        icon: Icons.people_rounded,
+                        mainText: '(لتر) ${dbPro.numOfCon}',
+                        subText: 'عدد المستهلكين',
+                        textColor: Colors.white,
+                        iconColor: Colors.red[700],
+                      );
+                    }),
                   ],
                 ),
               ),

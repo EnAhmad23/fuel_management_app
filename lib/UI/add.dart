@@ -60,18 +60,6 @@ class Add extends StatelessWidget {
                           labelText: 'اسم المستهلك',
                           hintText: 'أدخل اسم المستهلك',
                         ),
-                        // TextFormField(
-                        //   decoration: const InputDecoration(
-                        //     labelText: 'اسم المستهلك',
-                        //     border: OutlineInputBorder(),
-                        //   ),
-                        //   validator: (value) {
-                        //     if (value == null || value.isEmpty) {
-                        //       return 'الرجاء إدخال اسم المستهلك';
-                        //     }
-                        //     return null;
-                        //   },
-                        // ),
                       ),
                       SizedBox(
                         height: 20.h,
@@ -80,10 +68,7 @@ class Add extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: MyButton(
                           text: 'إنشاء',
-                          onTap: () {
-                            dbprovider.addConsumer(
-                                dbprovider.consumerNameController.text);
-                          },
+                          onTap: () {},
                         ),
                       ),
                     ],

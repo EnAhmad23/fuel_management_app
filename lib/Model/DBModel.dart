@@ -220,6 +220,13 @@ where  is_deleted=0
     return Sqflite.firstIntValue(re) ?? -1;
   }
 
+  Future<int?> getNumOfConsumers() async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery(
+        '''Select COUNT(DISTINCT id) from consumers  where  is_deleted=0''');
+    return Sqflite.firstIntValue(re) ?? -1;
+  }
+
   Future<int> addConsumer(String name) async {
     Database? database = await db;
     return await database!.rawInsert('''
