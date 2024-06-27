@@ -9,6 +9,9 @@ import 'package:fuel_management_app/Model/subconsumerT.dart';
 import 'package:get/get.dart';
 
 class SubProvider extends ChangeNotifier {
+  SubProvider() {
+    getSubConsumerT();
+  }
   final DBModel _dbModel = DBModel();
   GlobalKey<FormState> formKey = GlobalKey();
   int? numOfOp;

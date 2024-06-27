@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class HomePageCard extends StatelessWidget {
   final Color backgroundColor;
@@ -8,7 +9,7 @@ class HomePageCard extends StatelessWidget {
   final IconData icon;
   final String mainText;
   final String subText;
-
+  final dynamic toPage;
   const HomePageCard({
     super.key,
     required this.backgroundColor,
@@ -17,6 +18,7 @@ class HomePageCard extends StatelessWidget {
     required this.subText,
     required this.textColor,
     required this.iconColor,
+    this.toPage,
   });
 
   @override
@@ -85,23 +87,28 @@ class HomePageCard extends StatelessWidget {
                   padding:
                       EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 5.h),
                   color: iconColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_circle_left,
-                        color: textColor,
-                        size: 20.sp,
-                      ),
-                      SizedBox(width: 8.0.w),
-                      Text(
-                        'عرض المزيد',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: textColor),
-                      ),
-                    ],
+                  child: InkWell(
+                    onTap: () {
+                      Get.to(toPage);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.arrow_circle_left,
+                          color: textColor,
+                          size: 20.sp,
+                        ),
+                        SizedBox(width: 8.0.w),
+                        Text(
+                          'عرض المزيد',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: textColor),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

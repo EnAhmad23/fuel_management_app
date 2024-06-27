@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,12 +11,16 @@ class MyTextFormField extends StatelessWidget {
       this.obscureText,
       required this.hintText,
       required this.controller,
-      this.validator});
+      this.validator,
+      this.keyboardType,
+      this.fontSize});
   final String labelText;
+  final TextInputType? keyboardType;
   final String hintText;
   String? Function(String?)? validator;
   final TextEditingController controller;
   bool? obscureText;
+  double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +40,11 @@ class MyTextFormField extends StatelessWidget {
           height: 10.h,
         ),
         TextFormField(
+          keyboardType: keyboardType ?? TextInputType.text,
           validator: validator,
           controller: controller,
           obscureText: obscureText ?? false,
-          style: TextStyle(fontSize: 18.sp),
+          style: TextStyle(fontSize: fontSize ?? 18.sp),
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
             hintText: hintText,

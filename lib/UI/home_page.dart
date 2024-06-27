@@ -4,11 +4,13 @@ import 'package:fuel_management_app/Controllers/db_provider.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/UI/add.dart';
+import 'package:fuel_management_app/UI/add_operation_sarf.dart';
 import 'package:fuel_management_app/UI/add_subconsumer.dart';
 import 'package:fuel_management_app/UI/showConsumers.dart';
 import 'package:fuel_management_app/UI/add_operation_estrad.dart';
 import 'package:fuel_management_app/UI/show_operation.dart';
 import 'package:fuel_management_app/UI/show_subconsumer.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'Widgets/home_page_card.dart';
@@ -200,15 +202,21 @@ class HomePage extends StatelessWidget {
                     leading:
                         const Icon(Icons.add_box_outlined, color: Colors.white),
                     children: [
-                      ListTile(
-                        title: Text('صرف',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: Colors.white)),
-                        leading:
-                            const Icon(Icons.arrow_upward, color: Colors.white),
-                      ),
+                      Consumer<OpProvider>(builder: (context, provider, x) {
+                        return ListTile(
+                          onTap: () {
+                            provider.getConsumersNames();
+                            Get.to(const AddSarf());
+                          },
+                          title: Text('صرف',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(color: Colors.white)),
+                          leading: const Icon(Icons.arrow_upward,
+                              color: Colors.white),
+                        );
+                      }),
                       ListTile(
                         onTap: () {
                           Navigator.push(
@@ -297,9 +305,10 @@ class HomePage extends StatelessWidget {
                     ),
                     Consumer<DbProvider>(builder: (context, dbPro, x) {
                       return HomePageCard(
+                        toPage: const ShowSubconsumer(),
                         backgroundColor: Colors.red,
                         icon: Icons.people_rounded,
-                        mainText: '(لتر) ${dbPro.numOfCon}',
+                        mainText: '(مستهلك) ${dbPro.numOfCon}',
                         subText: 'عدد المستهلكين',
                         textColor: Colors.white,
                         iconColor: Colors.red[700],

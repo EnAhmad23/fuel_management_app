@@ -200,6 +200,30 @@ where  is_deleted=0
     return re;
   }
 
+  Future<List<Map<String, Object?>>> getSubconsumersNames(
+      String? conName) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''SELECT
+    sub_consumers.id,
+    sub_consumers.details,
+    sub_consumers.description,
+    sub_consumers.hasRecord,
+    sub_consumers.deleted_at,
+    sub_consumers.created_at,
+    sub_consumers.updated_at,
+    consumers.name AS consumer_name
+FROM
+    sub_consumers
+JOIN
+    consumers ON sub_consumers.consumer_id = consumers.id
+WHERE
+    sub_consumers.is_deleted = 0
+    AND consumers.is_deleted = 0
+    AND consumers.name = ?;
+''', [conName]);
+    return re;
+  }
+
   Future<int?> getConsumerID(String consumerName) async {
     Database? database = await db;
     List<Map<String, dynamic>> re = await database!.rawQuery(
@@ -220,10 +244,10 @@ where  is_deleted=0
     return Sqflite.firstIntValue(re) ?? -1;
   }
 
-  Future<int?> getNumOfConsumers() async {
+  Future<int?> getNumOfSubconsumers() async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery(
-        '''Select COUNT(DISTINCT id) from consumers  where  is_deleted=0''');
+        '''Select COUNT(DISTINCT id) from sub_consumers  where  is_deleted=0''');
     return Sqflite.firstIntValue(re) ?? -1;
   }
 

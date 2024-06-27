@@ -1,4 +1,5 @@
 import 'dart:developer';
+// import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,19 +22,32 @@ class OpProvider extends ChangeNotifier {
   }
   GlobalKey<FormState> formKey = GlobalKey();
   TextEditingController description = TextEditingController();
+  TextEditingController dischangeNumberCon = TextEditingController();
   TextEditingController amountCon = TextEditingController();
   TextEditingController subConsumerDetails = TextEditingController();
   TextEditingController fuelTypeCon = TextEditingController();
   TextEditingController consumerName = TextEditingController();
   TextEditingController receiverName = TextEditingController();
-  TextEditingController dischangeNumber = TextEditingController();
   TextEditingController dateCon = TextEditingController();
   DateTime? _date;
   List<OperationT>? operations;
   List<OperationT>? lastTenOp;
+  List<String>? consumerNames;
+  List<String>? subconsumerNames;
+
   double? _amount;
   String? _fuelType;
+  String? _conName;
+  String? _subconName;
   bool? _checked;
+  String? get subconName {
+    return _conName;
+  }
+
+  String? get conName {
+    return _subconName;
+  }
+
   String get hintText {
     return (date) == null
         ? 'yyyy-MM-dd'
@@ -48,10 +62,25 @@ class OpProvider extends ChangeNotifier {
     return _amount;
   }
 
+  setConName(String? name) {
+    if (name != null) {
+      _conName = name;
+      notifyListeners();
+    }
+  }
+
+  setSubConName(String? name) {
+    if (name != null) {
+      _subconName = name;
+      notifyListeners();
+    }
+  }
+
   dropItem(String? value) {
     log('$value');
     if (value != null) {
       _fuelType = value;
+      notifyListeners();
     }
   }
 
@@ -114,6 +143,27 @@ class OpProvider extends ChangeNotifier {
     return null;
   }
 
+  void getConsumersNames() async {
+    List<Map<String, Object?>> re = await _dbModel.getConsumersNames();
+    consumerNames = re.map(
+      (e) {
+        return '${e['name']}';
+      },
+    ).toList();
+    notifyListeners();
+  }
+
+  void getSubonsumersNames(String? conName) async {
+    List<Map<String, Object?>> re =
+        await _dbModel.getSubconsumersNames(conName);
+    subconsumerNames = re.map(
+      (e) {
+        return '${e['details']}';
+      },
+    ).toList();
+    notifyListeners();
+  }
+
   void getLastTenOpT() async {
     List<Map<String, Object?>> re = await _dbModel.getLastTenOp();
     lastTenOp = re.map(
@@ -161,6 +211,14 @@ class OpProvider extends ChangeNotifier {
     return x;
   }
 
+  addOperationSarf(OperationT op) async {
+    var x = await _dbModel.addOperation(op);
+    log('{$x}');
+    getAllOpT();
+    getLastTenOpT();
+    return x;
+  }
+
   deleteOperation(int id) async {
     var x = await _dbModel.deleteOperation(id);
     getAllOpT();
@@ -187,6 +245,46 @@ class OpProvider extends ChangeNotifier {
       amountCon.clear();
       description.clear();
       fuelTypeCon.clear();
+      changeCheck(false);
+      setDate(null);
+      if (x != 0) {
+        Get.snackbar(
+          'تم',
+          'تم إضافة العملة بنجاح',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackStyle: SnackStyle.FLOATING,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          isDismissible: true,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
+  }
+
+  void onTopSarf() async {
+    if (formKey.currentState!.validate()) {
+      setAmount(amountCon.text);
+      var x = await addOperationSarf(
+        OperationT(
+            subConsumerDetails: subconName,
+            consumerName: conName,
+            receiverName: receiverName.text,
+            type: 'صرف',
+            checked: checked,
+            dischangeNumber: dischangeNumberCon.text,
+            foulType: fuelType,
+            amount: amount,
+            newDate: date,
+            description: description.text),
+      );
+      amountCon.clear();
+      description.clear();
+      fuelTypeCon.clear();
+      receiverName.clear();
+      dischangeNumberCon.clear();
+      subConsumerDetails.clear();
+      consumerName.clear();
       changeCheck(false);
       setDate(null);
       if (x != 0) {
