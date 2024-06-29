@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/db_provider.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class Add extends StatelessWidget {
@@ -34,6 +35,7 @@ class Add extends StatelessWidget {
               ),
               child: Consumer<DbProvider>(builder: (context, dbprovider, x) {
                 return Form(
+                  key: dbprovider.formKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -56,6 +58,7 @@ class Add extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(30.0),
                         child: MyTextFormField(
+                          validator: dbprovider.nameValidtor,
                           controller: dbprovider.consumerNameController,
                           labelText: 'اسم المستهلك',
                           hintText: 'أدخل اسم المستهلك',
@@ -68,7 +71,26 @@ class Add extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: MyButton(
                           text: 'إنشاء',
-                          onTap: () {},
+                          onTap: () {
+                            if (dbprovider.formKey.currentState!.validate()) {
+                              var x = dbprovider.addConsumer(
+                                  dbprovider.consumerNameController.text);
+                              dbprovider.consumerNameController.clear();
+                              if (x != 0) {
+                                Get.snackbar(
+                                  'تم',
+                                  'تم إضافة المستهلك بنجاح',
+                                  backgroundColor: Colors.green,
+                                  colorText: Colors.white,
+                                  snackStyle: SnackStyle.FLOATING,
+                                  icon: const Icon(Icons.check_circle,
+                                      color: Colors.white),
+                                  isDismissible: true,
+                                  duration: const Duration(seconds: 3),
+                                );
+                              }
+                            }
+                          },
                         ),
                       ),
                     ],

@@ -9,7 +9,9 @@ class HomePageCard extends StatelessWidget {
   final IconData icon;
   final String mainText;
   final String subText;
+  final String? unitText;
   final dynamic toPage;
+  final void Function()? onPress;
   const HomePageCard({
     super.key,
     required this.backgroundColor,
@@ -19,6 +21,8 @@ class HomePageCard extends StatelessWidget {
     required this.textColor,
     required this.iconColor,
     this.toPage,
+    this.unitText,
+    this.onPress,
   });
 
   @override
@@ -55,12 +59,24 @@ class HomePageCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                            mainText,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(color: textColor),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                unitText ?? '',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(color: textColor),
+                              ),
+                              Text(
+                                mainText,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(color: textColor),
+                              ),
+                            ],
                           ),
                           Text(
                             subText,
@@ -88,9 +104,7 @@ class HomePageCard extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 5.h),
                   color: iconColor,
                   child: InkWell(
-                    onTap: () {
-                      Get.to(toPage);
-                    },
+                    onTap: onPress,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

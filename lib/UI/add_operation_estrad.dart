@@ -87,11 +87,11 @@ class AddOperationEstrad extends StatelessWidget {
                                         SizedBox(
                                           height: 10.h,
                                         ),
-                                        SizedBox(
-                                          width: 300.w,
-                                          height: 50.h,
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w, vertical: 10.h),
                                           child: TextFormField(
-                                            validator: provider.dateValidet,
+                                            style: TextStyle(fontSize: 18.sp),
                                             controller: provider.dateCon,
                                             decoration: InputDecoration(
                                                 // alignLabelWithHint: true,
@@ -123,7 +123,7 @@ class AddOperationEstrad extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  // SizedBox(width: 10.w),
+                                  SizedBox(width: 10.w),
                                   Expanded(
                                     child: MyTextFormField(
                                       validator: provider.amontValidet,

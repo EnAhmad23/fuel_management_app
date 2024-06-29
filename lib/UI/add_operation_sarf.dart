@@ -276,39 +276,32 @@ class AddSarf extends StatelessWidget {
                                             height: 10.h,
                                           ),
                                           TextFormField(
-                                            style: TextStyle(
-                                              fontSize: 18.sp,
-                                            ),
+                                            controller: provider.dateCon,
                                             decoration: InputDecoration(
-                                              hintText: provider.hintText,
-                                              border:
-                                                  const OutlineInputBorder(),
-                                              suffixIcon: InkWell(
-                                                onTap: () async {
-                                                  DateTime? pickedDate =
-                                                      await showDatePicker(
-                                                    context: context,
-                                                    initialDate: DateTime.now(),
-                                                    firstDate: DateTime(2000),
-                                                    lastDate: DateTime(2101),
-                                                  );
-                                                  if (pickedDate != null) {
-                                                    provider
-                                                        .setDate(pickedDate);
-                                                  }
-                                                },
-                                                child: const Icon(
-                                                    Icons.calendar_today),
-                                              ),
-                                            ),
+                                                // alignLabelWithHint: true,
+                                                hintText: provider.hintText,
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                suffixIcon: InkWell(
+                                                  child: const Icon(
+                                                    Icons.calendar_today,
+                                                    color: Colors.black,
+                                                  ),
+                                                  onTap: () async {
+                                                    var x =
+                                                        await showDatePicker(
+                                                      currentDate:
+                                                          provider.date,
+                                                      context: context,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(2000),
+                                                      lastDate: DateTime(2101),
+                                                    );
+                                                    provider.setDate(x);
+                                                  },
+                                                )),
                                             readOnly: true,
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'Please select a date';
-                                              }
-                                              return null;
-                                            },
                                           ),
                                         ],
                                       ),

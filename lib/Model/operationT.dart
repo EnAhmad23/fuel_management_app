@@ -1,3 +1,4 @@
+import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:intl/intl.dart';
 
 class OperationT {
@@ -28,9 +29,12 @@ class OperationT {
   });
 
   factory OperationT.fromMap(Map<String, dynamic> e) {
+    // DBModel().getConsumersName(subId)
     return OperationT(
       id: e['id'],
-      subConsumerDetails: '${e['sub_consumer_id']}',
+      subConsumerDetails: e['subConsumerDetails'].toString() == 'null'
+          ? '_'
+          : e['subConsumerDetails'].toString(),
       consumerName: e['consumerName'],
       receiverName: e['receiverName'],
       type: e['type'],

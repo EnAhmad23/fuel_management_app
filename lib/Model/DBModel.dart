@@ -19,6 +19,7 @@ class DBModel {
   intiDataBase() async {
     String dataBasePath = await getDatabasesPath();
     String path = join(dataBasePath, 'fuel_managment.db');
+    log(path);
     Database myDB = await openDatabase(path, onCreate: _onCreate, version: 1);
     return myDB;
   }
@@ -114,15 +115,51 @@ CREATE TABLE users (
 
   Future<List<Map<String, Object?>>> getLastTenOp() async {
     Database? database = await db;
-    List<Map<String, Object?>> re = await database!.query('operations',
-        limit: 10, orderBy: 'date DESC', where: 'is_deleted=0');
+    List<Map<String, Object?>> re = await database!.rawQuery(
+      '''SELECT 
+    s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+WHERE o.is_deleted = 0
+ORDER BY o.date DESC
+LIMIT 10;
+''',
+    );
     return re;
   }
 
   Future<List<Map<String, Object?>>> getAllOp() async {
     Database? database = await db;
-    List<Map<String, Object?>> re =
-        await database!.query('operations', where: 'is_deleted=0');
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+     SELECT 
+    s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+WHERE o.is_deleted = 0;
+
+''');
     return re;
   }
 
@@ -131,6 +168,116 @@ CREATE TABLE users (
     List<Map<String, Object?>> re = await database!.rawQuery('''
       select * from operations where id = ? and is_deleted=0
     ''', [opId]);
+    return re;
+  }
+
+  Future<List<Map<String, Object?>>> getDailyOp() async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+     SELECT 
+     s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+WHERE DATE(date) = DATE('now')
+  AND o.is_deleted = 0 and type = 'صرف';
+
+    ''');
+    return re;
+  }
+
+  Future<List<Map<String, Object?>>> getMontlySubOp(String? type) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+     SELECT 
+    s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+WHERE o.is_deleted = 0 
+    AND type = ?
+    AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now')  -- Current month
+   
+ORDER BY date DESC;
+
+
+    ''', [type]);
+    return re;
+  }
+
+  Future<List<Map<String, Object?>>> getWeeklySubOp() async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+     SELECT 
+    s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+WHERE o.is_deleted = 0 
+    AND type = 'صرف'
+    AND date >= date('now', 'weekday 6', '-7 days')  -- Start of current week (Saturday)
+    AND date <= date('now', 'weekday 6')              -- End of current week (Saturday)
+ORDER BY date DESC;
+
+
+    ''');
+    return re;
+  }
+
+  Future<List<Map<String, Object?>>> getTotalSubOp(String? type) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+    SELECT 
+    s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+WHERE type = ?
+    AND o.is_deleted = 0;
+
+
+
+    ''', [type]);
     return re;
   }
 
@@ -143,6 +290,102 @@ CREATE TABLE users (
       AND type = 'صرف' and is_deleted=0;
 ''', [subconsumerId]);
     return Sqflite.firstIntValue(re) ?? 0;
+  }
+
+  getDailySarf() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    date,
+    SUM(amount) AS total_exchange_amount
+FROM operations
+WHERE type = 'صرف' AND is_deleted = 0
+GROUP BY date
+ORDER BY date DESC;
+
+''');
+    return re.first;
+  }
+
+  getMonthlySarf() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    strftime('%Y-%m', date) AS month,
+    SUM(amount) AS total_exchange_amount
+FROM operations
+WHERE type = 'صرف' AND is_deleted = 0
+GROUP BY strftime('%Y-%m', date)
+ORDER BY month DESC;
+
+
+''');
+    return re.first;
+  }
+
+  getWeeklySarf() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    strftime('%Y-%W', date) AS week, 
+    SUM(amount) AS total_exchange_amount
+FROM operations
+WHERE type = 'صرف' AND is_deleted = 0
+GROUP BY week
+ORDER BY week DESC;
+
+
+
+''');
+    return re.first;
+  }
+
+  getTotalSarf() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    SUM(amount) AS total_exchange_amount
+FROM operations
+WHERE type = 'صرف' AND is_deleted = 0;
+
+
+
+
+''');
+    return re.first;
+  }
+
+  getMonthlyWard() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    COALESCE(SUM(amount), 0) AS total_amount
+FROM operations
+WHERE is_deleted = 0
+    AND type = 'وارد'
+    AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now');
+
+
+''');
+    return re.first;
+  }
+
+  getTotalWard() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    SUM(amount) AS total_exchange_amount
+FROM operations
+WHERE type = 'وارد' AND is_deleted = 0;
+
+
+
+
+''');
+    return re.first;
+  }
+
+  getTotalAvailable() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    (SELECT COALESCE(SUM(amount), 0) FROM operations WHERE type = 'وارد' AND is_deleted = 0) -
+    (SELECT COALESCE(SUM(amount), 0) FROM operations WHERE type = 'صرف' AND is_deleted = 0) AS net_amount;
+''');
+    return re.first;
   }
 
   Future<List<Map<String, Object?>>> getSubconsumerForTable() async {
@@ -190,6 +433,7 @@ where  is_deleted=0
         c.name;
         where is_deleted=0
   ''');
+    log('$result');
     return result;
   }
 
@@ -200,27 +444,30 @@ where  is_deleted=0
     return re;
   }
 
+  Future<String?> getConsumersName(int? subId) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery(
+        'SELECT name FROM consumers as c join sub_consumers as sub on c.id=sc.consumer_id  where is_deleted=0 and sc.id=? ');
+    return re.isNotEmpty ? re.first['name'].toString() : null;
+  }
+
   Future<List<Map<String, Object?>>> getSubconsumersNames(
       String? conName) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery('''SELECT
-    sub_consumers.id,
-    sub_consumers.details,
-    sub_consumers.description,
-    sub_consumers.hasRecord,
-    sub_consumers.deleted_at,
-    sub_consumers.created_at,
-    sub_consumers.updated_at,
-    consumers.name AS consumer_name
+    
+    s.details
 FROM
-    sub_consumers
+    consumers c
 JOIN
-    consumers ON sub_consumers.consumer_id = consumers.id
+sub_consumers as s
+     ON s.consumer_id = c.id
 WHERE
-    sub_consumers.is_deleted = 0
-    AND consumers.is_deleted = 0
-    AND consumers.name = ?;
+    s.is_deleted = 0
+    AND c.is_deleted = 0
+    AND c.name = ?;
 ''', [conName]);
+    log('subcon names -> ${re.length}');
     return re;
   }
 

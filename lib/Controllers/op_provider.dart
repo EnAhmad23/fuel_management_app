@@ -1,9 +1,7 @@
 import 'dart:developer';
 // import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +14,13 @@ class OpProvider extends ChangeNotifier {
   static final OpProvider _opProvider = OpProvider._();
   OpProvider._() {
     getLastTenOpT();
+    getDailySarf();
+    getWeeklySarf();
+    getMonthlySarf();
+    getTotalSarf();
+    getTotalWard();
+    getMonthlyWard();
+    getTotalAvailable();
   }
   factory OpProvider() {
     return _opProvider;
@@ -31,21 +36,63 @@ class OpProvider extends ChangeNotifier {
   TextEditingController dateCon = TextEditingController();
   DateTime? _date;
   List<OperationT>? operations;
+  List<OperationT>? subOperations;
   List<OperationT>? lastTenOp;
   List<String>? consumerNames;
   List<String>? subconsumerNames;
 
+  String? _subTitle;
   double? _amount;
+  String? _dailySarf;
+  String? _totalAvailable;
+  String? _monthlySarf;
+  String? _monthlyWard;
+  String? _totalSarf;
+  String? _totalWard;
+  String? _weeklySarf;
   String? _fuelType;
   String? _conName;
   String? _subconName;
   bool? _checked;
+
+  String? get subTitle {
+    return _subTitle;
+  }
+
   String? get subconName {
-    return _conName;
+    return _subconName;
+  }
+
+  String? get dailySarf {
+    return _dailySarf;
+  }
+
+  String? get totalSarf {
+    return _totalSarf;
+  }
+
+  String? get totalAvailable {
+    return _totalAvailable;
+  }
+
+  String? get totalWard {
+    return _totalWard;
+  }
+
+  String? get weeklySarf {
+    return _weeklySarf;
+  }
+
+  String? get monthlySarf {
+    return _monthlySarf;
+  }
+
+  String? get monthlyWard {
+    return _monthlyWard;
   }
 
   String? get conName {
-    return _subconName;
+    return _conName;
   }
 
   String get hintText {
@@ -62,9 +109,74 @@ class OpProvider extends ChangeNotifier {
     return _amount;
   }
 
+  setSubTitle(String? name) {
+    if (name != null) {
+      _subTitle = name;
+
+      notifyListeners();
+    }
+  }
+
   setConName(String? name) {
     if (name != null) {
       _conName = name;
+
+      notifyListeners();
+    }
+  }
+
+  setDailySarf(String? value) {
+    if (value != null) {
+      _dailySarf = value;
+
+      notifyListeners();
+    }
+  }
+
+  setTotalSarf(String? value) {
+    if (value != null) {
+      _totalSarf = value;
+
+      notifyListeners();
+    }
+  }
+
+  setTotalAvailable(String? value) {
+    if (value != null) {
+      _totalAvailable = value;
+
+      notifyListeners();
+    }
+  }
+
+  setTotalWard(String? value) {
+    if (value != null) {
+      _totalWard = value;
+
+      notifyListeners();
+    }
+  }
+
+  setMonthlySarf(String? value) {
+    if (value != null) {
+      _monthlySarf = value;
+
+      notifyListeners();
+    }
+  }
+
+  setMonthlyWard(String? value) {
+    if (value != null) {
+      _monthlyWard = value;
+
+      notifyListeners();
+    }
+  }
+
+  setWeeklySarf(String? value) {
+    if (value != null) {
+      _weeklySarf = value;
+
       notifyListeners();
     }
   }
@@ -135,10 +247,10 @@ class OpProvider extends ChangeNotifier {
   }
 
   String? dateValidet(String? value) {
-    //-------------------------------------------------checked
+    //-------------------------------------------------check the history for see if it was wark well
     log('$value');
     if (value == null || value.isEmpty) {
-      return 'الرجاء ادخال التاريح ';
+      return 'الرجاء ادخال التاريخ ';
     }
     return null;
   }
@@ -164,6 +276,76 @@ class OpProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void getDailySarf() async {
+    Map<String, dynamic> re = await _dbModel.getDailySarf();
+    log('Daily Sarf -> $re');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setDailySarf('${re['total_exchange_amount']}');
+    } else {
+      setDailySarf('0.0');
+    }
+  }
+
+  void getMonthlySarf() async {
+    Map<String, dynamic> re = await _dbModel.getMonthlySarf();
+    log('Monthly Sarf -> ${re['total_exchange_amount']}');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setMonthlySarf('${re['total_exchange_amount']}');
+    } else {
+      setMonthlySarf('0.0');
+    }
+  }
+
+  void getWeeklySarf() async {
+    Map<String, dynamic> re = await _dbModel.getWeeklySarf();
+    log('Weekly Sarf -> ${re['total_exchange_amount']}');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setWeeklySarf('${re['total_exchange_amount']}');
+    } else {
+      setWeeklySarf('0.0');
+    }
+  }
+
+  void getTotalSarf() async {
+    Map<String, dynamic> re = await _dbModel.getTotalSarf();
+    log('Total Sarf -> ${re['total_exchange_amount']}');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setTotalSarf('${re['total_exchange_amount']}');
+    } else {
+      setTotalSarf('0.0');
+    }
+  }
+
+  void getTotalAvailable() async {
+    Map<String, dynamic> re = await _dbModel.getTotalAvailable();
+    log('Total Available -> ${re['net_amount']}');
+    if (re.isNotEmpty && re['net_amount'] != null) {
+      setTotalAvailable('${re['net_amount']}');
+    } else {
+      setTotalAvailable('0.0');
+    }
+  }
+
+  void getTotalWard() async {
+    Map<String, dynamic> re = await _dbModel.getTotalWard();
+    log('Total Ward -> ${re['total_exchange_amount']}');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setTotalWard('${re['total_exchange_amount']}');
+    } else {
+      setTotalWard('0.0');
+    }
+  }
+
+  void getMonthlyWard() async {
+    Map<String, dynamic> re = await _dbModel.getMonthlyWard();
+    log('Monthly Ward -> ${re['total_exchange_amount']}');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setMonthlyWard('${re['total_exchange_amount']}');
+    } else {
+      setMonthlyWard('0.0');
+    }
+  }
+
   void getLastTenOpT() async {
     List<Map<String, Object?>> re = await _dbModel.getLastTenOp();
     lastTenOp = re.map(
@@ -180,17 +362,96 @@ class OpProvider extends ChangeNotifier {
     log('the length of Last = ${lastTenOp?.length}');
   }
 
+  void getDailySubOP() async {
+    List<Map<String, Object?>> re = await _dbModel.getDailyOp();
+    subOperations = re.map(
+      (e) {
+        log('$e');
+        OperationT operationT = OperationT.fromMap(e);
+        print(operationT.newDate);
+        return operationT;
+      },
+    ).toList();
+
+    notifyListeners();
+
+    log('the length of DailySubOP = ${lastTenOp?.length}');
+  }
+
+  void getWeeklySubOP() async {
+    List<Map<String, Object?>> re = await _dbModel.getWeeklySubOp();
+    subOperations = re.map(
+      (e) {
+        print('$e');
+        OperationT operationT = OperationT.fromMap(e);
+        print(operationT.newDate);
+        return operationT;
+      },
+    ).toList();
+
+    notifyListeners();
+
+    log('the length of DailySubOP = ${lastTenOp?.length}');
+  }
+
+  void getMonthlySubOP(String? type) async {
+    List<Map<String, Object?>> re = await _dbModel.getMontlySubOp(type);
+    subOperations = re.map(
+      (e) {
+        print('$e');
+        OperationT operationT = OperationT.fromMap(e);
+        print(operationT.newDate);
+        return operationT;
+      },
+    ).toList();
+
+    notifyListeners();
+
+    log('the length of DailySubOP = ${lastTenOp?.length}');
+  }
+
+  void getTotalSubOP(String? type) async {
+    List<Map<String, Object?>> re = await _dbModel.getTotalSubOp(type);
+    subOperations = re.map(
+      (e) {
+        print('$e');
+        OperationT operationT = OperationT.fromMap(e);
+        print(operationT.newDate);
+        return operationT;
+      },
+    ).toList();
+
+    notifyListeners();
+
+    log('the length of DailySubOP = ${lastTenOp?.length}');
+  }
+
   void getAllOpT() async {
     List<Map<String, Object?>> re = await _dbModel.getAllOp();
-    operations = re
-        .map(
-          (e) => OperationT.fromMap(e),
-        )
-        .toList();
+    operations = re.map(
+      (e) {
+        log('operations $e');
+        return OperationT.fromMap(e);
+      },
+    ).toList();
     log('$operations');
     notifyListeners();
 
     log('the length of operation = ${operations?.length}');
+  }
+
+  void getDailyOpT() async {
+    List<Map<String, Object?>> re = await _dbModel.getDailyOp();
+    operations = re.map(
+      (e) {
+        log('operations $e');
+        return OperationT.fromMap(e);
+      },
+    ).toList();
+    log('$operations');
+    notifyListeners();
+
+    log('the length of daily operation = ${operations?.length}');
   }
 
   Future<Operation> getOp(int opId) async {
@@ -206,21 +467,36 @@ class OpProvider extends ChangeNotifier {
   addOperationWared(OperationT op) async {
     var x = await _dbModel.addOperationWard(op);
     log('{$x}');
+    getTotalWard();
+    getMonthlyWard();
     getAllOpT();
     getLastTenOpT();
+    getTotalAvailable();
     return x;
   }
 
   addOperationSarf(OperationT op) async {
     var x = await _dbModel.addOperation(op);
     log('{$x}');
+    getTotalSarf();
+    getMonthlySarf();
+    getWeeklySarf();
+    getDailySarf();
     getAllOpT();
     getLastTenOpT();
+    getTotalAvailable();
     return x;
   }
 
   deleteOperation(int id) async {
     var x = await _dbModel.deleteOperation(id);
+    getTotalAvailable();
+    getTotalWard();
+    getTotalSarf();
+    getMonthlyWard();
+    getMonthlySarf();
+    getWeeklySarf();
+    getDailySarf();
     getAllOpT();
     getLastTenOpT();
     return x;

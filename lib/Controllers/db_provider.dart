@@ -13,11 +13,12 @@ class DbProvider extends ChangeNotifier {
   // Database? database;
   final DBModel _dbModel = DBModel();
   int? numOfOp;
-  int? numOfCon;
+  int? numOfSub;
   DbProvider() {
     getNumOfSubconsumers();
   }
   // Operation? operation;
+  GlobalKey<FormState> formKey = GlobalKey();
   List<AppConsumers>? consumers;
   List<OperationT>? operations;
   List<String>? consumersNames;
@@ -29,6 +30,12 @@ class DbProvider extends ChangeNotifier {
   // initDB() async {
   //   database = await _dbModel.db;
   // }
+  String? nameValidtor(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'أدخل اسم المستهلك';
+    }
+    return null;
+  }
 
   Future<List<AppConsumers>?> getConsumerForTable() async {
     try {
@@ -64,8 +71,8 @@ class DbProvider extends ChangeNotifier {
   }
 
   void getNumOfSubconsumers() async {
-    numOfCon = await _dbModel.getNumOfSubconsumers() ?? 0;
-    log('Number of consumers -> $numOfCon');
+    numOfSub = await _dbModel.getNumOfSubconsumers() ?? 0;
+    log('Number of consumers -> $numOfSub');
     notifyListeners();
   }
 

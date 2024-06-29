@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
+import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class OperationTable extends StatelessWidget {
@@ -69,7 +71,56 @@ class OperationTable extends StatelessWidget {
                         topRightRadius: 0,
                         iconColor: Colors.white,
                         onTap: () {
-                          opPro.deleteOperation(operation.id ?? 0);
+                          Get.defaultDialog(
+                              title: 'حذف',
+                              backgroundColor: Colors.white,
+                              content: Padding(
+                                padding: EdgeInsets.all(10.w),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                        height: 100.h,
+                                        width: 200.h,
+                                        child: Lottie.asset(
+                                            'assets/warning.json')),
+                                    SizedBox(
+                                      height: 5.h,
+                                    ),
+                                    const Text('هل متاكد من حذف العنصر؟'),
+                                  ],
+                                ),
+                              ),
+                              confirm: InkWell(
+                                onTap: () {
+                                  opPro.deleteOperation(operation.id ?? 0);
+                                  Get.back();
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(5.r)),
+                                  margin: EdgeInsets.symmetric(horizontal: 5.w),
+                                  padding: EdgeInsets.all(10.w),
+                                  child: const Text(
+                                    'نعم',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              cancel: InkWell(
+                                onTap: () => Get.back(),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(5.r)),
+                                  padding: EdgeInsets.all(10.w),
+                                  margin: EdgeInsets.symmetric(horizontal: 5.w),
+                                  child: const Text(
+                                    'لا',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ));
                         },
                       ),
                       const SettingButton(
