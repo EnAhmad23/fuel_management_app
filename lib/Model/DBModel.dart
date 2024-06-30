@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:fuel_management_app/Model/consumer.dart';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/Model/user.dart';
@@ -585,6 +586,51 @@ WHERE
       consumerID,
       subconsumer.hasRcord! ? 1 : 0
     ]);
+  }
+
+  Future<int?> updateOperation(OperationT? operation) async {
+    Database? database = await db;
+
+    // Await the Future to get the actual sub_consumer_id
+    int? subConsumerId = await getSubonsumerID(operation?.subConsumerDetails);
+
+    var x = await database?.rawUpdate('''
+    UPDATE operations
+    SET
+      sub_consumer_id = ?, 
+      amount = ?, 
+      description = ?, 
+      type = ?, 
+      foulType = ?, 
+      receiverName = ?, 
+      dischangeNumber = ?, 
+      date = ?, 
+      checked = ?
+    WHERE id = ?
+  ''', [
+      subConsumerId,
+      operation?.amount,
+      operation?.description,
+      operation?.type,
+      operation?.foulType,
+      operation?.receiverName,
+      operation?.dischangeNumber,
+      DateFormat('yyyy-MM-dd').format(
+          operation?.newDate! ?? DateTime.now()), // Format the date correctly
+      operation?.checked ?? false ? 1 : 0,
+      operation?.id, // Make sure the operation object includes the id
+    ]);
+    log('update -> $x');
+    return x;
+  }
+
+  Future<int> updateConsumer(AppConsumers consumer) async {
+    Database? database = await db;
+    var x = await database!.rawInsert('''
+    update consumers set name =? where id =
+    ''', [consumer.name, consumer.id]);
+    log('update Consumer -> $x');
+    return x;
   }
 
   Future<List<Map<String, Object?>>> searchOp(Operation operation) async {

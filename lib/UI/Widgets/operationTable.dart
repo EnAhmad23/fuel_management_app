@@ -5,7 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
+import 'package:fuel_management_app/UI/update_operation_sarf.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -123,7 +125,10 @@ class OperationTable extends StatelessWidget {
                               ));
                         },
                       ),
-                      const SettingButton(
+                      SettingButton(
+                        onTap: () {
+                          opPro.checkOperationType(operation);
+                        },
                         color: Colors.green,
                         icon: Icons.edit,
                         topRightRadius: 0,

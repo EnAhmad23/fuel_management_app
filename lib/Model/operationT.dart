@@ -10,7 +10,7 @@ class OperationT {
   bool? checked;
   String? dischangeNumber;
   String? foulType;
-  double? amount;
+  int? amount;
   DateTime? newDate;
   String? description;
 
@@ -41,7 +41,7 @@ class OperationT {
       checked: (int.parse(e['checked'].toString())) == 1,
       dischangeNumber: e['dischangeNumber'],
       foulType: e['foulType'],
-      amount: double.tryParse(e['amount'].toString()) ?? 0,
+      amount: int.tryParse(e['amount'].toString()) ?? 0,
       newDate: e['date'] != null ? DateTime.parse(e['date'].toString()) : null,
       description: e['description'],
     );

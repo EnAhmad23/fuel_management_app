@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyButton extends StatelessWidget {
-  const MyButton({super.key, required this.text, required this.onTap});
+  const MyButton(
+      {super.key, required this.text, required this.onTap, this.doneMassege});
   final String text;
+  final String? doneMassege;
   final void Function()? onTap;
   @override
   Widget build(BuildContext context) {

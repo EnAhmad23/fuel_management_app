@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/Model/consumer.dart';
 import 'package:fuel_management_app/Model/subconsumer.dart';
+import 'package:get/get.dart';
 
 import '../Model/operationT.dart';
 // ignore: unused_import
@@ -116,10 +118,35 @@ class DbProvider extends ChangeNotifier {
     return x;
   }
 
+  Future<int> updateConsumer(AppConsumers consumer) async {
+    var x = await _dbModel.updateConsumer(consumer);
+    getConsumerForTable();
+    return x;
+  }
+
   Future<int> deleteConsumer(int id) async {
     var x = await _dbModel.deleteConsumer(id);
     getConsumerForTable();
     log('delete {$x}');
     return x;
+  }
+
+  void onTopUpdate(AppConsumers consumer) async {
+    if (formKey.currentState!.validate()) {
+      var x = await updateConsumer(consumer);
+      log('update Consumer -> $x');
+      if (x != 0) {
+        Get.snackbar(
+          'تم',
+          'تم تعديل العملية بنجاح',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackStyle: SnackStyle.FLOATING,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          isDismissible: true,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
   }
 }

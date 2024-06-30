@@ -3,11 +3,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fuel_management_app/Model/operation.dart';
+import 'package:fuel_management_app/UI/update_operation_estrad.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../Model/DBModel.dart';
 import '../Model/operationT.dart';
+import '../UI/update_operation_sarf.dart';
 
 class OpProvider extends ChangeNotifier {
   final DBModel _dbModel = DBModel();
@@ -35,14 +37,16 @@ class OpProvider extends ChangeNotifier {
   TextEditingController receiverName = TextEditingController();
   TextEditingController dateCon = TextEditingController();
   DateTime? _date;
+  OperationT? _operationT;
   List<OperationT>? operations;
   List<OperationT>? subOperations;
   List<OperationT>? lastTenOp;
   List<String>? consumerNames;
   List<String>? subconsumerNames;
-
+  String? doneMassege;
+  String? _hintText;
   String? _subTitle;
-  double? _amount;
+  int? _amount;
   String? _dailySarf;
   String? _totalAvailable;
   String? _monthlySarf;
@@ -54,6 +58,10 @@ class OpProvider extends ChangeNotifier {
   String? _conName;
   String? _subconName;
   bool? _checked;
+
+  OperationT? get operationT {
+    return _operationT;
+  }
 
   String? get subTitle {
     return _subTitle;
@@ -105,8 +113,21 @@ class OpProvider extends ChangeNotifier {
     return _date;
   }
 
-  double? get amount {
+  int? get amount {
     return _amount;
+  }
+
+  setUpdatedOperation(OperationT op) {
+    _operationT = op;
+    notifyListeners();
+  }
+
+  setHintText(String? text) {
+    if (text != null) {
+      _hintText = text;
+
+      notifyListeners();
+    }
   }
 
   setSubTitle(String? name) {
@@ -205,7 +226,7 @@ class OpProvider extends ChangeNotifier {
 
   setAmount(String? amount) {
     if (amount != null) {
-      _amount = double.parse(amount);
+      _amount = int.parse(amount);
       notifyListeners();
     }
   }
@@ -488,6 +509,31 @@ class OpProvider extends ChangeNotifier {
     return x;
   }
 
+  Future<int?>? updateOperationSarf(OperationT? op) async {
+    var x = await _dbModel.updateOperation(op);
+    log('{$x}');
+    getTotalAvailable();
+    getTotalSarf();
+    getMonthlySarf();
+    getWeeklySarf();
+    getDailySarf();
+    getAllOpT();
+    getLastTenOpT();
+    getTotalAvailable();
+    return x;
+  }
+
+  Future<int?>? updateOperationWard(OperationT op) async {
+    var x = await _dbModel.updateOperation(op);
+    log('{$x}');
+    getTotalAvailable();
+    getTotalWard();
+    getMonthlyWard();
+    getAllOpT();
+    getLastTenOpT();
+    return x;
+  }
+
   deleteOperation(int id) async {
     var x = await _dbModel.deleteOperation(id);
     getTotalAvailable();
@@ -518,15 +564,11 @@ class OpProvider extends ChangeNotifier {
             newDate: date,
             description: description.text),
       );
-      amountCon.clear();
-      description.clear();
-      fuelTypeCon.clear();
-      changeCheck(false);
-      setDate(null);
+      clearWardFeild();
       if (x != 0) {
         Get.snackbar(
           'تم',
-          'تم إضافة العملة بنجاح',
+          doneMassege ?? '',
           backgroundColor: Colors.green,
           colorText: Colors.white,
           snackStyle: SnackStyle.FLOATING,
@@ -554,19 +596,11 @@ class OpProvider extends ChangeNotifier {
             newDate: date,
             description: description.text),
       );
-      amountCon.clear();
-      description.clear();
-      fuelTypeCon.clear();
-      receiverName.clear();
-      dischangeNumberCon.clear();
-      subConsumerDetails.clear();
-      consumerName.clear();
-      changeCheck(false);
-      setDate(null);
+      clearSarfFeild();
       if (x != 0) {
         Get.snackbar(
           'تم',
-          'تم إضافة العملة بنجاح',
+          doneMassege ?? '',
           backgroundColor: Colors.green,
           colorText: Colors.white,
           snackStyle: SnackStyle.FLOATING,
@@ -576,5 +610,119 @@ class OpProvider extends ChangeNotifier {
         );
       }
     }
+  }
+
+  void onTopUpdateSarf() async {
+    if (formKey.currentState!.validate()) {
+      log('$subconName-----------$conName');
+      setAmount(amountCon.text);
+      var x = await updateOperationSarf(OperationT(
+          id: operationT?.id,
+          subConsumerDetails: subconName,
+          consumerName: conName,
+          receiverName: receiverName.text,
+          type: 'صرف',
+          checked: checked,
+          dischangeNumber: dischangeNumberCon.text,
+          foulType: fuelType,
+          amount: amount,
+          newDate: date,
+          description: description.text));
+      clearSarfFeild();
+      if (x != 0) {
+        Get.snackbar(
+          'تم',
+          'تم تعديل العملية بنجاح',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackStyle: SnackStyle.FLOATING,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          isDismissible: true,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
+  }
+
+  void onTopUpdateWared() async {
+    if (formKey.currentState!.validate()) {
+      setAmount((amountCon.text));
+      var x = await updateOperationWard(OperationT(
+        id: operationT?.id,
+        subConsumerDetails: null,
+        consumerName: null,
+        receiverName: null,
+        type: 'وارد',
+        checked: checked,
+        dischangeNumber: null,
+        foulType: fuelType,
+        amount: amount,
+        newDate: date,
+        description: description.text,
+      ));
+      clearWardFeild();
+      if (x != 0) {
+        Get.snackbar(
+          'تم',
+          'تم تعديل العملية بنجاح',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackStyle: SnackStyle.FLOATING,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          isDismissible: true,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
+  }
+
+  checkOperationType(OperationT operation) {
+    if (operation.type == 'صرف') {
+      setFuelType('${operation.foulType}');
+      dischangeNumberCon.text = '${operation.dischangeNumber}';
+      description.text = '${operation.description}';
+      getConsumersNames();
+      setConName('${operation.consumerName}');
+      setDate(operation.newDate!);
+      log('operation.subConsumerDeails - >${operation.subConsumerDetails}');
+      setSubConName('${operation.subConsumerDetails}');
+      setAmount('${int.parse('${operation.amount}')}');
+      amountCon.text = '${operation.amount}';
+      changeCheck(operation.checked);
+      receiverName.text = '${operation.receiverName}';
+      setUpdatedOperation(operation);
+      Get.to(const UpdateOperationSarf());
+    } else {
+      amountCon.text = '${int.parse('${operation.amount}')}';
+      description.text = '${operation.description}';
+      setHintText('yyyy-MM-dd');
+      changeCheck(operation.checked);
+      setDate(operation.newDate!);
+      setFuelType('${operation.foulType}');
+      setUpdatedOperation(operation);
+      Get.to(const UpdateOperationEstrad());
+    }
+  }
+
+  clearSarfFeild() {
+    amountCon.clear();
+    description.clear();
+    setFuelType(null);
+    receiverName.clear();
+    dischangeNumberCon.clear();
+    subConsumerDetails.clear();
+    consumerName.clear();
+    changeCheck(false);
+    setDate(null);
+    setHintText('yyyy-MM-dd');
+  }
+
+  clearWardFeild() {
+    amountCon.clear();
+    description.clear();
+    setFuelType(null);
+    changeCheck(false);
+    setDate(null);
+    setHintText('yyyy-MM-dd');
   }
 }

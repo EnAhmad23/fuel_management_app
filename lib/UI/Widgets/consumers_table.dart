@@ -3,7 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/db_provider.dart';
 import 'package:fuel_management_app/Model/consumer.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
+import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+
+import '../update_consumer.dart';
 
 class ConsumersTable extends StatelessWidget {
   const ConsumersTable({super.key, required this.consumers});
@@ -39,10 +43,62 @@ class ConsumersTable extends StatelessWidget {
                     topRightRadius: 0,
                     iconColor: Colors.white,
                     onTap: () {
-                      db.deleteConsumer(consumer.id ?? 0);
+                      Get.defaultDialog(
+                          title: 'حذف',
+                          backgroundColor: Colors.white,
+                          content: Padding(
+                            padding: EdgeInsets.all(10.w),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                    height: 100.h,
+                                    width: 200.h,
+                                    child: Lottie.asset('assets/warning.json')),
+                                SizedBox(
+                                  height: 5.h,
+                                ),
+                                const Text('هل متاكد من حذف العنصر؟'),
+                              ],
+                            ),
+                          ),
+                          confirm: InkWell(
+                            onTap: () {
+                              db.deleteConsumer(consumer.id ?? 0);
+                              Get.back();
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(5.r)),
+                              margin: EdgeInsets.symmetric(horizontal: 5.w),
+                              padding: EdgeInsets.all(10.w),
+                              child: const Text(
+                                'نعم',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          cancel: InkWell(
+                            onTap: () => Get.back(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(5.r)),
+                              padding: EdgeInsets.all(10.w),
+                              margin: EdgeInsets.symmetric(horizontal: 5.w),
+                              child: const Text(
+                                'لا',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ));
                     },
                   ),
-                  const SettingButton(
+                  SettingButton(
+                    onTap: () {
+                      db.consumerNameController.text = '${consumer.name}';
+                      Get.to(const UpdateConsumer());
+                    },
                     color: Colors.green,
                     icon: Icons.edit,
                     topRightRadius: 0,
