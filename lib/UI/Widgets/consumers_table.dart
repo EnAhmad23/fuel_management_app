@@ -97,6 +97,7 @@ class ConsumersTable extends StatelessWidget {
                   SettingButton(
                     onTap: () {
                       db.consumerNameController.text = '${consumer.name}';
+                      db.setConsumer(consumer);
                       Get.to(const UpdateConsumer());
                     },
                     color: Colors.green,

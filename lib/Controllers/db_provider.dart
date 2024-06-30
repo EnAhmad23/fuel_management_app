@@ -20,10 +20,20 @@ class DbProvider extends ChangeNotifier {
     getNumOfSubconsumers();
   }
   // Operation? operation;
+  AppConsumers? _consumer;
   GlobalKey<FormState> formKey = GlobalKey();
   List<AppConsumers>? consumers;
   List<OperationT>? operations;
   List<String>? consumersNames;
+
+  AppConsumers? get consumer {
+    return _consumer;
+  }
+
+  void setConsumer(AppConsumers con) {
+    _consumer = con;
+    notifyListeners();
+  }
 
   TextEditingController consumerNameController = TextEditingController();
   // DbProvider() {
@@ -131,10 +141,15 @@ class DbProvider extends ChangeNotifier {
     return x;
   }
 
-  void onTopUpdate(AppConsumers consumer) async {
+  void onTopUpdate() async {
     if (formKey.currentState!.validate()) {
-      var x = await updateConsumer(consumer);
+      var x = await updateConsumer(AppConsumers(
+          name: consumerNameController.text,
+          subConsumerCount: consumer?.subConsumerCount,
+          operationsCount: consumer?.operationsCount,
+          id: consumer?.id));
       log('update Consumer -> $x');
+      consumerNameController.clear();
       if (x != 0) {
         Get.snackbar(
           'تم',

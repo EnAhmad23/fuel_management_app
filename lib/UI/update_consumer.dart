@@ -71,26 +71,8 @@ class UpdateConsumer extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: MyButton(
-                          text: 'تعدبل',
-                          onTap: () {
-                            if (dbprovider.formKey.currentState!.validate()) {
-                              var x = dbprovider.onTopUpdate;
-                              dbprovider.consumerNameController.clear();
-                              if (x != 0) {
-                                Get.snackbar(
-                                  'تم',
-                                  'تم تعديل المستهلك بنجاح',
-                                  backgroundColor: Colors.green,
-                                  colorText: Colors.white,
-                                  snackStyle: SnackStyle.FLOATING,
-                                  icon: const Icon(Icons.check_circle,
-                                      color: Colors.white),
-                                  isDismissible: true,
-                                  duration: const Duration(seconds: 3),
-                                );
-                              }
-                            }
-                          },
+                          text: 'تعديل',
+                          onTap: dbprovider.onTopUpdate,
                         ),
                       ),
                     ],

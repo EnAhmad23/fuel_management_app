@@ -626,8 +626,10 @@ WHERE
 
   Future<int> updateConsumer(AppConsumers consumer) async {
     Database? database = await db;
-    var x = await database!.rawInsert('''
-    update consumers set name =? where id =
+    log('consumer name -> ${consumer.name}');
+    log('consumer id -> ${consumer.id}');
+    var x = await database!.rawUpdate('''
+    update consumers set name =? where id =?
     ''', [consumer.name, consumer.id]);
     log('update Consumer -> $x');
     return x;
