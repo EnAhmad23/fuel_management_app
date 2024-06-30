@@ -9,6 +9,7 @@ class SubConsumer {
   // DBModel dbModel = DBModel();
 
   SubConsumer({
+    this.id,
     required this.details,
     required this.description,
     required this.consumerName,

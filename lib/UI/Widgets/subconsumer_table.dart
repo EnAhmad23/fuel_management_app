@@ -4,6 +4,8 @@ import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/subconsumerT.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
+import 'package:fuel_management_app/UI/update_subconsumer.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class SubonsumersTable extends StatelessWidget {
@@ -44,7 +46,17 @@ class SubonsumersTable extends StatelessWidget {
                       subPro.deleteSubconsumer(subconsumer.id ?? 0);
                     },
                   ),
-                  const SettingButton(
+                  SettingButton(
+                    onTap: () {
+                      subPro.getConsumersNames();
+                      subPro.setUpdatedSub(subconsumer);
+                      subPro.subName.text = '${subconsumer.details}';
+                      subPro.description.text = '${subconsumer.description}';
+                      subPro.changeDropdownValue(subconsumer.consumerName);
+                      subPro.changRecord(subconsumer.hasRecord == 1);
+
+                      Get.to(const UpdateSubconsumer());
+                    },
                     color: Colors.green,
                     icon: Icons.edit,
                     topRightRadius: 0,

@@ -6,6 +6,7 @@ class SubConsumerT {
   String? description;
   // final int operationsCount;
   int? numOfOP;
+  int? hasRecord;
   // DBModel dbModel = DBModel();
 
   SubConsumerT({
@@ -14,6 +15,7 @@ class SubConsumerT {
     required this.id,
     required this.consumerName,
     required this.numOfOP,
+    required this.hasRecord,
   });
   factory SubConsumerT.fromMap(Map<String, Object?> map) {
     return SubConsumerT(
@@ -21,6 +23,7 @@ class SubConsumerT {
         description: map['description'] as String,
         id: int.parse('${map['id']}'),
         consumerName: map['consumerName'] as String,
-        numOfOP: int.parse('${map['numberOfOperations']}'));
+        numOfOP: int.parse('${map['numberOfOperations']}'),
+        hasRecord: int.parse('${map['hasRecord']}'));
   }
 }

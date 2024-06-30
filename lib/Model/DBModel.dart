@@ -397,6 +397,7 @@ WHERE type = 'وارد' AND is_deleted = 0;
     c.name AS consumerName,
     sc.details,
     sc.description,
+    sc.hasRecord ,
     COUNT(o.id) AS numberOfOperations
 FROM 
     sub_consumers sc
@@ -585,6 +586,28 @@ WHERE
       subconsumer.description,
       consumerID,
       subconsumer.hasRcord! ? 1 : 0
+    ]);
+  }
+
+  Future<int> updateSubonsumer(SubConsumer subconsumer) async {
+    Database? database = await db;
+    int? consumerID = await getConsumerID(subconsumer.consumerName);
+    log('consumerName ${subconsumer.consumerName}');
+    log('${subconsumer.id}');
+
+    return await database!.rawUpdate('''
+    update sub_consumers  set 
+    details= ?,
+    description = ?,
+    consumer_id = ? ,
+    hasRecord = ?
+    where id = ?
+    ''', [
+      subconsumer.details,
+      subconsumer.description,
+      consumerID,
+      subconsumer.hasRcord! ? 1 : 0,
+      subconsumer.id
     ]);
   }
 

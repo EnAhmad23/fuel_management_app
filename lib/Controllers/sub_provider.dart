@@ -21,12 +21,22 @@ class SubProvider extends ChangeNotifier {
   TextEditingController subDescription = TextEditingController();
   List<SubConsumer>? subconsumer;
   List<SubConsumerT>? subconsumerT;
+  SubConsumerT? _updatedSub;
 
   List<String>? consumersNames;
   String? dropdownValue;
   bool? _hasRecord;
   bool? get hasRcord {
     return _hasRecord;
+  }
+
+  SubConsumerT? get updatedSub {
+    return _updatedSub;
+  }
+
+  void setUpdatedSub(SubConsumerT sub) {
+    _updatedSub = sub;
+    notifyListeners();
   }
 
   void changRecord(bool hasRecord) {
@@ -109,6 +119,13 @@ class SubProvider extends ChangeNotifier {
     return x;
   }
 
+  Future<int> updateSubonsumer(SubConsumer subconsumer) async {
+    var x = await _dbModel.updateSubonsumer(subconsumer);
+    getSubConsumerT();
+    log('{$x}');
+    return x;
+  }
+
   void onTapButton() {
     if (formKey.currentState!.validate()) {
       var done = addSubonsumer(SubConsumer(
@@ -116,6 +133,37 @@ class SubProvider extends ChangeNotifier {
           description: subDescription.text,
           consumerName: dropdownValue!,
           hasRcord: hasRcord));
+      description.clear();
+      subName.clear();
+      name.clear();
+      subDescription.clear();
+      changRecord(false);
+      changeDropdownValue(null);
+
+      if (done != 0) {
+        Get.snackbar(
+          'تم',
+          'تم إضافة المستهلك بنجاح',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackStyle: SnackStyle.FLOATING,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          isDismissible: true,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
+  }
+
+  void onTapUpdateSub() async {
+    if (formKey.currentState!.validate()) {
+      var done = await updateSubonsumer(SubConsumer(
+        id: updatedSub?.id,
+        details: subName.text,
+        description: subDescription.text,
+        consumerName: dropdownValue!,
+        hasRcord: hasRcord,
+      ));
       description.clear();
       subName.clear();
       name.clear();
