@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Controllers/op_provider.dart';
-import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
-import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
-import 'package:fuel_management_app/UI/Widgets/my_button.dart';
+import 'package:fuel_management_app/UI/Widgets/My_dropdown.dart';
 import 'package:provider/provider.dart';
 
-import 'Widgets/My_dropdown.dart';
+import '../Controllers/op_provider.dart';
+import 'Widgets/custom_switch.dart';
+import 'Widgets/myTextFormField.dart';
+import 'Widgets/my_button.dart';
 
-class AddSarf extends StatelessWidget {
-  const AddSarf({super.key});
+class SearchOperation extends StatelessWidget {
+  const SearchOperation({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class AddSarf extends StatelessWidget {
       appBar: AppBar(
         elevation: 5,
         title: Text(
-          'إنشاء عملية',
+          'بحث',
           style: Theme.of(context)
               .textTheme
               .bodyLarge
@@ -43,16 +43,6 @@ class AddSarf extends StatelessWidget {
                       color: Colors.blue,
                       width: double.infinity,
                       padding: const EdgeInsets.all(16.0),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text('إنشاء عملية صرف جديدة',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
-                      ),
                     ),
                     Expanded(
                       child: ListView(
@@ -70,6 +60,71 @@ class AddSarf extends StatelessWidget {
                                 Row(
                                   children: [
                                     Expanded(
+                                        child: MyDropdown(
+                                      lable: 'نوع التقرير',
+                                      itemsList: const [
+                                        'اختر نوع التقرير',
+                                        'تقرير يومي',
+                                        'تقرير لفترة'
+                                      ],
+                                      onchanged: (value) {
+                                        provider.setReportType(value);
+                                      },
+                                      value: provider.reportType,
+                                      validator: (String) {},
+                                    )),
+                                    SizedBox(
+                                      width: 20.w,
+                                    ),
+                                    Expanded(
+                                        child: MyDropdown(
+                                      lable: 'نوع الوقود',
+                                      itemsList: const ['بنزين', 'سولار'],
+                                      onchanged: (value) {
+                                        provider.setFuelType(value);
+                                      },
+                                      value: provider.fuelType,
+                                      validator: provider.fuelTypeValidator,
+                                    )),
+                                    SizedBox(
+                                      width: 20.w,
+                                    ),
+                                    Expanded(
+                                        child: MyDropdown(
+                                      lable: 'النوع',
+                                      itemsList: const ['صرف', 'وارد'],
+                                      onchanged: (value) {
+                                        provider.setOperationType(value);
+                                      },
+                                      value: provider.operationType,
+                                      validator: (String) {},
+                                    )),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          MyTextFormField(
+                                            fontSize: 16.sp,
+                                            validator:
+                                                provider.dischangeNumberValidet,
+                                            labelText: 'رقم سند الصرف',
+                                            hintText: 'أدخل رقم الصرف',
+                                            controller:
+                                                provider.dischangeNumberCon,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 15.w,
+                                    ),
+                                    Expanded(
                                       child: MyTextFormField(
                                         fontSize: 16.sp,
                                         validator: provider.receiverValidet,
@@ -79,11 +134,11 @@ class AddSarf extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 10.w,
+                                      width: 15.w,
                                     ),
                                     Expanded(
                                       child: MyDropdown(
-                                        lable: 'المستهلك الفرعي',
+                                        lable: 'المستهلك',
                                         itemsList:
                                             provider.subconsumerNames ?? [],
                                         onchanged: (value) {
@@ -94,7 +149,7 @@ class AddSarf extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 10.w,
+                                      width: 15.w,
                                     ),
                                     Expanded(
                                       child: MyDropdown(
@@ -102,39 +157,10 @@ class AddSarf extends StatelessWidget {
                                         itemsList: provider.consumerNames ?? [],
                                         onchanged: (value) {
                                           provider.setConName(value);
+                                          provider.getSubonsumersNames(value);
                                         },
                                         value: provider.conName,
                                         validator: provider.conNameValidet,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: MyDropdown(
-                                        lable: 'نوع الوقود',
-                                        itemsList: const ['بنزين', 'سولار'],
-                                        onchanged: (value) {
-                                          provider.setFuelType(value);
-                                        },
-                                        value: provider.fuelType,
-                                        validator: provider.fuelTypeValidator,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10.w,
-                                    ),
-                                    Expanded(
-                                      child: MyTextFormField(
-                                        validator:
-                                            provider.dischangeNumberValidet,
-                                        labelText: 'رقم سند الصرف',
-                                        hintText: 'أدخل رقم الصرف',
-                                        controller: provider.dischangeNumberCon,
                                       ),
                                     ),
                                   ],
@@ -156,14 +182,17 @@ class AddSarf extends StatelessWidget {
                                                   .bodySmall
                                                   ?.copyWith(
                                                       fontWeight:
-                                                          FontWeight.bold),
+                                                          FontWeight.w800),
                                             ),
                                           ),
                                           SizedBox(
                                             height: 10.h,
                                           ),
                                           TextFormField(
+                                            style: TextStyle(fontSize: 16.sp),
+                                            // textAlign: TextAlign.right,
                                             controller: provider.dateCon,
+                                            // textDirection: TextDirection.rtl,
                                             decoration: InputDecoration(
                                                 // alignLabelWithHint: true,
                                                 hintText: provider.hintText,
@@ -195,15 +224,6 @@ class AddSarf extends StatelessWidget {
                                     ),
                                     SizedBox(
                                       width: 10.w,
-                                    ),
-                                    Expanded(
-                                      child: MyTextFormField(
-                                        keyboardType: TextInputType.number,
-                                        validator: provider.amontValidet,
-                                        labelText: 'الكمية',
-                                        hintText: 'أدخل كمية الوقود',
-                                        controller: provider.amountCon,
-                                      ),
                                     ),
                                   ],
                                 ),
@@ -264,7 +284,7 @@ class AddSarf extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: MyButton(
-                                    text: 'إنشاء', onTap: provider.onTopSarf),
+                                    text: 'بحث', onTap: provider.onTopSarf),
                               ),
                             );
                           }),

@@ -2,7 +2,9 @@ import 'dart:developer';
 // import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fuel_management_app/Model/fuel_available_amount.dart';
 import 'package:fuel_management_app/Model/operation.dart';
+import 'package:fuel_management_app/UI/Widgets/fuel_amount_table.dart';
 import 'package:fuel_management_app/UI/update_operation_estrad.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -38,6 +40,7 @@ class OpProvider extends ChangeNotifier {
   TextEditingController dateCon = TextEditingController();
   DateTime? _date;
   OperationT? _operationT;
+  List<FuelAvailableAmount>? fuelavailable;
   List<OperationT>? operations;
   List<OperationT>? subOperations;
   List<OperationT>? lastTenOp;
@@ -47,6 +50,8 @@ class OpProvider extends ChangeNotifier {
   String? _hintText;
   String? _subTitle;
   int? _amount;
+  String? _reportType;
+  String? _operationType;
   String? _dailySarf;
   String? _totalAvailable;
   String? _monthlySarf;
@@ -65,6 +70,14 @@ class OpProvider extends ChangeNotifier {
 
   String? get subTitle {
     return _subTitle;
+  }
+
+  String? get reportType {
+    return _reportType;
+  }
+
+  String? get operationType {
+    return _operationType;
   }
 
   String? get subconName {
@@ -125,6 +138,22 @@ class OpProvider extends ChangeNotifier {
   setHintText(String? text) {
     if (text != null) {
       _hintText = text;
+
+      notifyListeners();
+    }
+  }
+
+  setReportType(String? text) {
+    if (text != null) {
+      _reportType = text;
+
+      notifyListeners();
+    }
+  }
+
+  setOperationType(String? text) {
+    if (text != null) {
+      _operationType = text;
 
       notifyListeners();
     }
@@ -267,6 +296,54 @@ class OpProvider extends ChangeNotifier {
     return null;
   }
 
+  String? receiverValidet(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty) {
+      return 'الرجاء ادخال أسم المستلم ';
+    }
+    return null;
+  }
+
+  String? dischangeNumberValidet(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty) {
+      return 'الرجاء ادخال سند الصرف ';
+    }
+    return null;
+  }
+
+  String? subNameValidet(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty) {
+      return 'الرجاء اختيار المستهلك الفرعي ';
+    }
+    return null;
+  }
+
+  String? conNameValidet(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty) {
+      return 'الرجاء اختيار المستهلك الرئيسي ';
+    }
+    return null;
+  }
+
+  String? reportValidet(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty || value == 'اختر نوع التقرير') {
+      return ' الرجاء اختيار نوع التقرير ';
+    }
+    return null;
+  }
+
+  String? operationTypeValidet(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty) {
+      return ' الرجاء اختيار نوع العملية ';
+    }
+    return null;
+  }
+
   String? dateValidet(String? value) {
     //-------------------------------------------------check the history for see if it was wark well
     log('$value');
@@ -359,9 +436,9 @@ class OpProvider extends ChangeNotifier {
 
   void getMonthlyWard() async {
     Map<String, dynamic> re = await _dbModel.getMonthlyWard();
-    log('Monthly Ward -> ${re['total_exchange_amount']}');
-    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
-      setMonthlyWard('${re['total_exchange_amount']}');
+    log('Monthly Ward -> ${re['total_amount']}');
+    if (re.isNotEmpty && re['total_amount'] != null) {
+      setMonthlyWard('${re['total_amount']}');
     } else {
       setMonthlyWard('0.0');
     }
@@ -371,9 +448,7 @@ class OpProvider extends ChangeNotifier {
     List<Map<String, Object?>> re = await _dbModel.getLastTenOp();
     lastTenOp = re.map(
       (e) {
-        print('$e');
         OperationT operationT = OperationT.fromMap(e);
-        print(operationT.newDate);
         return operationT;
       },
     ).toList();
@@ -389,7 +464,6 @@ class OpProvider extends ChangeNotifier {
       (e) {
         log('$e');
         OperationT operationT = OperationT.fromMap(e);
-        print(operationT.newDate);
         return operationT;
       },
     ).toList();
@@ -403,9 +477,7 @@ class OpProvider extends ChangeNotifier {
     List<Map<String, Object?>> re = await _dbModel.getWeeklySubOp();
     subOperations = re.map(
       (e) {
-        print('$e');
         OperationT operationT = OperationT.fromMap(e);
-        print(operationT.newDate);
         return operationT;
       },
     ).toList();
@@ -419,9 +491,7 @@ class OpProvider extends ChangeNotifier {
     List<Map<String, Object?>> re = await _dbModel.getMontlySubOp(type);
     subOperations = re.map(
       (e) {
-        print('$e');
         OperationT operationT = OperationT.fromMap(e);
-        print(operationT.newDate);
         return operationT;
       },
     ).toList();
@@ -435,9 +505,7 @@ class OpProvider extends ChangeNotifier {
     List<Map<String, Object?>> re = await _dbModel.getTotalSubOp(type);
     subOperations = re.map(
       (e) {
-        print('$e');
         OperationT operationT = OperationT.fromMap(e);
-        print(operationT.newDate);
         return operationT;
       },
     ).toList();
@@ -453,6 +521,20 @@ class OpProvider extends ChangeNotifier {
       (e) {
         log('operations $e');
         return OperationT.fromMap(e);
+      },
+    ).toList();
+    log('$operations');
+    notifyListeners();
+
+    log('the length of operation = ${operations?.length}');
+  }
+
+  void getFuelAvailable() async {
+    List<Map<String, Object?>> re = await _dbModel.getFuelAvailabel();
+    fuelavailable = re.map(
+      (e) {
+        log('operations $e');
+        return FuelAvailableAmount.fromMap(e);
       },
     ).toList();
     log('$operations');

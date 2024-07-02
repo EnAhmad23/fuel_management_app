@@ -363,6 +363,7 @@ WHERE is_deleted = 0
 
 
 ''');
+    log('${re.first}');
     return re.first;
   }
 
@@ -443,6 +444,26 @@ where  is_deleted=0
     Database? database = await db;
     List<Map<String, Object?>> re = await database!
         .rawQuery('SELECT name FROM consumers where is_deleted=0');
+    return re;
+  }
+
+  getFuelAvailabel() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''
+   SELECT
+    foulType,
+    SUM(CASE WHEN type = 'وارد' THEN amount ELSE 0 END) -
+    SUM(CASE WHEN type = 'صرف' THEN amount ELSE 0 END) AS net_amount
+FROM
+    operations
+WHERE
+    is_deleted = 0
+GROUP BY
+    foulType;
+
+
+''');
+    log('availbe $re');
     return re;
   }
 

@@ -164,4 +164,23 @@ class DbProvider extends ChangeNotifier {
       }
     }
   }
+
+  opTap() {
+    if (formKey.currentState!.validate()) {
+      var x = addConsumer(consumerNameController.text);
+      consumerNameController.clear();
+      if (x != 0) {
+        Get.snackbar(
+          'تم',
+          'تم إضافة المستهلك بنجاح',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackStyle: SnackStyle.FLOATING,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          isDismissible: true,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    }
+  }
 }

@@ -32,8 +32,8 @@ class MyTextFormField extends StatelessWidget {
             labelText,
             style: Theme.of(context)
                 .textTheme
-                .bodyMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+                .bodySmall
+                ?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
         SizedBox(

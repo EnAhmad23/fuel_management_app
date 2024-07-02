@@ -69,29 +69,7 @@ class Add extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: MyButton(
-                          text: 'إنشاء',
-                          onTap: () {
-                            if (dbprovider.formKey.currentState!.validate()) {
-                              var x = dbprovider.addConsumer(
-                                  dbprovider.consumerNameController.text);
-                              dbprovider.consumerNameController.clear();
-                              if (x != 0) {
-                                Get.snackbar(
-                                  'تم',
-                                  'تم إضافة المستهلك بنجاح',
-                                  backgroundColor: Colors.green,
-                                  colorText: Colors.white,
-                                  snackStyle: SnackStyle.FLOATING,
-                                  icon: const Icon(Icons.check_circle,
-                                      color: Colors.white),
-                                  isDismissible: true,
-                                  duration: const Duration(seconds: 3),
-                                );
-                              }
-                            }
-                          },
-                        ),
+                        child: MyButton(text: 'إنشاء', onTap: dbprovider.opTap),
                       ),
                     ],
                   ),

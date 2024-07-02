@@ -6,8 +6,10 @@ import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/UI/add.dart';
 import 'package:fuel_management_app/UI/add_operation_sarf.dart';
 import 'package:fuel_management_app/UI/add_subconsumer.dart';
+import 'package:fuel_management_app/UI/search_operation.dart';
 import 'package:fuel_management_app/UI/showConsumers.dart';
 import 'package:fuel_management_app/UI/add_operation_estrad.dart';
+import 'package:fuel_management_app/UI/show_available_fuel.dart';
 import 'package:fuel_management_app/UI/show_operation.dart';
 import 'package:fuel_management_app/UI/show_subOperation.dart';
 import 'package:fuel_management_app/UI/show_subconsumer.dart';
@@ -239,14 +241,21 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-              ListTile(
-                title: Text('بحث',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: Colors.white)),
-                leading: const Icon(Icons.search_rounded, color: Colors.white),
-              ),
+              Consumer<OpProvider>(builder: (context, provider, x) {
+                return ListTile(
+                  onTap: () {
+                    provider.getConsumersNames();
+                    Get.to(const SearchOperation());
+                  },
+                  title: Text('بحث',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.white)),
+                  leading:
+                      const Icon(Icons.search_rounded, color: Colors.white),
+                );
+              }),
             ],
           ),
         ),
@@ -273,6 +282,10 @@ class HomePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       HomePageCard(
+                        onPress: () {
+                          op.getFuelAvailable();
+                          Get.to(const ShowAvailableFuel());
+                        },
                         backgroundColor: Colors.yellow,
                         icon: Icons.window,
                         mainText: '${op.totalAvailable}',
@@ -351,13 +364,13 @@ class HomePage extends StatelessWidget {
                           op.getTotalSubOP('صرف');
                           Get.to(const ShowSubOperation());
                         },
-                        backgroundColor: Colors.yellow,
+                        backgroundColor: Colors.red,
                         icon: Icons.arrow_upward,
                         mainText: '${op.totalSarf}',
                         unitText: ' (لتر)  ',
                         subText: 'إجمالي المصروف',
-                        textColor: Colors.black,
-                        iconColor: Colors.yellow[700],
+                        textColor: Colors.white,
+                        iconColor: Colors.red[700],
                       ),
                       SizedBox(
                         width: 20.w,
@@ -368,13 +381,13 @@ class HomePage extends StatelessWidget {
                           op.getMonthlySubOP('صرف');
                           Get.to(const ShowSubOperation());
                         },
-                        backgroundColor: Colors.cyan,
+                        backgroundColor: Colors.green,
                         icon: Icons.arrow_upward,
                         mainText: '${op.monthlySarf}',
                         unitText: ' (لتر)  ',
                         subText: 'الصرف الشهري',
                         textColor: Colors.white,
-                        iconColor: Colors.cyan[700],
+                        iconColor: Colors.green[700],
                       ),
                       SizedBox(
                         width: 20.w,
@@ -385,13 +398,13 @@ class HomePage extends StatelessWidget {
                           op.getWeeklySubOP();
                           Get.to(const ShowSubOperation());
                         },
-                        backgroundColor: Colors.green,
+                        backgroundColor: Colors.yellow,
                         icon: Icons.arrow_upward,
                         mainText: '${op.weeklySarf}',
                         unitText: ' (لتر)  ',
                         subText: 'الصرف الاسبوعي',
-                        textColor: Colors.white,
-                        iconColor: Colors.green[700],
+                        textColor: Colors.black,
+                        iconColor: Colors.yellow[700],
                       ),
                       SizedBox(
                         width: 20.w,
@@ -402,13 +415,13 @@ class HomePage extends StatelessWidget {
                           op.getDailySubOP();
                           Get.to(const ShowSubOperation());
                         },
-                        backgroundColor: Colors.red,
+                        backgroundColor: Colors.cyan,
                         icon: Icons.arrow_upward,
                         mainText: '${op.dailySarf}',
                         unitText: ' (لتر)  ',
                         subText: 'الصرف اليومي',
                         textColor: Colors.white,
-                        iconColor: Colors.red[700],
+                        iconColor: Colors.cyan[700],
                       ),
                     ],
                   );

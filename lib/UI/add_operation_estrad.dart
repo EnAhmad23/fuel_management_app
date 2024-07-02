@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
-import 'package:fuel_management_app/Model/operationT.dart';
+import 'package:fuel_management_app/UI/Widgets/My_dropdown.dart';
 import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class AddOperationEstrad extends StatelessWidget {
@@ -134,48 +133,14 @@ class AddOperationEstrad extends StatelessWidget {
                                   ),
                                   SizedBox(width: 15.w),
                                   Expanded(
-                                    child: Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            'نوع الوقود',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10.h,
-                                        ),
-                                        DropdownButtonFormField<String?>(
-                                          validator: provider.fuelTypeValidator,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          hint: const Text('اختر نوع الوقود'),
-                                          value: provider
-                                              .fuelType, // Ensure this matches one of the items in items list
-                                          onChanged: (String? value) {
-                                            provider.setFuelType(
-                                                value); // Update fuelType in provider
-                                          },
-                                          items: <String>['بنزين', 'سولار']
-                                              .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            },
-                                          ).toList(),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                      child: MyDropdown(
+                                    lable: 'نوع الوقود',
+                                    itemsList: const ['بنزين', 'سولار'],
+                                    onchanged: (value) =>
+                                        provider.setFuelType(value),
+                                    value: provider.fuelType,
+                                    validator: provider.fuelTypeValidator,
+                                  ))
                                 ],
                               ),
                               SizedBox(
