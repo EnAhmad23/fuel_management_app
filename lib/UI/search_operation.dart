@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/UI/Widgets/My_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -27,11 +27,11 @@ class SearchOperation extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 100.w),
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 100),
           child: Card(
             elevation: 5,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.r),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Consumer<OpProvider>(builder: (context, provider, x) {
               return Form(
@@ -39,7 +39,7 @@ class SearchOperation extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      height: 60.h,
+                      height: 60,
                       color: Colors.blue,
                       width: double.infinity,
                       padding: const EdgeInsets.all(16.0),
@@ -47,15 +47,15 @@ class SearchOperation extends StatelessWidget {
                     Expanded(
                       child: ListView(
                         children: [
-                          SizedBox(
-                            height: 20.h,
+                          const SizedBox(
+                            height: 20,
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.w),
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Column(
                               children: [
-                                SizedBox(
-                                  width: 10.w,
+                                const SizedBox(
+                                  width: 10,
                                 ),
                                 Row(
                                   children: [
@@ -73,8 +73,8 @@ class SearchOperation extends StatelessWidget {
                                       value: provider.reportType,
                                       validator: (String) {},
                                     )),
-                                    SizedBox(
-                                      width: 20.w,
+                                    const SizedBox(
+                                      width: 20,
                                     ),
                                     Expanded(
                                         child: MyDropdown(
@@ -86,8 +86,8 @@ class SearchOperation extends StatelessWidget {
                                       value: provider.fuelType,
                                       validator: provider.fuelTypeValidator,
                                     )),
-                                    SizedBox(
-                                      width: 20.w,
+                                    const SizedBox(
+                                      width: 20,
                                     ),
                                     Expanded(
                                         child: MyDropdown(
@@ -101,77 +101,83 @@ class SearchOperation extends StatelessWidget {
                                     )),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
+                                provider.operationType == 'صرف'
+                                    ? Row(
                                         children: [
-                                          MyTextFormField(
-                                            fontSize: 16.sp,
-                                            validator:
-                                                provider.dischangeNumberValidet,
-                                            labelText: 'رقم سند الصرف',
-                                            hintText: 'أدخل رقم الصرف',
-                                            controller:
-                                                provider.dischangeNumberCon,
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                MyTextFormField(
+                                                  fontSize: 16,
+                                                  validator: provider
+                                                      .dischangeNumberValidet,
+                                                  labelText: 'رقم سند الصرف',
+                                                  hintText: 'أدخل رقم الصرف',
+                                                  controller: provider
+                                                      .dischangeNumberCon,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 15,
+                                          ),
+                                          Expanded(
+                                            child: MyTextFormField(
+                                              fontSize: 16,
+                                              validator:
+                                                  provider.receiverValidet,
+                                              labelText: 'اسم المستلم',
+                                              hintText: 'أدخل اسم المستلم',
+                                              controller: provider.receiverName,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 15,
+                                          ),
+                                          Expanded(
+                                            child: MyDropdown(
+                                              lable: 'المستهلك',
+                                              itemsList:
+                                                  provider.subconsumerNames ??
+                                                      [],
+                                              onchanged: (value) {
+                                                provider.setSubConName(value);
+                                              },
+                                              value: provider.subconName,
+                                              validator:
+                                                  provider.subNameValidet,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 15,
+                                          ),
+                                          Expanded(
+                                            child: MyDropdown(
+                                              lable: 'المستهلك الرئيسي',
+                                              itemsList:
+                                                  provider.consumerNames ?? [],
+                                              onchanged: (value) {
+                                                provider.setConName(value);
+                                                provider
+                                                    .getSubonsumersNames(value);
+                                              },
+                                              value: provider.conName,
+                                              validator:
+                                                  provider.conNameValidet,
+                                            ),
                                           ),
                                         ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 15.w,
-                                    ),
-                                    Expanded(
-                                      child: MyTextFormField(
-                                        fontSize: 16.sp,
-                                        validator: provider.receiverValidet,
-                                        labelText: 'اسم المستلم',
-                                        hintText: 'أدخل اسم المستلم',
-                                        controller: provider.receiverName,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 15.w,
-                                    ),
-                                    Expanded(
-                                      child: MyDropdown(
-                                        lable: 'المستهلك',
-                                        itemsList:
-                                            provider.subconsumerNames ?? [],
-                                        onchanged: (value) {
-                                          provider.setSubConName(value);
-                                        },
-                                        value: provider.subconName,
-                                        validator: provider.subNameValidet,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 15.w,
-                                    ),
-                                    Expanded(
-                                      child: MyDropdown(
-                                        lable: 'المستهلك الرئيسي',
-                                        itemsList: provider.consumerNames ?? [],
-                                        onchanged: (value) {
-                                          provider.setConName(value);
-                                          provider.getSubonsumersNames(value);
-                                        },
-                                        value: provider.conName,
-                                        validator: provider.conNameValidet,
-                                      ),
-                                    ),
-                                  ],
+                                      )
+                                    : const SizedBox(),
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
+                                provider.reportType == 'تقرير يومي'
+                                    ? Column(
                                         children: [
                                           Align(
                                             alignment: Alignment.centerRight,
@@ -185,11 +191,12 @@ class SearchOperation extends StatelessWidget {
                                                           FontWeight.w800),
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 10.h,
+                                          const SizedBox(
+                                            height: 10,
                                           ),
                                           TextFormField(
-                                            style: TextStyle(fontSize: 16.sp),
+                                            style:
+                                                const TextStyle(fontSize: 16),
                                             // textAlign: TextAlign.right,
                                             controller: provider.dateCon,
                                             // textDirection: TextDirection.rtl,
@@ -220,26 +227,145 @@ class SearchOperation extends StatelessWidget {
                                             readOnly: true,
                                           ),
                                         ],
+                                      )
+                                    : Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    'إلى تاريخ',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w800),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                TextFormField(
+                                                  style: const TextStyle(
+                                                      fontSize: 16),
+                                                  // textAlign: TextAlign.right,
+                                                  controller: provider.dateCon,
+                                                  // textDirection: TextDirection.rtl,
+                                                  decoration: InputDecoration(
+                                                      // alignLabelWithHint: true,
+                                                      hintText:
+                                                          provider.toHintText,
+                                                      border:
+                                                          const OutlineInputBorder(),
+                                                      suffixIcon: InkWell(
+                                                        child: const Icon(
+                                                          Icons.calendar_today,
+                                                          color: Colors.black,
+                                                        ),
+                                                        onTap: () async {
+                                                          var x =
+                                                              await showDatePicker(
+                                                            currentDate:
+                                                                provider.todate,
+                                                            context: context,
+                                                            initialDate:
+                                                                DateTime.now(),
+                                                            firstDate:
+                                                                DateTime(2000),
+                                                            lastDate:
+                                                                DateTime(2101),
+                                                          );
+                                                          provider.setToDate(x);
+                                                        },
+                                                      )),
+                                                  readOnly: true,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    ' من تاريخ ',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w800),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                TextFormField(
+                                                  style: const TextStyle(
+                                                      fontSize: 16),
+                                                  // textAlign: TextAlign.right,
+                                                  controller: provider.dateCon,
+                                                  // textDirection: TextDirection.rtl,
+                                                  decoration: InputDecoration(
+                                                      // alignLabelWithHint: true,
+                                                      hintText:
+                                                          provider.fromHintText,
+                                                      border:
+                                                          const OutlineInputBorder(),
+                                                      suffixIcon: InkWell(
+                                                        child: const Icon(
+                                                          Icons.calendar_today,
+                                                          color: Colors.black,
+                                                        ),
+                                                        onTap: () async {
+                                                          var x =
+                                                              await showDatePicker(
+                                                            currentDate:
+                                                                provider
+                                                                    .fromdate,
+                                                            context: context,
+                                                            initialDate:
+                                                                DateTime.now(),
+                                                            firstDate:
+                                                                DateTime(2000),
+                                                            lastDate:
+                                                                DateTime(2101),
+                                                          );
+                                                          provider
+                                                              .setFromDate(x);
+                                                        },
+                                                      )),
+                                                  readOnly: true,
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 10.w,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 const CustomSwitch(),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 10.h,
+                          const SizedBox(
+                            height: 10,
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 30.w,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
                             ), // Add padding as needed
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -254,13 +380,13 @@ class SearchOperation extends StatelessWidget {
                                           fontWeight: FontWeight
                                               .bold), // Customize the style as needed
                                 ),
-                                SizedBox(
-                                    height: 10
-                                        .h), // Add some space between the label and the TextField
+                                const SizedBox(
+                                    height:
+                                        10), // Add some space between the label and the TextField
                                 Consumer<OpProvider>(
                                     builder: (context, provider, x) {
                                   return TextField(
-                                    style: TextStyle(fontSize: 18.sp),
+                                    style: const TextStyle(fontSize: 18),
                                     // textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
                                     controller: provider.description,
@@ -275,21 +401,22 @@ class SearchOperation extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 20.h,
+                          const SizedBox(
+                            height: 20,
                           ),
                           Consumer<OpProvider>(builder: (context, provider, x) {
                             return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.w),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30),
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: MyButton(
-                                    text: 'بحث', onTap: provider.onTopSarf),
+                                    text: 'بحث', onTap: provider.onTopSearch),
                               ),
                             );
                           }),
-                          SizedBox(
-                            height: 30.h,
+                          const SizedBox(
+                            height: 10,
                           )
                         ],
                       ),

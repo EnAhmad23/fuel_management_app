@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
@@ -27,11 +27,11 @@ class AddSarf extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 100.w),
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 100),
           child: Card(
             elevation: 5,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.r),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Consumer<OpProvider>(builder: (context, provider, x) {
               return Form(
@@ -39,7 +39,7 @@ class AddSarf extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      height: 60.h,
+                      height: 60,
                       color: Colors.blue,
                       width: double.infinity,
                       padding: const EdgeInsets.all(16.0),
@@ -57,29 +57,29 @@ class AddSarf extends StatelessWidget {
                     Expanded(
                       child: ListView(
                         children: [
-                          SizedBox(
-                            height: 20.h,
+                          const SizedBox(
+                            height: 20,
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.w),
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Column(
                               children: [
-                                SizedBox(
-                                  width: 10.w,
+                                const SizedBox(
+                                  width: 10,
                                 ),
                                 Row(
                                   children: [
                                     Expanded(
                                       child: MyTextFormField(
-                                        fontSize: 16.sp,
+                                        fontSize: 16,
                                         validator: provider.receiverValidet,
                                         labelText: 'اسم المستلم',
                                         hintText: 'أدخل اسم المستلم',
                                         controller: provider.receiverName,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 10.w,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     Expanded(
                                       child: MyDropdown(
@@ -93,8 +93,8 @@ class AddSarf extends StatelessWidget {
                                         validator: provider.subNameValidet,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 10.w,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     Expanded(
                                       child: MyDropdown(
@@ -109,8 +109,8 @@ class AddSarf extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 Row(
                                   children: [
@@ -125,8 +125,8 @@ class AddSarf extends StatelessWidget {
                                         validator: provider.fuelTypeValidator,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 10.w,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     Expanded(
                                       child: MyTextFormField(
@@ -139,8 +139,8 @@ class AddSarf extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 Row(
                                   children: [
@@ -159,10 +159,12 @@ class AddSarf extends StatelessWidget {
                                                           FontWeight.bold),
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 10.h,
+                                          const SizedBox(
+                                            height: 10,
                                           ),
                                           TextFormField(
+                                            style:
+                                                const TextStyle(fontSize: 16),
                                             controller: provider.dateCon,
                                             decoration: InputDecoration(
                                                 // alignLabelWithHint: true,
@@ -193,8 +195,8 @@ class AddSarf extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 10.w,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     Expanded(
                                       child: MyTextFormField(
@@ -207,19 +209,19 @@ class AddSarf extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 const CustomSwitch(),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 10.h,
+                          const SizedBox(
+                            height: 10,
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 30.w,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
                             ), // Add padding as needed
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -234,13 +236,13 @@ class AddSarf extends StatelessWidget {
                                           fontWeight: FontWeight
                                               .bold), // Customize the style as needed
                                 ),
-                                SizedBox(
-                                    height: 10
-                                        .h), // Add some space between the label and the TextField
+                                const SizedBox(
+                                    height:
+                                        10), // Add some space between the label and the TextField
                                 Consumer<OpProvider>(
                                     builder: (context, provider, x) {
                                   return TextField(
-                                    style: TextStyle(fontSize: 18.sp),
+                                    style: const TextStyle(fontSize: 18),
                                     // textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
                                     controller: provider.description,
@@ -255,12 +257,13 @@ class AddSarf extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 20.h,
+                          const SizedBox(
+                            height: 20,
                           ),
                           Consumer<OpProvider>(builder: (context, provider, x) {
                             return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.w),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30),
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: MyButton(
@@ -268,8 +271,8 @@ class AddSarf extends StatelessWidget {
                               ),
                             );
                           }),
-                          SizedBox(
-                            height: 30.h,
+                          const SizedBox(
+                            height: 30,
                           )
                         ],
                       ),

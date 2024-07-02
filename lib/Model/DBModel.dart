@@ -679,9 +679,48 @@ WHERE
     return x;
   }
 
-  Future<List<Map<String, Object?>>> searchOp(Operation operation) async {
+  Future<List<Map<String, Object?>>> searchOp(OperationT operation) async {
     Database? database = await db;
-    List<Map<String, Object?>> re = await database!.rawQuery('''sql''');
+    List<Map<String, Object?>> re = await database!.rawQuery('''SELECT 
+    s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+WHERE o.is_deleted = 0
+AND (
+    s.details =? OR
+    c.name =? OR
+    o.amount =? OR
+    o.description =?OR
+    o.type =?OR
+    o.foulType =? OR
+    o.receiverName =? OR
+    o.dischangeNumber =? OR
+    o.date =? OR
+    o.checked  =?
+);
+''', [
+      operation.subConsumerDetails,
+      operation.consumerName,
+      operation.amount,
+      operation.description,
+      operation.type,
+      operation.foulType,
+      operation.receiverName,
+      operation.dischangeNumber,
+      operation.newDate,
+      operation.checked
+    ]);
     return re;
   }
 

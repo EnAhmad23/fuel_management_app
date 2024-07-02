@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fuel_management_app/Model/fuel_available_amount.dart';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/UI/Widgets/fuel_amount_table.dart';
+import 'package:fuel_management_app/UI/search_operation.dart';
+import 'package:fuel_management_app/UI/show_operation.dart';
 import 'package:fuel_management_app/UI/update_operation_estrad.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -39,6 +41,8 @@ class OpProvider extends ChangeNotifier {
   TextEditingController receiverName = TextEditingController();
   TextEditingController dateCon = TextEditingController();
   DateTime? _date;
+  DateTime? _fromdate;
+  DateTime? _todate;
   OperationT? _operationT;
   List<FuelAvailableAmount>? fuelavailable;
   List<OperationT>? operations;
@@ -48,6 +52,8 @@ class OpProvider extends ChangeNotifier {
   List<String>? subconsumerNames;
   String? doneMassege;
   String? _hintText;
+  String? _formHintText;
+  String? _toHintText;
   String? _subTitle;
   int? _amount;
   String? _reportType;
@@ -122,8 +128,28 @@ class OpProvider extends ChangeNotifier {
         : DateFormat('yyyy-MM-dd').format(date ?? DateTime.now());
   }
 
+  String get fromHintText {
+    return (fromdate) == null
+        ? 'yyyy-MM-dd'
+        : DateFormat('yyyy-MM-dd').format(fromdate ?? DateTime.now());
+  }
+
+  String get toHintText {
+    return (todate) == null
+        ? 'yyyy-MM-dd'
+        : DateFormat('yyyy-MM-dd').format(todate ?? DateTime.now());
+  }
+
   DateTime? get date {
     return _date;
+  }
+
+  DateTime? get fromdate {
+    return _fromdate;
+  }
+
+  DateTime? get todate {
+    return _todate;
   }
 
   int? get amount {
@@ -249,6 +275,20 @@ class OpProvider extends ChangeNotifier {
   setDate(DateTime? date) {
     if (date != null) {
       _date = date;
+      notifyListeners();
+    }
+  }
+
+  setFromDate(DateTime? date) {
+    if (date != null) {
+      _fromdate = date;
+      notifyListeners();
+    }
+  }
+
+  setToDate(DateTime? date) {
+    if (date != null) {
+      _todate = date;
       notifyListeners();
     }
   }
@@ -529,6 +569,20 @@ class OpProvider extends ChangeNotifier {
     log('the length of operation = ${operations?.length}');
   }
 
+  void searchOperation(OperationT operation) async {
+    List<Map<String, Object?>> re = await _dbModel.searchOp(operation);
+    operations = re.map(
+      (e) {
+        log('operations $e');
+        return OperationT.fromMap(e);
+      },
+    ).toList();
+    log('$operations');
+    notifyListeners();
+
+    log('the length of operation = ${operations?.length}');
+  }
+
   void getFuelAvailable() async {
     List<Map<String, Object?>> re = await _dbModel.getFuelAvailabel();
     fuelavailable = re.map(
@@ -665,6 +719,7 @@ class OpProvider extends ChangeNotifier {
   void onTopSarf() async {
     if (formKey.currentState!.validate()) {
       setAmount(amountCon.text);
+      setDate(fromdate!.difference(todate!).inDays as DateTime?);
       var x = await addOperationSarf(
         OperationT(
             subConsumerDetails: subconName,
@@ -691,6 +746,25 @@ class OpProvider extends ChangeNotifier {
           duration: const Duration(seconds: 3),
         );
       }
+    }
+  }
+
+  void onTopSearch() async {
+    if (formKey.currentState!.validate()) {
+      searchOperation(
+        OperationT(
+            subConsumerDetails: subconName,
+            consumerName: conName,
+            receiverName: receiverName.text,
+            type: 'صرف',
+            checked: checked,
+            dischangeNumber: dischangeNumberCon.text,
+            foulType: fuelType,
+            amount: amount,
+            newDate: date,
+            description: description.text),
+      );
+      Get.to(const ShowOperation());
     }
   }
 
