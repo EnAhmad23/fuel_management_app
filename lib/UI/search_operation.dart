@@ -84,7 +84,7 @@ class SearchOperation extends StatelessWidget {
                                         provider.setFuelType(value);
                                       },
                                       value: provider.fuelType,
-                                      validator: provider.fuelTypeValidator,
+                                      validator: (String) {},
                                     )),
                                     const SizedBox(
                                       width: 20,
@@ -112,8 +112,7 @@ class SearchOperation extends StatelessWidget {
                                               children: [
                                                 MyTextFormField(
                                                   fontSize: 16,
-                                                  validator: provider
-                                                      .dischangeNumberValidet,
+                                                  validator: (String) {},
                                                   labelText: 'رقم سند الصرف',
                                                   hintText: 'أدخل رقم الصرف',
                                                   controller: provider
@@ -128,8 +127,7 @@ class SearchOperation extends StatelessWidget {
                                           Expanded(
                                             child: MyTextFormField(
                                               fontSize: 16,
-                                              validator:
-                                                  provider.receiverValidet,
+                                              validator: (String) {},
                                               labelText: 'اسم المستلم',
                                               hintText: 'أدخل اسم المستلم',
                                               controller: provider.receiverName,
@@ -148,8 +146,7 @@ class SearchOperation extends StatelessWidget {
                                                 provider.setSubConName(value);
                                               },
                                               value: provider.subconName,
-                                              validator:
-                                                  provider.subNameValidet,
+                                              validator: (String) {},
                                             ),
                                           ),
                                           const SizedBox(
@@ -166,8 +163,7 @@ class SearchOperation extends StatelessWidget {
                                                     .getSubonsumersNames(value);
                                               },
                                               value: provider.conName,
-                                              validator:
-                                                  provider.conNameValidet,
+                                              validator: (String) {},
                                             ),
                                           ),
                                         ],

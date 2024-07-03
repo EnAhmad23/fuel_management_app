@@ -570,7 +570,7 @@ class OpProvider extends ChangeNotifier {
   }
 
   void searchOperation(OperationT operation) async {
-    List<Map<String, Object?>> re = await _dbModel.searchOp(operation);
+    List<Map<String, Object?>> re = await _dbModel.getAllOp();
     operations = re.map(
       (e) {
         log('operations $e');
@@ -578,6 +578,69 @@ class OpProvider extends ChangeNotifier {
       },
     ).toList();
     log('$operations');
+    if (operation.subConsumerDetails != null) {
+      operations = operations
+          ?.where(
+            (element) =>
+                element.subConsumerDetails == operation.subConsumerDetails,
+          )
+          .toList();
+    }
+    if (operation.consumerName != null) {
+      operations = operations
+          ?.where(
+            (element) => element.consumerName == operation.consumerName,
+          )
+          .toList();
+    }
+
+    if (operation.foulType != null) {
+      operations = operations
+          ?.where(
+            (element) => element.foulType == operation.foulType,
+          )
+          .toList();
+    }
+
+    log('-*-*-*-*-*-*-*-**-*${operations}');
+    if (operation.type != null) {
+      operations = operations?.where(
+        (element) {
+          log('-*-*-*-*-*-*-*-**-*${element.type}');
+          log('-*-*-*-*-*-*-*-**-*${operation.type}');
+          return element.type == operation.type;
+        },
+      ).toList();
+    }
+    log('-*-*-*-*-*-*-*-**-*${operations?.length}');
+    if (operation.amount != null) {
+      operations = operations
+          ?.where(
+            (element) => element.amount == operation.amount,
+          )
+          .toList();
+    }
+    log('-*-*-*-*-*-*-*-**-*${operations?.length}');
+    if (operation.dischangeNumber != null) {
+      operations = operations?.where(
+        (element) {
+          log('8888888888 ${operation.dischangeNumber}//');
+          log('8888888888${element.dischangeNumber}');
+          return element.dischangeNumber == operation.dischangeNumber;
+        },
+      ).toList();
+    }
+    log('-*-*-*-*-*-*-*-**-*${operations?.length}');
+    if (operation.newDate != null) {
+      operations = operations?.where(
+        (element) {
+          log('111111111111${operation.newDate}');
+          log('111111111111${element.newDate}');
+          return element.newDate!.isAfter(fromdate!) &&
+              element.newDate!.isBefore(todate!);
+        },
+      ).toList();
+    }
     notifyListeners();
 
     log('the length of operation = ${operations?.length}');
@@ -751,14 +814,20 @@ class OpProvider extends ChangeNotifier {
 
   void onTopSearch() async {
     if (formKey.currentState!.validate()) {
+      var x = todate?.difference(fromdate!);
+      log('$todate');
+      log('$fromdate');
+      log('$x');
+      setDate(fromdate?.add(x!));
       searchOperation(
         OperationT(
             subConsumerDetails: subconName,
             consumerName: conName,
             receiverName: receiverName.text,
-            type: 'صرف',
+            type: operationType,
             checked: checked,
-            dischangeNumber: dischangeNumberCon.text,
+            dischangeNumber:
+                dischangeNumberCon.text == '' ? null : dischangeNumberCon.text,
             foulType: fuelType,
             amount: amount,
             newDate: date,
