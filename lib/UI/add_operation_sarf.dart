@@ -163,6 +163,7 @@ class AddSarf extends StatelessWidget {
                                             height: 10,
                                           ),
                                           TextFormField(
+                                            validator: provider.dateValidet,
                                             style:
                                                 const TextStyle(fontSize: 16),
                                             controller: provider.dateCon,

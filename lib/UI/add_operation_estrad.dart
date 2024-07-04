@@ -90,6 +90,7 @@ class AddOperationEstrad extends StatelessWidget {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 10.w, vertical: 10.h),
                                           child: TextFormField(
+                                            validator: provider.dateValidet,
                                             style: TextStyle(fontSize: 18.sp),
                                             controller: provider.dateCon,
                                             decoration: InputDecoration(

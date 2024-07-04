@@ -387,7 +387,16 @@ class OpProvider extends ChangeNotifier {
   String? dateValidet(String? value) {
     //-------------------------------------------------check the history for see if it was wark well
     log('$value');
-    if (value == null || value.isEmpty) {
+    if (hintText == 'yyyy-MM-dd' || hintText.isEmpty) {
+      return 'الرجاء ادخال التاريخ ';
+    }
+    return null;
+  }
+
+  String? toDateValidet(String? value) {
+    //-------------------------------------------------check the history for see if it was wark well
+    log('$value');
+    if (toHintText == 'yyyy-MM-dd' || toHintText.isEmpty) {
       return 'الرجاء ادخال التاريخ ';
     }
     return null;

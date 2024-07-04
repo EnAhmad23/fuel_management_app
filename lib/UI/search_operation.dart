@@ -79,7 +79,11 @@ class SearchOperation extends StatelessWidget {
                                     Expanded(
                                         child: MyDropdown(
                                       lable: 'نوع الوقود',
-                                      itemsList: const ['بنزين', 'سولار'],
+                                      itemsList: const [
+                                        'اختر نوع الوقود',
+                                        'بنزين',
+                                        'سولار'
+                                      ],
                                       onchanged: (value) {
                                         provider.setFuelType(value);
                                       },
@@ -247,6 +251,8 @@ class SearchOperation extends StatelessWidget {
                                                   height: 10,
                                                 ),
                                                 TextFormField(
+                                                  validator:
+                                                      provider.toDateValidet,
                                                   style: const TextStyle(
                                                       fontSize: 16),
                                                   // textAlign: TextAlign.right,

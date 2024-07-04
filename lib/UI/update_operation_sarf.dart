@@ -277,6 +277,7 @@ class UpdateOperationSarf extends StatelessWidget {
                                             height: 10.h,
                                           ),
                                           TextFormField(
+                                            validator: provider.dateValidet,
                                             controller: provider.dateCon,
                                             decoration: InputDecoration(
                                                 // alignLabelWithHint: true,
