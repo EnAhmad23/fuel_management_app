@@ -27,7 +27,7 @@ class AddSubconsumer extends StatelessWidget {
       body: Center(
         child: SizedBox(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 100.w),
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 100),
             child: Card(
               elevation: 5,
               shape: RoundedRectangleBorder(
@@ -46,11 +46,11 @@ class AddSubconsumer extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(16.0),
                         ),
-                        SizedBox(
-                          height: 30.h,
+                        const SizedBox(
+                          height: 30,
                         ),
                         Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.w),
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Column(
                               children: [
                                 Align(
@@ -62,8 +62,8 @@ class AddSubconsumer extends StatelessWidget {
                                           ?.copyWith(
                                               fontWeight: FontWeight.bold)),
                                 ),
-                                SizedBox(
-                                  height: 10.h,
+                                const SizedBox(
+                                  height: 10,
                                 ),
                                 DropdownButtonFormField<String>(
                                     // alignment: Alignment.centerRight,
@@ -84,8 +84,8 @@ class AddSubconsumer extends StatelessWidget {
                                       );
                                     }).toList(),
                                     validator: provider.conNameValidtor),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 MyTextFormField(
                                   validator: provider.subNameValidtor,
@@ -93,8 +93,8 @@ class AddSubconsumer extends StatelessWidget {
                                   hintText: 'أدخل اسم المستهلك',
                                   controller: provider.subName,
                                 ),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 MyTextFormField(
                                   labelText: 'تفاصيل المستهلك',
@@ -102,8 +102,8 @@ class AddSubconsumer extends StatelessWidget {
                                   controller: provider.subDescription,
                                   validator: provider.descriptionValidtor,
                                 ),
-                                SizedBox(
-                                  height: 30.h,
+                                const SizedBox(
+                                  height: 30,
                                 ),
                                 Consumer<SubProvider>(
                                     builder: (context, subPro, x) {
@@ -125,7 +125,82 @@ class AddSubconsumer extends StatelessWidget {
                                     ),
                                   );
                                 }),
-                                SizedBox(height: 8.h),
+                                provider.hasRcord
+                                    ? Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    ' التاريخ ',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w800),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                TextFormField(
+                                                  style: const TextStyle(
+                                                      fontSize: 16),
+                                                  // textAlign: TextAlign.right,
+                                                  controller: provider.dateCon,
+                                                  // textDirection: TextDirection.rtl,
+                                                  decoration: InputDecoration(
+                                                      // alignLabelWithHint: true,
+                                                      hintText:
+                                                          provider.hintText,
+                                                      border:
+                                                          const OutlineInputBorder(),
+                                                      suffixIcon: InkWell(
+                                                        child: const Icon(
+                                                          Icons.calendar_today,
+                                                          color: Colors.black,
+                                                        ),
+                                                        onTap: () async {
+                                                          var x =
+                                                              await showDatePicker(
+                                                            currentDate:
+                                                                provider.date,
+                                                            context: context,
+                                                            initialDate:
+                                                                DateTime.now(),
+                                                            firstDate:
+                                                                DateTime(2000),
+                                                            lastDate:
+                                                                DateTime(2101),
+                                                          );
+                                                          provider.setDate(x);
+                                                        },
+                                                      )),
+                                                  readOnly: true,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Expanded(
+                                              child: MyTextFormField(
+                                                  fontSize: 16,
+                                                  labelText: 'القراءة الاولية',
+                                                  hintText:
+                                                      'أدخل القراءة الأولية',
+                                                  controller:
+                                                      provider.recordCon))
+                                        ],
+                                      )
+                                    : const SizedBox(),
+                                const SizedBox(height: 20),
                                 Consumer<SubProvider>(
                                     builder: (context, subPr, x) {
                                   return Align(
@@ -136,7 +211,7 @@ class AddSubconsumer extends StatelessWidget {
                                     ),
                                   );
                                 }),
-                                SizedBox(height: 20.h),
+                                const SizedBox(height: 20),
                               ],
                             )),
                       ],

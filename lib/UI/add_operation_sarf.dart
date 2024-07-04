@@ -117,11 +117,16 @@ class AddSarf extends StatelessWidget {
                                     Expanded(
                                       child: MyDropdown(
                                         lable: 'نوع الوقود',
-                                        itemsList: const ['بنزين', 'سولار'],
+                                        itemsList: const [
+                                          'اختر نوع الوقود',
+                                          'بنزين',
+                                          'سولار'
+                                        ],
                                         onchanged: (value) {
                                           provider.setFuelType(value);
                                         },
-                                        value: provider.fuelType,
+                                        value: provider.fuelType ??
+                                            'اختر نوع الوقود',
                                         validator: provider.fuelTypeValidator,
                                       ),
                                     ),

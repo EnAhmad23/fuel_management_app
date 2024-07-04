@@ -77,7 +77,7 @@ class AddOperationEstrad extends StatelessWidget {
                                             'التاريخ  ',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium
+                                                .bodySmall
                                                 ?.copyWith(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -91,7 +91,7 @@ class AddOperationEstrad extends StatelessWidget {
                                               horizontal: 10.w, vertical: 10.h),
                                           child: TextFormField(
                                             validator: provider.dateValidet,
-                                            style: TextStyle(fontSize: 18.sp),
+                                            style: TextStyle(fontSize: 16.sp),
                                             controller: provider.dateCon,
                                             decoration: InputDecoration(
                                                 // alignLabelWithHint: true,
@@ -126,6 +126,7 @@ class AddOperationEstrad extends StatelessWidget {
                                   SizedBox(width: 10.w),
                                   Expanded(
                                     child: MyTextFormField(
+                                      fontSize: 16.sp,
                                       validator: provider.amontValidet,
                                       labelText: 'الكمية',
                                       hintText: 'أدخل كمية الوقود',
@@ -136,10 +137,15 @@ class AddOperationEstrad extends StatelessWidget {
                                   Expanded(
                                       child: MyDropdown(
                                     lable: 'نوع الوقود',
-                                    itemsList: const ['بنزين', 'سولار'],
+                                    itemsList: const [
+                                      'اختر نوع الوقود',
+                                      'بنزين',
+                                      'سولار'
+                                    ],
                                     onchanged: (value) =>
                                         provider.setFuelType(value),
-                                    value: provider.fuelType,
+                                    value:
+                                        provider.fuelType ?? 'اختر نوع الوقود',
                                     validator: provider.fuelTypeValidator,
                                   ))
                                 ],

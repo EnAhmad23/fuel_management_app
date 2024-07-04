@@ -70,7 +70,8 @@ class SearchOperation extends StatelessWidget {
                                       onchanged: (value) {
                                         provider.setReportType(value);
                                       },
-                                      value: provider.reportType,
+                                      value: provider.reportType ??
+                                          'اختر نوع التقرير',
                                       validator: (String) {},
                                     )),
                                     const SizedBox(
@@ -87,7 +88,8 @@ class SearchOperation extends StatelessWidget {
                                       onchanged: (value) {
                                         provider.setFuelType(value);
                                       },
-                                      value: provider.fuelType,
+                                      value: provider.fuelType ??
+                                          'اختر نوع الوقود',
                                       validator: (String) {},
                                     )),
                                     const SizedBox(
@@ -96,11 +98,16 @@ class SearchOperation extends StatelessWidget {
                                     Expanded(
                                         child: MyDropdown(
                                       lable: 'النوع',
-                                      itemsList: const ['صرف', 'وارد'],
+                                      itemsList: const [
+                                        'اختر نوع العملية',
+                                        'صرف',
+                                        'وارد'
+                                      ],
                                       onchanged: (value) {
                                         provider.setOperationType(value);
                                       },
-                                      value: provider.operationType,
+                                      value: provider.operationType ??
+                                          'اختر نوع العملية',
                                       validator: (String) {},
                                     )),
                                   ],

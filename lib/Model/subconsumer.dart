@@ -6,9 +6,13 @@ class SubConsumer {
   final String? description;
   // final int operationsCount;
   final bool? hasRcord;
+  final int? record;
+  final DateTime? date;
   // DBModel dbModel = DBModel();
 
   SubConsumer({
+    this.date,
+    this.record,
     this.id,
     required this.details,
     required this.description,

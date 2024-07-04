@@ -7,6 +7,7 @@ import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/Model/subconsumer.dart';
 import 'package:fuel_management_app/Model/subconsumerT.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class SubProvider extends ChangeNotifier {
   SubProvider() {
@@ -19,19 +20,47 @@ class SubProvider extends ChangeNotifier {
   TextEditingController description = TextEditingController();
   TextEditingController subName = TextEditingController();
   TextEditingController subDescription = TextEditingController();
+  TextEditingController dateCon = TextEditingController();
+  TextEditingController recordCon = TextEditingController();
   List<SubConsumer>? subconsumer;
   List<SubConsumerT>? subconsumerT;
   SubConsumerT? _updatedSub;
-
+  DateTime? _date;
   List<String>? consumersNames;
   String? dropdownValue;
-  bool? _hasRecord;
-  bool? get hasRcord {
+  bool _hasRecord = false;
+  String? _hintText;
+  bool get hasRcord {
     return _hasRecord;
+  }
+
+  DateTime? get date {
+    return _date;
   }
 
   SubConsumerT? get updatedSub {
     return _updatedSub;
+  }
+
+  String? get hintText {
+    return (date) == null
+        ? 'yyyy-MM-dd'
+        : DateFormat('yyyy-MM-dd').format(date ?? DateTime.now());
+  }
+
+  setDate(DateTime? date) {
+    if (date != null) {
+      _date = date;
+      notifyListeners();
+    }
+  }
+
+  setHintText(String? text) {
+    if (text != null) {
+      _hintText = text;
+
+      notifyListeners();
+    }
   }
 
   void setUpdatedSub(SubConsumerT sub) {
@@ -129,10 +158,13 @@ class SubProvider extends ChangeNotifier {
   void onTapButton() {
     if (formKey.currentState!.validate()) {
       var done = addSubonsumer(SubConsumer(
-          details: subName.text,
-          description: subDescription.text,
-          consumerName: dropdownValue!,
-          hasRcord: hasRcord));
+        details: subName.text,
+        description: subDescription.text,
+        consumerName: dropdownValue!,
+        hasRcord: hasRcord,
+        record: int.parse(recordCon.text),
+        date: date,
+      ));
       description.clear();
       subName.clear();
       name.clear();

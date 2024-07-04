@@ -600,7 +600,7 @@ WHERE
     log('consumerName ${subconsumer.consumerName}');
     log('$consumerID');
 
-    return await database!.rawInsert('''
+    var x = await database!.rawInsert('''
     insert into sub_consumers (details,description,consumer_id,hasRecord) values(?,?,?,?)
     ''', [
       subconsumer.details,
@@ -608,6 +608,13 @@ WHERE
       consumerID,
       subconsumer.hasRcord! ? 1 : 0
     ]);
+    if (subconsumer.hasRcord ?? false) {
+      int? subConsumerId = await getSubonsumerID(subconsumer.details);
+      await database!.rawInsert(
+          '''insert into movement_records (sub_consumer_id ,record ,date ) values(?,?,?);''',
+          [subConsumerId, subconsumer.record, subconsumer.date]);
+    }
+    return x;
   }
 
   Future<int> updateSubonsumer(SubConsumer subconsumer) async {

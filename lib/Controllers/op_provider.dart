@@ -320,7 +320,7 @@ class OpProvider extends ChangeNotifier {
 
   String? fuelTypeValidator(String? value) {
     //-----------------------------------------------checked
-    if (value == null || value.isEmpty) {
+    if (value == null || value.isEmpty || value == 'اختر نوع الوقود') {
       return 'الرجاء اخيار نوع الوقود ';
     }
     return null;
