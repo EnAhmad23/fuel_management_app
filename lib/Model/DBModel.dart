@@ -93,6 +93,19 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE trips (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sub_consumer_id INTEGER,
+    road TEXT NOT NULL,
+    cause TEXT NOT NULL,
+    date DATE,
+    status TEXT CHECK(status IN ('منشأة', 'منتهية', 'قيد التنفيذ')),
+    recordBefore TEXT,
+    recordAfter TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
  ''');
     log('create database');
   }
@@ -612,7 +625,11 @@ WHERE
       int? subConsumerId = await getSubonsumerID(subconsumer.details);
       await database!.rawInsert(
           '''insert into movement_records (sub_consumer_id ,record ,date ) values(?,?,?);''',
-          [subConsumerId, subconsumer.record, subconsumer.date]);
+          [
+            subConsumerId,
+            subconsumer.record,
+            DateFormat('yyyy-MM-dd').format(subconsumer.date!)
+          ]);
     }
     return x;
   }

@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/db_provider.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
+import 'package:fuel_management_app/Controllers/trip_provider.dart';
 import 'package:fuel_management_app/UI/add.dart';
+import 'package:fuel_management_app/UI/addTrip.dart';
 import 'package:fuel_management_app/UI/add_operation_sarf.dart';
 import 'package:fuel_management_app/UI/add_subconsumer.dart';
 import 'package:fuel_management_app/UI/search_operation.dart';
@@ -239,6 +241,55 @@ class HomePage extends StatelessWidget {
                       ),
                     ],
                   ),
+                ],
+              ),
+              ExpansionTile(
+                title: Text(
+                  'الرحلات',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: Colors.white),
+                ),
+                leading: const Icon(Icons.emoji_flags, color: Colors.white),
+                children: [
+                  Consumer<OpProvider>(builder: (context, opPro, x) {
+                    return ListTile(
+                      onTap: () {
+                        opPro.getAllOpT();
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ShowOperation(),
+                        ));
+                      },
+                      title: Text(
+                        'عرض',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white),
+                      ),
+                      leading: const Icon(Icons.remove_red_eye_outlined,
+                          color: Colors.white),
+                    );
+                  }),
+                  Consumer<TripProvider>(builder: (context, pro, x) {
+                    return ListTile(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const AddTrip(),
+                        ));
+                      },
+                      title: Text(
+                        'إضافة',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white),
+                      ),
+                      leading: const Icon(Icons.add_box_outlined,
+                          color: Colors.white),
+                    );
+                  })
                 ],
               ),
               Consumer<OpProvider>(builder: (context, provider, x) {

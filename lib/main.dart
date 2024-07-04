@@ -4,6 +4,7 @@ import 'package:fuel_management_app/Controllers/db_provider.dart';
 import 'package:fuel_management_app/Controllers/login_provider.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
+import 'package:fuel_management_app/Controllers/trip_provider.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/UI/login_page.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -15,10 +16,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized;
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
-  await DBModel().intiDataBase();
 
+  await DBModel().intiDataBase();
+  await DBModel().addUser('123', '123123123');
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider(
+        create: (context) => TripProvider(),
+      ),
       ChangeNotifierProvider(
         create: (context) => DbProvider(),
       ),
