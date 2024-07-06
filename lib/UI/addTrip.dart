@@ -79,6 +79,8 @@ class AddTrip extends StatelessWidget {
                                         itemsList: provider.consumerNames ?? [],
                                         onchanged: (value) {
                                           provider.setConName(value);
+                                          provider.getSubonsumersNames(
+                                              provider.conName);
                                         },
                                         value: provider.conName,
                                         validator: (p0) {},
@@ -93,7 +95,7 @@ class AddTrip extends StatelessWidget {
                                   validator: (p0) {},
                                   labelText: 'وجهة الرحلة',
                                   hintText: 'أدخل وجهة الرحلة',
-                                  controller: provider.subNameCon,
+                                  controller: provider.roadCon,
                                 ),
                                 const SizedBox(
                                   height: 20,
@@ -105,7 +107,7 @@ class AddTrip extends StatelessWidget {
                                   validator: (p0) {},
                                 ),
                                 const SizedBox(
-                                  height: 30,
+                                  height: 20,
                                 ),
                                 Column(
                                   children: [
@@ -152,6 +154,7 @@ class AddTrip extends StatelessWidget {
                                     ),
                                   ],
                                 ),
+                                const SizedBox(height: 20),
                                 Consumer<SubProvider>(
                                     builder: (context, subPr, x) {
                                   return Align(

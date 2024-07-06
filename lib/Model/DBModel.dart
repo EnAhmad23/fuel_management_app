@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fuel_management_app/Model/consumer.dart';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
+import 'package:fuel_management_app/Model/trip.dart';
 import 'package:fuel_management_app/Model/user.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
@@ -600,6 +601,27 @@ WHERE
       operation.checked ?? false ? 1 : 0,
     ]);
   }
+
+  Future<int?> addTrip(Trip trip) async {
+    Database? database = await db;
+    int? subConsumerId = await getSubonsumerID(trip.subconName);
+    return await database?.rawInsert('''
+    INSERT INTO Trips (
+      sub_consumer_id ,
+      road ,
+      cause ,
+      date ,
+      status 
+    ) VALUES (?, ?, ?, ?, ?)
+  ''', [
+      subConsumerId,
+      trip.road ?? 'Default Road', // Provide a default value if road is null
+      trip.cause,
+      DateFormat('yyyy-MM-dd').format(trip.date!), // Format the date correctly
+      trip.status,
+    ]);
+  }
+
   // Future<int> addOper(OperationT operationT) async {
   //   Database? database = await db;
   //   return await database!.rawInsert('''

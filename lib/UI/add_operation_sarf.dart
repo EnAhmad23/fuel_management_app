@@ -88,6 +88,8 @@ class AddSarf extends StatelessWidget {
                                             provider.subconsumerNames ?? [],
                                         onchanged: (value) {
                                           provider.setSubConName(value);
+                                          provider.getSubonsumersNames(
+                                              provider.conName);
                                         },
                                         value: provider.subconName,
                                         validator: provider.subNameValidet,

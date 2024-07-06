@@ -43,115 +43,60 @@ class HomePage extends StatelessWidget {
         ),
         endDrawer: Drawer(
           backgroundColor: Colors.black,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Text(
-                  'المحروقات',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Colors.white),
-                ),
-              ),
-              const Divider(),
-              ExpansionTile(
-                title: Text(
-                  'المستهلكين الرئيسين',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: Colors.white),
-                ),
-                leading: const Icon(
-                  Icons.people,
-                  color: Colors.white,
-                ),
-                children: [
-                  Consumer<DbProvider>(builder: (context, provider, x) {
-                    return ListTile(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ShowConsumers(),
-                            ));
-                        provider.getConsumerForTable();
-                      },
-                      title: Text(
-                        'عرض',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: Colors.white),
-                      ),
-                      leading: const Icon(Icons.remove_red_eye_outlined,
-                          color: Colors.white),
-                    );
-                  }),
-                  ListTile(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Add(),
-                          ));
-                    },
-                    title: Text(
-                      'إضافة',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Colors.white),
-                    ),
-                    leading:
-                        const Icon(Icons.person_add_alt_1, color: Colors.white),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Text(
+                    'المحروقات',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(color: Colors.white),
                   ),
-                ],
-              ),
-              ExpansionTile(
-                title: Text(
-                  'المستهلكين الفرعين',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: Colors.white),
                 ),
-                leading: const Icon(
-                  Icons.people,
-                  color: Colors.white,
-                ),
-                children: [
-                  Consumer<SubProvider>(builder: (context, provider, x) {
-                    return ListTile(
+                const Divider(),
+                ExpansionTile(
+                  title: Text(
+                    'المستهلكين الرئيسين',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.white),
+                  ),
+                  leading: const Icon(
+                    Icons.people,
+                    color: Colors.white,
+                  ),
+                  children: [
+                    Consumer<DbProvider>(builder: (context, provider, x) {
+                      return ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ShowConsumers(),
+                              ));
+                          provider.getConsumerForTable();
+                        },
+                        title: Text(
+                          'عرض',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white),
+                        ),
+                        leading: const Icon(Icons.remove_red_eye_outlined,
+                            color: Colors.white),
+                      );
+                    }),
+                    ListTile(
                       onTap: () {
-                        provider.getSubConsumerT();
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ShowSubconsumer(),
-                            ));
-                      },
-                      title: Text(
-                        'عرض',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: Colors.white),
-                      ),
-                      leading: const Icon(Icons.remove_red_eye_outlined,
-                          color: Colors.white),
-                    );
-                  }),
-                  Consumer<SubProvider>(builder: (context, provider, x) {
-                    return ListTile(
-                      onTap: () {
-                        provider.getConsumersNames();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AddSubconsumer(),
+                              builder: (context) => const Add(),
                             ));
                       },
                       title: Text(
@@ -163,122 +108,96 @@ class HomePage extends StatelessWidget {
                       ),
                       leading: const Icon(Icons.person_add_alt_1,
                           color: Colors.white),
-                    );
-                  }),
-                ],
-              ),
-              ExpansionTile(
-                title: Text(
-                  'العمليات',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: Colors.white),
-                ),
-                leading: const Icon(Icons.settings, color: Colors.white),
-                children: [
-                  Consumer<OpProvider>(builder: (context, opPro, x) {
-                    return ListTile(
-                      onTap: () {
-                        opPro.getAllOpT();
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ShowOperation(),
-                        ));
-                      },
-                      title: Text(
-                        'عرض',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: Colors.white),
-                      ),
-                      leading: const Icon(Icons.remove_red_eye_outlined,
-                          color: Colors.white),
-                    );
-                  }),
-                  ExpansionTile(
-                    title: Text(
-                      'إضافة',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Colors.white),
                     ),
-                    leading:
-                        const Icon(Icons.add_box_outlined, color: Colors.white),
-                    children: [
-                      Consumer<OpProvider>(builder: (context, provider, x) {
-                        return ListTile(
-                          onTap: () {
-                            provider.getConsumersNames();
-                            Get.to(const AddSarf());
-                          },
-                          title: Text('صرف',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: Colors.white)),
-                          leading: const Icon(Icons.arrow_upward,
-                              color: Colors.white),
-                        );
-                      }),
-                      ListTile(
+                  ],
+                ),
+                ExpansionTile(
+                  title: Text(
+                    'المستهلكين الفرعين',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.white),
+                  ),
+                  leading: const Icon(
+                    Icons.people,
+                    color: Colors.white,
+                  ),
+                  children: [
+                    Consumer<SubProvider>(builder: (context, provider, x) {
+                      return ListTile(
                         onTap: () {
+                          provider.getSubConsumerT();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const AddOperationEstrad(),
+                                builder: (context) => const ShowSubconsumer(),
                               ));
                         },
-                        title: Text('وارد',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: Colors.white)),
-                        leading: const Icon(Icons.arrow_downward,
+                        title: Text(
+                          'عرض',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white),
+                        ),
+                        leading: const Icon(Icons.remove_red_eye_outlined,
                             color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              ExpansionTile(
-                title: Text(
-                  'الرحلات',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: Colors.white),
+                      );
+                    }),
+                    Consumer<SubProvider>(builder: (context, provider, x) {
+                      return ListTile(
+                        onTap: () {
+                          provider.getConsumersNames();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AddSubconsumer(),
+                              ));
+                        },
+                        title: Text(
+                          'إضافة',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white),
+                        ),
+                        leading: const Icon(Icons.person_add_alt_1,
+                            color: Colors.white),
+                      );
+                    }),
+                  ],
                 ),
-                leading: const Icon(Icons.emoji_flags, color: Colors.white),
-                children: [
-                  Consumer<OpProvider>(builder: (context, opPro, x) {
-                    return ListTile(
-                      onTap: () {
-                        opPro.getAllOpT();
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ShowOperation(),
-                        ));
-                      },
-                      title: Text(
-                        'عرض',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: Colors.white),
-                      ),
-                      leading: const Icon(Icons.remove_red_eye_outlined,
-                          color: Colors.white),
-                    );
-                  }),
-                  Consumer<TripProvider>(builder: (context, pro, x) {
-                    return ListTile(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const AddTrip(),
-                        ));
-                      },
+                ExpansionTile(
+                  title: Text(
+                    'العمليات',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.white),
+                  ),
+                  leading: const Icon(Icons.settings, color: Colors.white),
+                  children: [
+                    Consumer<OpProvider>(builder: (context, opPro, x) {
+                      return ListTile(
+                        onTap: () {
+                          opPro.getAllOpT();
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ShowOperation(),
+                          ));
+                        },
+                        title: Text(
+                          'عرض',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white),
+                        ),
+                        leading: const Icon(Icons.remove_red_eye_outlined,
+                            color: Colors.white),
+                      );
+                    }),
+                    ExpansionTile(
                       title: Text(
                         'إضافة',
                         style: Theme.of(context)
@@ -288,26 +207,110 @@ class HomePage extends StatelessWidget {
                       ),
                       leading: const Icon(Icons.add_box_outlined,
                           color: Colors.white),
-                    );
-                  })
-                ],
-              ),
-              Consumer<OpProvider>(builder: (context, provider, x) {
-                return ListTile(
-                  onTap: () {
-                    provider.getConsumersNames();
-                    Get.to(const SearchOperation());
-                  },
-                  title: Text('بحث',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Colors.white)),
-                  leading:
-                      const Icon(Icons.search_rounded, color: Colors.white),
-                );
-              }),
-            ],
+                      children: [
+                        Consumer<OpProvider>(builder: (context, provider, x) {
+                          return ListTile(
+                            onTap: () {
+                              provider.getConsumersNames();
+                              Get.to(const AddSarf());
+                            },
+                            title: Text('صرف',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(color: Colors.white)),
+                            leading: const Icon(Icons.arrow_upward,
+                                color: Colors.white),
+                          );
+                        }),
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AddOperationEstrad(),
+                                ));
+                          },
+                          title: Text('وارد',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(color: Colors.white)),
+                          leading: const Icon(Icons.arrow_downward,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  title: Text(
+                    'الرحلات',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.white),
+                  ),
+                  leading: const Icon(Icons.emoji_flags, color: Colors.white),
+                  children: [
+                    Consumer<OpProvider>(builder: (context, opPro, x) {
+                      return ListTile(
+                        onTap: () {
+                          opPro.getAllOpT();
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ShowOperation(),
+                          ));
+                        },
+                        title: Text(
+                          'عرض',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white),
+                        ),
+                        leading: const Icon(Icons.remove_red_eye_outlined,
+                            color: Colors.white),
+                      );
+                    }),
+                    Consumer<TripProvider>(builder: (context, pro, x) {
+                      return ListTile(
+                        onTap: () {
+                          pro.getConusmersNames();
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const AddTrip(),
+                          ));
+                        },
+                        title: Text(
+                          'إضافة',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.white),
+                        ),
+                        leading: const Icon(Icons.add_box_outlined,
+                            color: Colors.white),
+                      );
+                    })
+                  ],
+                ),
+                Consumer<OpProvider>(builder: (context, provider, x) {
+                  return ListTile(
+                    onTap: () {
+                      provider.getConsumersNames();
+                      Get.to(const SearchOperation());
+                    },
+                    title: Text('بحث',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.white)),
+                    leading:
+                        const Icon(Icons.search_rounded, color: Colors.white),
+                  );
+                }),
+              ],
+            ),
           ),
         ),
         body: SingleChildScrollView(

@@ -415,6 +415,7 @@ class OpProvider extends ChangeNotifier {
   void getSubonsumersNames(String? conName) async {
     List<Map<String, Object?>> re =
         await _dbModel.getSubconsumersNames(conName);
+
     subconsumerNames = re.map(
       (e) {
         return '${e['details']}';

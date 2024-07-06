@@ -162,7 +162,7 @@ class SubProvider extends ChangeNotifier {
         description: subDescription.text,
         consumerName: dropdownValue!,
         hasRcord: hasRcord,
-        record: int.parse(recordCon.text),
+        record: hasRcord ? int.parse(recordCon.text) : null,
         date: date,
       ));
       description.clear();

@@ -100,7 +100,7 @@ class AddSubconsumer extends StatelessWidget {
                                   labelText: 'تفاصيل المستهلك',
                                   hintText: 'أدخل تفاصيل المستهلك',
                                   controller: provider.subDescription,
-                                  validator: provider.descriptionValidtor,
+                                  // validator: provider.descriptionValidtor,
                                 ),
                                 const SizedBox(
                                   height: 30,
