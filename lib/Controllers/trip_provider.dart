@@ -47,6 +47,7 @@ class TripProvider extends ChangeNotifier {
   Status status = Status.created;
   List<String>? consumerNames;
   List<String>? subNames;
+  List<Trip>? trips;
   String? _subConName;
   String? _road;
   String? _cause;
@@ -165,6 +166,17 @@ class TripProvider extends ChangeNotifier {
         return '${e['details']}';
       },
     ).toList();
+    notifyListeners();
+  }
+
+  void getTrips() async {
+    List<Map<String, Object?>> re = await _dbModel.getTrips();
+    log('$re');
+    trips = re
+        .map(
+          (e) => Trip.fromMap(e),
+        )
+        .toList();
     notifyListeners();
   }
 }

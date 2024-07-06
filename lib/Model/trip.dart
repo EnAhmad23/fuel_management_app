@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Trip {
   final String? subconName;
   final int? recordBefor;
@@ -16,4 +18,16 @@ class Trip {
     required this.road,
     required this.cause,
   });
+  factory Trip.fromMap(Map<String, Object?> map) {
+    return Trip(
+        subconName: '${map['details']}',
+        status: map['status'] as String,
+        date:
+            map['date'] != null ? DateTime.parse(map['date'].toString()) : null,
+        road: map['road'] as String?,
+        cause: map['cause'] as String?);
+  }
+  String? get formattedDate {
+    return date != null ? DateFormat('yyyy-MM-dd').format(date!) : null;
+  }
 }

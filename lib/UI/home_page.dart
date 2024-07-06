@@ -15,6 +15,7 @@ import 'package:fuel_management_app/UI/show_available_fuel.dart';
 import 'package:fuel_management_app/UI/show_operation.dart';
 import 'package:fuel_management_app/UI/show_subOperation.dart';
 import 'package:fuel_management_app/UI/show_subconsumer.dart';
+import 'package:fuel_management_app/UI/show_trips.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -254,12 +255,12 @@ class HomePage extends StatelessWidget {
                   ),
                   leading: const Icon(Icons.emoji_flags, color: Colors.white),
                   children: [
-                    Consumer<OpProvider>(builder: (context, opPro, x) {
+                    Consumer<TripProvider>(builder: (context, pro, x) {
                       return ListTile(
                         onTap: () {
-                          opPro.getAllOpT();
+                          pro.getTrips();
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ShowOperation(),
+                            builder: (context) => const ShowTrips(),
                           ));
                         },
                         title: Text(

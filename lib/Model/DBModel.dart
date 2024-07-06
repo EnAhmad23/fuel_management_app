@@ -211,6 +211,26 @@ WHERE DATE(date) = DATE('now')
     return re;
   }
 
+  getTrips() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''
+   SELECT 
+    sc.details,
+    t.road,
+    t.cause,
+    t.date,
+    t.status
+FROM 
+    trips t
+JOIN 
+    sub_consumers sc
+ON 
+    t.sub_consumer_id = sc.id;
+''');
+    log('${re}');
+    return re;
+  }
+
   Future<List<Map<String, Object?>>> getMontlySubOp(String? type) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery('''

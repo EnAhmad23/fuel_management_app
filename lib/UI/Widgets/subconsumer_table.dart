@@ -15,6 +15,7 @@ class SubonsumersTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DataTable(
+      decoration: const BoxDecoration(color: Colors.white),
       border: const TableBorder.symmetric(
         inside: BorderSide(color: Colors.grey),
         outside: BorderSide(color: Colors.grey),

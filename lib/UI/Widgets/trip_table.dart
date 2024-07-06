@@ -1,39 +1,68 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Controllers/db_provider.dart';
-import 'package:fuel_management_app/Model/consumer.dart';
+import 'package:fuel_management_app/Controllers/op_provider.dart';
+import 'package:fuel_management_app/Model/operationT.dart';
+import 'package:fuel_management_app/Model/trip.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
+import 'package:fuel_management_app/UI/update_operation_sarf.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../update_consumer.dart';
+class TripTable extends StatelessWidget {
+  final List<Trip> trips;
+  const TripTable({super.key, required this.trips});
 
-class ConsumersTable extends StatelessWidget {
-  const ConsumersTable({super.key, required this.consumers});
-  final List<AppConsumers> consumers;
   @override
   Widget build(BuildContext context) {
-    return DataTable(
-      decoration: const BoxDecoration(color: Colors.white),
-      border: const TableBorder.symmetric(
-        inside: BorderSide(color: Colors.grey),
-        outside: BorderSide(color: Colors.grey),
-      ),
-      columns: const [
-        DataColumn(label: Text('الإعدادات', textAlign: TextAlign.center)),
-        DataColumn(label: Text('عدد العمليات', textAlign: TextAlign.center)),
-        DataColumn(
-            label:
-                Text('عدد المستهلكين الفرعيين', textAlign: TextAlign.center)),
-        DataColumn(label: Text('المستهلك')),
-        DataColumn(label: Text('#')),
-      ],
-      rows: consumers.map((consumer) {
-        return DataRow(cells: [
-          DataCell(
-            Consumer<DbProvider>(builder: (context, db, x) {
-              return ButtonBar(
+    log('operations $trips');
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        decoration: const BoxDecoration(color: Colors.white),
+        border: const TableBorder.symmetric(
+          inside: BorderSide(color: Colors.grey),
+          outside: BorderSide(color: Colors.grey),
+        ),
+        columns: const [
+          DataColumn(
+              label: Text(
+            'الإعدادات',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          )),
+          DataColumn(
+              label: Center(
+                  child: Text(
+            'خيارات',
+            style: TextStyle(fontSize: 18),
+          ))),
+          DataColumn(
+              label: Center(
+                  child: Text(
+            'المسافة المقطوعة',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          ))),
+          DataColumn(label: Text('تاريخ الرحلة', textAlign: TextAlign.center)),
+          DataColumn(
+              label: SizedBox(
+            child: Text('سبب الرحلة', textAlign: TextAlign.center),
+            width: 80,
+          )),
+          DataColumn(
+            label: Text('وجهة الرحلة', textAlign: TextAlign.center),
+          ),
+          DataColumn(label: Text('اسم المستهلك')),
+          DataColumn(label: Text('#')),
+        ],
+        rows: trips.map((trip) {
+          return DataRow(
+            cells: [
+              DataCell(ButtonBar(
                 buttonPadding: const EdgeInsets.all(0),
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -64,7 +93,7 @@ class ConsumersTable extends StatelessWidget {
                           ),
                           confirm: InkWell(
                             onTap: () {
-                              db.deleteConsumer(consumer.id ?? 0);
+                              // opPro.deleteOperation(operation.id ?? 0);
                               Get.back();
                             },
                             child: Container(
@@ -97,9 +126,7 @@ class ConsumersTable extends StatelessWidget {
                   ),
                   SettingButton(
                     onTap: () {
-                      db.consumerNameController.text = '${consumer.name}';
-                      db.setConsumer(consumer);
-                      Get.to(const UpdateConsumer());
+                      // opPro.checkOperationType(operation);
                     },
                     color: Colors.green,
                     icon: Icons.edit,
@@ -114,24 +141,24 @@ class ConsumersTable extends StatelessWidget {
                       topLiftRadius: 0,
                       iconColor: Colors.white),
                 ],
-              );
-            }),
-          ),
-          DataCell(Center(
-              child: Text('${consumer.operationsCount}',
-                  textAlign: TextAlign.center))),
-          DataCell(Center(
-            child: Text('${consumer.subConsumerCount}',
-                textAlign: TextAlign.center),
-          )),
-          DataCell(Center(
-              child: Text(consumer.name ?? '', textAlign: TextAlign.center))),
-          DataCell(Center(
-            child: Text('${consumers.indexOf(consumer) + 1}',
-                textAlign: TextAlign.center),
-          )),
-        ]);
-      }).toList(),
+              )),
+              DataCell(Center(
+                  child: Text('${trip.status}', textAlign: TextAlign.center))),
+              const DataCell(
+                  Center(child: Text('0000', textAlign: TextAlign.center))),
+              DataCell(Center(
+                  child: Text('${trip.formattedDate}',
+                      textAlign: TextAlign.center))),
+              DataCell(Text('${trip.cause}', textAlign: TextAlign.center)),
+              DataCell(Text('${trip.road}', textAlign: TextAlign.center)),
+              DataCell(Center(
+                  child: Text(trip.subconName ?? '_',
+                      textAlign: TextAlign.center))),
+              DataCell(Center(child: Text('${trips.indexOf(trip) + 1}'))),
+            ],
+          );
+        }).toList(),
+      ),
     );
   }
 }
