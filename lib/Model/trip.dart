@@ -1,15 +1,17 @@
 import 'package:intl/intl.dart';
 
 class Trip {
+  final int? id;
   final String? subconName;
-  final int? recordBefor;
-  final int? recordAfter;
+  int? recordBefor;
+  int? recordAfter;
   final String? status;
   final String? road;
   final String? cause;
   final DateTime? date;
 
   Trip({
+    this.id,
     required this.subconName,
     this.recordBefor,
     this.recordAfter,
@@ -20,8 +22,9 @@ class Trip {
   });
   factory Trip.fromMap(Map<String, Object?> map) {
     return Trip(
+        id: int.parse('${map['id']}'),
         subconName: '${map['details']}',
-        status: map['status'] as String,
+        status: '${map['status']}',
         date:
             map['date'] != null ? DateTime.parse(map['date'].toString()) : null,
         road: map['road'] as String?,

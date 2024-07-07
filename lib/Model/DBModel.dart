@@ -100,7 +100,7 @@ CREATE TABLE trips (
     road TEXT NOT NULL,
     cause TEXT NOT NULL,
     date DATE,
-    status TEXT CHECK(status IN ('منشأة', 'منتهية', 'قيد التنفيذ')),
+    status TEXT CHECK(status IN ('منشأة', 'منتهية', 'ملغاه','قيد التنفيذ')),
     recordBefore TEXT,
     recordAfter TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -216,6 +216,7 @@ WHERE DATE(date) = DATE('now')
     List<Map<String, dynamic>> re = await database!.rawQuery('''
    SELECT 
     sc.details,
+    t.id,
     t.road,
     t.cause,
     t.date,
@@ -745,6 +746,26 @@ WHERE
     return x;
   }
 
+  Future<int> updateStartTrip(Trip trip) async {
+    Database? database = await db;
+
+    var x = await database!.rawUpdate('''
+    update trips set status =? where id =?
+    ''', [trip.status, trip.id]);
+    log('update Consumer -> $x');
+    return x;
+  }
+
+  Future<int> updateTripRecord(int? record, int? id) async {
+    Database? database = await db;
+    log('*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*$record');
+    var x = await database!.rawUpdate('''
+    update trips set recordBefore =? where id =?
+    ''', [record, id]);
+    log('update Consumer -> $x');
+    return x;
+  }
+
   Future<List<Map<String, Object?>>> searchOp(OperationT operation) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery('''SELECT 
@@ -794,6 +815,13 @@ AND (
     Database? database = await db;
     return await database!.rawUpdate('''UPDATE consumers
 SET is_deleted = 1
+WHERE id = ?;
+''', [id]);
+  }
+
+  Future<int> deleteTrip(int id) async {
+    Database? database = await db;
+    return await database!.rawUpdate('''DELETE FROM trips
 WHERE id = ?;
 ''', [id]);
   }

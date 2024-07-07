@@ -83,7 +83,7 @@ class AddTrip extends StatelessWidget {
                                               provider.conName);
                                         },
                                         value: provider.conName,
-                                        validator: (p0) {},
+                                        validator: provider.consumerValidator,
                                       ),
                                     ),
                                   ],
@@ -92,7 +92,7 @@ class AddTrip extends StatelessWidget {
                                   height: 20,
                                 ),
                                 MyTextFormField(
-                                  validator: (p0) {},
+                                  validator: provider.roadValidator,
                                   labelText: 'وجهة الرحلة',
                                   hintText: 'أدخل وجهة الرحلة',
                                   controller: provider.roadCon,

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
+import 'package:fuel_management_app/Controllers/trip_provider.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/Model/trip.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
@@ -62,88 +63,99 @@ class TripTable extends StatelessWidget {
         rows: trips.map((trip) {
           return DataRow(
             cells: [
-              DataCell(ButtonBar(
-                buttonPadding: const EdgeInsets.all(0),
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SettingButton(
-                    color: Colors.red,
-                    icon: Icons.delete,
-                    topLiftRadius: 5.r,
-                    topRightRadius: 0,
-                    iconColor: Colors.white,
-                    onTap: () {
-                      Get.defaultDialog(
-                          title: 'حذف',
-                          backgroundColor: Colors.white,
-                          content: Padding(
-                            padding: EdgeInsets.all(10.w),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                    height: 100.h,
-                                    width: 200.h,
-                                    child: Lottie.asset('assets/warning.json')),
-                                SizedBox(
-                                  height: 5.h,
+              DataCell(trip.status == Status.finished.stringValue ||
+                      trip.status == Status.canceled.stringValue
+                  ? const Text('---')
+                  : ButtonBar(
+                      buttonPadding: const EdgeInsets.all(0),
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SettingButton(
+                          color: Colors.red,
+                          icon: Icons.delete,
+                          topLiftRadius: 5.r,
+                          topRightRadius: 0,
+                          iconColor: Colors.white,
+                          onTap: () {
+                            Get.defaultDialog(
+                                title: 'حذف',
+                                backgroundColor: Colors.white,
+                                content: Padding(
+                                  padding: EdgeInsets.all(10.w),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                          height: 100.h,
+                                          width: 200.h,
+                                          child: Lottie.asset(
+                                              'assets/warning.json')),
+                                      SizedBox(
+                                        height: 5.h,
+                                      ),
+                                      const Text('هل متاكد من حذف العنصر؟'),
+                                    ],
+                                  ),
                                 ),
-                                const Text('هل متاكد من حذف العنصر؟'),
-                              ],
-                            ),
-                          ),
-                          confirm: InkWell(
-                            onTap: () {
-                              // opPro.deleteOperation(operation.id ?? 0);
-                              Get.back();
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(5.r)),
-                              margin: EdgeInsets.symmetric(horizontal: 5.w),
-                              padding: EdgeInsets.all(10.w),
-                              child: const Text(
-                                'نعم',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          cancel: InkWell(
-                            onTap: () => Get.back(),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(5.r)),
-                              padding: EdgeInsets.all(10.w),
-                              margin: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: const Text(
-                                'لا',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ));
-                    },
-                  ),
-                  SettingButton(
-                    onTap: () {
-                      // opPro.checkOperationType(operation);
-                    },
-                    color: Colors.green,
-                    icon: Icons.edit,
-                    topRightRadius: 0,
-                    iconColor: Colors.white,
-                    topLiftRadius: 0,
-                  ),
-                  SettingButton(
-                      color: Colors.blue,
-                      icon: Icons.remove_red_eye,
-                      topRightRadius: 5.r,
-                      topLiftRadius: 0,
-                      iconColor: Colors.white),
-                ],
-              )),
-              DataCell(Center(
-                  child: Text('${trip.status}', textAlign: TextAlign.center))),
+                                confirm: Consumer<TripProvider>(
+                                    builder: (context, pro, x) {
+                                  return InkWell(
+                                    onTap: () {
+                                      // opPro.deleteOperation(operation.id ?? 0);
+                                      pro.deleteTrip(trip.id!);
+                                      Get.back();
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(5.r)),
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 5.w),
+                                      padding: EdgeInsets.all(10.w),
+                                      child: const Text(
+                                        'نعم',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                                cancel: InkWell(
+                                  onTap: () => Get.back(),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius:
+                                            BorderRadius.circular(5.r)),
+                                    padding: EdgeInsets.all(10.w),
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 5.w),
+                                    child: const Text(
+                                      'لا',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ));
+                          },
+                        ),
+                        SettingButton(
+                          onTap: () {
+                            // opPro.checkOperationType(operation);
+                          },
+                          color: Colors.green,
+                          icon: Icons.edit,
+                          topRightRadius: 5.r,
+                          iconColor: Colors.white,
+                          topLiftRadius: 0,
+                        ),
+                        // SettingButton(
+                        //     color: Colors.blue,
+                        //     icon: Icons.remove_red_eye,
+                        //     topRightRadius: 5.r,
+                        //     topLiftRadius: 0,
+                        //     iconColor: Colors.white),
+                      ],
+                    )),
+              DataCell(Center(child: choseStatus(trip))),
               const DataCell(
                   Center(child: Text('0000', textAlign: TextAlign.center))),
               DataCell(Center(
@@ -160,5 +172,40 @@ class TripTable extends StatelessWidget {
         }).toList(),
       ),
     );
+  }
+
+  choseStatus(Trip trip) {
+    if (trip.status == Status.canceled.stringValue ||
+        trip.status == Status.finished.stringValue) {
+      return Text(trip.status ?? '');
+    } else if (trip.status == Status.created.stringValue) {
+      return Consumer<TripProvider>(builder: (context, pro, x) {
+        return Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5), color: Colors.green),
+          child: TextButton(
+              onPressed: () {
+                pro.startTrip(trip);
+              },
+              child: const Text(
+                'بدأ الرحلة',
+                style: TextStyle(color: Colors.white),
+              )),
+        );
+      });
+    } else {
+      Consumer<TripProvider>(builder: (context, pro, x) {
+        return Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5), color: Colors.red),
+          child: TextButton(
+              onPressed: () {},
+              child: const Text(
+                'إنهاء الرحلة',
+                style: TextStyle(color: Colors.white),
+              )),
+        );
+      });
+    }
   }
 }
