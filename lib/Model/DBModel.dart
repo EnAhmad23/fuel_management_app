@@ -339,7 +339,7 @@ GROUP BY date
 ORDER BY date DESC;
 
 ''');
-    return re.first;
+    return re?.first;
   }
 
   getMonthlySarf() async {
@@ -505,7 +505,16 @@ GROUP BY
   Future<String?> getConsumersName(int? subId) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery(
-        'SELECT name FROM consumers as c join sub_consumers as sub on c.id=sc.consumer_id  where is_deleted=0 and sc.id=? ');
+        'SELECT name FROM consumers as c join sub_consumers as sub on c.id=sc.consumer_id  where is_deleted=0 and sc.id=? ',
+        [subId]);
+    return re.isNotEmpty ? re.first['name'].toString() : null;
+  }
+
+  Future<String?> getConsumerName(String? subName) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery(
+        'SELECT name FROM consumers as c join sub_consumers as sub on c.id=sc.consumer_id  where is_deleted=0 and sc.details=? ',
+        [subName]);
     return re.isNotEmpty ? re.first['name'].toString() : null;
   }
 
@@ -746,7 +755,17 @@ WHERE
     return x;
   }
 
-  Future<int> updateStartTrip(Trip trip) async {
+  Future<int> updateStartTrip(String? status, int? id) async {
+    Database? database = await db;
+
+    var x = await database!.rawUpdate('''
+    update trips set status =? where id =?
+    ''', [status, id]);
+    log('update Consumer -> $x');
+    return x;
+  }
+
+  Future<int> updateTrip(Trip trip) async {
     Database? database = await db;
 
     var x = await database!.rawUpdate('''
@@ -761,6 +780,16 @@ WHERE
     log('*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*$record');
     var x = await database!.rawUpdate('''
     update trips set recordBefore =? where id =?
+    ''', [record, id]);
+    log('update Consumer -> $x');
+    return x;
+  }
+
+  Future<int> updateRecordAfter(int? record, int? id) async {
+    Database? database = await db;
+    log('*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*$record');
+    var x = await database!.rawUpdate('''
+    update trips set recordAfter =? where id =?
     ''', [record, id]);
     log('update Consumer -> $x');
     return x;

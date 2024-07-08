@@ -5,7 +5,7 @@ import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Controllers/trip_provider.dart';
 import 'package:fuel_management_app/UI/add.dart';
-import 'package:fuel_management_app/UI/addTrip.dart';
+import 'package:fuel_management_app/UI/add_trip.dart';
 import 'package:fuel_management_app/UI/add_operation_sarf.dart';
 import 'package:fuel_management_app/UI/add_subconsumer.dart';
 import 'package:fuel_management_app/UI/search_operation.dart';

@@ -9,6 +9,8 @@ import 'package:fuel_management_app/Model/subconsumerT.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../UI/Widgets/my_snackbar.dart';
+
 class SubProvider extends ChangeNotifier {
   SubProvider() {
     getSubConsumerT();
@@ -173,16 +175,7 @@ class SubProvider extends ChangeNotifier {
       changeDropdownValue(null);
 
       if (done != 0) {
-        Get.snackbar(
-          'تم',
-          'تم إضافة المستهلك بنجاح',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackStyle: SnackStyle.FLOATING,
-          icon: const Icon(Icons.check_circle, color: Colors.white),
-          isDismissible: true,
-          duration: const Duration(seconds: 3),
-        );
+        MySnackbar.doneSnack(massege: 'تم إضافة المستهلك بنجاح');
       }
     }
   }
@@ -204,16 +197,7 @@ class SubProvider extends ChangeNotifier {
       changeDropdownValue(null);
 
       if (done != 0) {
-        Get.snackbar(
-          'تم',
-          'تم إضافة المستهلك بنجاح',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackStyle: SnackStyle.FLOATING,
-          icon: const Icon(Icons.check_circle, color: Colors.white),
-          isDismissible: true,
-          duration: const Duration(seconds: 3),
-        );
+        MySnackbar.doneSnack(massege: 'تم تعديل المستهلك بنجاح');
       }
     }
   }

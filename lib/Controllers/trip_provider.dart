@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../UI/Widgets/my_snackbar.dart';
+
 enum Status { created, finished, activated, canceled }
 
 extension MyStatues on Status {
@@ -49,9 +51,12 @@ class TripProvider extends ChangeNotifier {
   TextEditingController dateCon = TextEditingController();
   TextEditingController reasonCon = TextEditingController();
   TextEditingController recordBeforCon = TextEditingController();
+  TextEditingController recordCon = TextEditingController();
   TextEditingController roadCon = TextEditingController();
   Status _status = Status.created;
   int? _recordBefor;
+  int? _distation;
+  int? _recordAfter;
   List<String>? consumerNames;
   List<String>? subNames;
   List<Trip>? trips;
@@ -64,6 +69,14 @@ class TripProvider extends ChangeNotifier {
 
   int? get recordBefor {
     return _recordBefor;
+  }
+
+  int? get distation {
+    return _distation;
+  }
+
+  int? get recordAfter {
+    return _recordAfter;
   }
 
   DateTime? get date {
@@ -117,6 +130,20 @@ class TripProvider extends ChangeNotifier {
     }
   }
 
+  setRecordAfter(int? num) {
+    if (num != null) {
+      _recordAfter = num;
+      notifyListeners();
+    }
+  }
+
+  setDistation(int? num) {
+    if (num != null) {
+      _distation = num;
+      notifyListeners();
+    }
+  }
+
   setRoad(String? name) {
     if (name != null) {
       _road = name;
@@ -166,6 +193,15 @@ class TripProvider extends ChangeNotifier {
     return null;
   }
 
+  String? recordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'أدخل قيمة العداد';
+    } else if (int.parse(value) < (recordAfter ?? 0)) {
+      return 'يجب انو تكون القراءة أكبر من القراءة السابقة';
+    }
+    return null;
+  }
+
   Future<int?> addTrip(Trip trip) {
     return _dbModel.addTrip(trip);
   }
@@ -182,16 +218,30 @@ class TripProvider extends ChangeNotifier {
     setSubConName(null);
     setConName(null);
     if (x != 0) {
-      Get.snackbar(
-        'تم',
-        'تم إضافة الرحلة بنجاح',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        snackStyle: SnackStyle.FLOATING,
-        icon: const Icon(Icons.check_circle, color: Colors.white),
-        isDismissible: true,
-        duration: const Duration(seconds: 2),
-      );
+      MySnackbar.doneSnack(massege: 'تم إضافة الرحلة بنجاح');
+    }
+  }
+
+  void onTapUpdate(Trip trip) async {
+    getConusmersNames();
+    roadCon.text = '${trip.road}';
+    subNameCon.text = '${trip.subconName}';
+    setSubConName(trip.subconName);
+    setConName(getConusmersName(trip.subconName));
+
+    var x = await updateTrip(Trip(
+        subconName: subConName,
+        status: status,
+        date: date,
+        road: roadCon.text,
+        cause: reasonCon.text));
+    roadCon.clear();
+    reasonCon.clear();
+    setSubConName(null);
+    setConName(null);
+    getTrips();
+    if (x != 0) {
+      MySnackbar.doneSnack(massege: 'تم تعديل الرحلة بنجاح');
     }
   }
 
@@ -203,6 +253,11 @@ class TripProvider extends ChangeNotifier {
       },
     ).toList();
     notifyListeners();
+  }
+
+  getConusmersName(String? subName) async {
+    String? name = await _dbModel.getConsumerName(subName);
+    return name;
   }
 
   void getSubonsumersNames(String? conName) async {
@@ -228,8 +283,13 @@ class TripProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<int> updateStartTrip(Trip trip) async {
-    var x = await _dbModel.updateStartTrip(trip);
+  Future<int> updateStartTrip(String? status, int? id) async {
+    var x = await _dbModel.updateStartTrip(status, id);
+    return x;
+  }
+
+  Future<int> updateTrip(Trip trip) async {
+    var x = await _dbModel.updateTrip(trip);
     return x;
   }
 
@@ -240,8 +300,15 @@ class TripProvider extends ChangeNotifier {
   }
 
   Future<int> updateTripRecord(int? recordBefor, int? id) async {
-    log('65564564645${id}');
+    log('65564564645$id');
     var x = await _dbModel.updateTripRecord(recordBefor, id);
+    log('$x');
+    return x;
+  }
+
+  Future<int> updateRecordAfter(int? recordAfter, int? id) async {
+    log('65564564645$id');
+    var x = await _dbModel.updateRecordAfter(recordAfter, id);
     log('$x');
     return x;
   }
@@ -294,8 +361,10 @@ class TripProvider extends ChangeNotifier {
               if (formKey.currentState!.validate()) {
                 setStatus(Status.activated.stringValue);
                 setRecordBefor(int.parse(recordBeforCon.text));
-                pro.updateStartTrip(trip);
+                pro.updateStartTrip(status, trip.id);
                 pro.updateTripRecord(recordBefor, trip.id);
+                pro.getTrips();
+                setStatus(Status.created.stringValue);
                 Get.back();
               }
             },
@@ -324,7 +393,87 @@ class TripProvider extends ChangeNotifier {
             ),
           ),
         ));
-    _dbModel.updateStartTrip(trip);
-    notifyListeners();
+  }
+
+  void endTrip(Trip trip) {
+    Get.defaultDialog(
+        title: '',
+        backgroundColor: Colors.white,
+        content: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Consumer<TripProvider>(builder: (context, pro, x) {
+            return Column(
+              children: [
+                Text(
+                  '        أدخل قراءة العداد        ',
+                  style:
+                      TextStyle(fontSize: 30.sp, fontWeight: FontWeight.w800),
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Form(
+                  key: formKey,
+                  child: TextFormField(
+                    validator: pro.recordValidator,
+                    controller: pro.recordCon,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                    ),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15.h,
+                ),
+              ],
+            );
+          }),
+        ),
+        confirm: Consumer<TripProvider>(builder: (context, pro, x) {
+          return InkWell(
+            onTap: () {
+              if (formKey.currentState!.validate()) {
+                setStatus(Status.finished.stringValue);
+                if (int.parse(recordCon.text) > (recordAfter ?? 0)) {
+                  setRecordAfter(int.parse(recordCon.text));
+                }
+                pro.updateStartTrip(status, trip.id);
+                pro.updateRecordAfter(recordAfter, trip.id);
+                setDistation((recordAfter ?? 0) - (recordBefor ?? 0));
+                setStatus(Status.created.stringValue);
+                pro.getTrips();
+                recordCon.clear();
+                Get.back();
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(5.r)),
+              margin: EdgeInsets.symmetric(horizontal: 5.w),
+              padding: EdgeInsets.all(10.w),
+              child: const Text(
+                ' إنهاء ',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        }),
+        cancel: InkWell(
+          onTap: () => Get.back(),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.green, borderRadius: BorderRadius.circular(5.r)),
+            padding: EdgeInsets.all(10.w),
+            margin: EdgeInsets.symmetric(horizontal: 5.w),
+            child: const Text(
+              'الغاء',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ));
   }
 }

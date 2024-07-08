@@ -16,9 +16,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized;
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
-
+  // await DBModel().delDatabase();
   await DBModel().intiDataBase();
-  await DBModel().addUser('123', '123123123');
+  // await DBModel().addUser('123', '123123123');
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(

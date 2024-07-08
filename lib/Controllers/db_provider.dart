@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import '../Model/operationT.dart';
 // ignore: unused_import
 import '../Model/subconsumerT.dart';
+import '../UI/Widgets/my_snackbar.dart';
 
 class DbProvider extends ChangeNotifier {
   // Database? database;
@@ -151,16 +152,7 @@ class DbProvider extends ChangeNotifier {
       log('update Consumer -> $x');
       consumerNameController.clear();
       if (x != 0) {
-        Get.snackbar(
-          'تم',
-          'تم تعديل العملية بنجاح',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackStyle: SnackStyle.FLOATING,
-          icon: const Icon(Icons.check_circle, color: Colors.white),
-          isDismissible: true,
-          duration: const Duration(seconds: 3),
-        );
+        MySnackbar.doneSnack(massege: 'تم تعديل المستهلك بنجاح');
       }
     }
   }
@@ -170,16 +162,7 @@ class DbProvider extends ChangeNotifier {
       var x = addConsumer(consumerNameController.text);
       consumerNameController.clear();
       if (x != 0) {
-        Get.snackbar(
-          'تم',
-          'تم إضافة المستهلك بنجاح',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackStyle: SnackStyle.FLOATING,
-          icon: const Icon(Icons.check_circle, color: Colors.white),
-          isDismissible: true,
-          duration: const Duration(seconds: 3),
-        );
+        MySnackbar.doneSnack(massege: 'تم إضافة المستهلك بنجاح');
       }
     }
   }

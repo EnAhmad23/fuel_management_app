@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fuel_management_app/Model/fuel_available_amount.dart';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/UI/Widgets/fuel_amount_table.dart';
+import 'package:fuel_management_app/UI/Widgets/my_snackbar.dart';
 import 'package:fuel_management_app/UI/search_operation.dart';
 import 'package:fuel_management_app/UI/show_operation.dart';
 import 'package:fuel_management_app/UI/update_operation_estrad.dart';
@@ -775,16 +776,7 @@ class OpProvider extends ChangeNotifier {
       );
       clearWardFeild();
       if (x != 0) {
-        Get.snackbar(
-          'تم',
-          doneMassege ?? '',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackStyle: SnackStyle.FLOATING,
-          icon: const Icon(Icons.check_circle, color: Colors.white),
-          isDismissible: true,
-          duration: const Duration(seconds: 3),
-        );
+        MySnackbar.doneSnack(massege: 'تم إضافة العملية بنجاح');
       }
     }
   }
@@ -808,16 +800,7 @@ class OpProvider extends ChangeNotifier {
       );
       clearSarfFeild();
       if (x != 0) {
-        Get.snackbar(
-          'تم',
-          doneMassege ?? '',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackStyle: SnackStyle.FLOATING,
-          icon: const Icon(Icons.check_circle, color: Colors.white),
-          isDismissible: true,
-          duration: const Duration(seconds: 3),
-        );
+        MySnackbar.doneSnack(massege: 'تم إضافة العملية بنجاح');
       }
     }
   }
@@ -865,16 +848,7 @@ class OpProvider extends ChangeNotifier {
           description: description.text));
       clearSarfFeild();
       if (x != 0) {
-        Get.snackbar(
-          'تم',
-          'تم تعديل العملية بنجاح',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackStyle: SnackStyle.FLOATING,
-          icon: const Icon(Icons.check_circle, color: Colors.white),
-          isDismissible: true,
-          duration: const Duration(seconds: 3),
-        );
+        MySnackbar.doneSnack(massege: 'تم تعديل العملية بنجاح');
       }
     }
   }
@@ -897,16 +871,7 @@ class OpProvider extends ChangeNotifier {
       ));
       clearWardFeild();
       if (x != 0) {
-        Get.snackbar(
-          'تم',
-          'تم تعديل العملية بنجاح',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackStyle: SnackStyle.FLOATING,
-          icon: const Icon(Icons.check_circle, color: Colors.white),
-          isDismissible: true,
-          duration: const Duration(seconds: 3),
-        );
+        MySnackbar.doneSnack(massege: 'تم تعديل العملية بنجاح');
       }
     }
   }

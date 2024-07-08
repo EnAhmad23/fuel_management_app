@@ -30,10 +30,12 @@ class TripTable extends StatelessWidget {
         ),
         columns: const [
           DataColumn(
-              label: Text(
-            'الإعدادات',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18),
+              label: Center(
+            child: Text(
+              'الإعدادات',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+            ),
           )),
           DataColumn(
               label: Center(
@@ -48,24 +50,28 @@ class TripTable extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18),
           ))),
-          DataColumn(label: Text('تاريخ الرحلة', textAlign: TextAlign.center)),
+          DataColumn(
+              label: Center(
+                  child: Text('تاريخ الرحلة', textAlign: TextAlign.center))),
           DataColumn(
               label: SizedBox(
-            child: Text('سبب الرحلة', textAlign: TextAlign.center),
             width: 80,
+            child: Text('سبب الرحلة', textAlign: TextAlign.center),
           )),
           DataColumn(
-            label: Text('وجهة الرحلة', textAlign: TextAlign.center),
+            label:
+                Center(child: Text('وجهة الرحلة', textAlign: TextAlign.center)),
           ),
-          DataColumn(label: Text('اسم المستهلك')),
+          DataColumn(label: Center(child: Text('اسم المستهلك'))),
           DataColumn(label: Text('#')),
         ],
         rows: trips.map((trip) {
+          int record = trip.recordAfter ?? 0 - (trip.recordBefor ?? 0);
           return DataRow(
             cells: [
               DataCell(trip.status == Status.finished.stringValue ||
                       trip.status == Status.canceled.stringValue
-                  ? const Text('---')
+                  ? const Center(child: Text('---'))
                   : ButtonBar(
                       buttonPadding: const EdgeInsets.all(0),
                       mainAxisSize: MainAxisSize.min,
@@ -156,8 +162,11 @@ class TripTable extends StatelessWidget {
                       ],
                     )),
               DataCell(Center(child: choseStatus(trip))),
-              const DataCell(
-                  Center(child: Text('0000', textAlign: TextAlign.center))),
+              DataCell(Consumer<TripProvider>(builder: (context, pro, x) {
+                return Center(
+                    child: Text('كلبو متر${pro.distation ?? 0}',
+                        textAlign: TextAlign.center));
+              })),
               DataCell(Center(
                   child: Text('${trip.formattedDate}',
                       textAlign: TextAlign.center))),
@@ -175,37 +184,41 @@ class TripTable extends StatelessWidget {
   }
 
   choseStatus(Trip trip) {
-    if (trip.status == Status.canceled.stringValue ||
-        trip.status == Status.finished.stringValue) {
-      return Text(trip.status ?? '');
-    } else if (trip.status == Status.created.stringValue) {
-      return Consumer<TripProvider>(builder: (context, pro, x) {
-        return Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5), color: Colors.green),
-          child: TextButton(
-              onPressed: () {
-                pro.startTrip(trip);
-              },
-              child: const Text(
-                'بدأ الرحلة',
-                style: TextStyle(color: Colors.white),
-              )),
-        );
-      });
-    } else {
-      Consumer<TripProvider>(builder: (context, pro, x) {
-        return Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5), color: Colors.red),
-          child: TextButton(
-              onPressed: () {},
-              child: const Text(
-                'إنهاء الرحلة',
-                style: TextStyle(color: Colors.white),
-              )),
-        );
-      });
-    }
+    return Consumer<TripProvider>(
+      builder: (context, pro, x) {
+        if (trip.status == Status.canceled.stringValue ||
+            trip.status == Status.finished.stringValue) {
+          return Text('${trip.status}');
+        } else if (trip.status == Status.created.stringValue) {
+          return Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.r), color: Colors.green),
+            child: TextButton(
+                onPressed: () {
+                  pro.startTrip(trip);
+                  pro.getTrips();
+                },
+                child: const Text(
+                  'بدأ الرحلة',
+                  style: TextStyle(color: Colors.white),
+                )),
+          );
+        } else {
+          return Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.r), color: Colors.red),
+            child: TextButton(
+                onPressed: () {
+                  pro.endTrip(trip);
+                  pro.getTrips();
+                },
+                child: const Text(
+                  'إنهاء الرحلة',
+                  style: TextStyle(color: Colors.white),
+                )),
+          );
+        }
+      },
+    );
   }
 }
