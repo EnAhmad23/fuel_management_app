@@ -155,13 +155,13 @@ class UpdateTrip extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(height: 20),
-                                Consumer<SubProvider>(
-                                    builder: (context, subPr, x) {
+                                Consumer<TripProvider>(
+                                    builder: (context, pro, x) {
                                   return Align(
                                     alignment: Alignment.centerRight,
                                     child: MyButton(
-                                      text: 'إنشاء',
-                                      onTap: provider.onTapButton,
+                                      text: 'تعديل',
+                                      onTap: provider.onTapUpdate,
                                     ),
                                   );
                                 }),

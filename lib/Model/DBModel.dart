@@ -220,7 +220,9 @@ WHERE DATE(date) = DATE('now')
     t.road,
     t.cause,
     t.date,
-    t.status
+    t.status,
+    t.recordBefore ,
+    t.recordAfter 
 FROM 
     trips t
 JOIN 
@@ -512,9 +514,13 @@ GROUP BY
 
   Future<String?> getConsumerName(String? subName) async {
     Database? database = await db;
-    List<Map<String, Object?>> re = await database!.rawQuery(
-        'SELECT name FROM consumers as c join sub_consumers as sub on c.id=sc.consumer_id  where is_deleted=0 and sc.details=? ',
-        [subName]);
+    List<Map<String, Object?>> re = await database!.rawQuery('''SELECT name 
+FROM consumers AS c 
+JOIN sub_consumers AS sub 
+ON c.id = sub.consumer_id 
+WHERE c.is_deleted = 0 
+AND sub.details = ?
+''', [subName]);
     return re.isNotEmpty ? re.first['name'].toString() : null;
   }
 
@@ -767,11 +773,13 @@ WHERE
 
   Future<int> updateTrip(Trip trip) async {
     Database? database = await db;
-
+    String? dateString = trip.date?.toIso8601String();
+    int? subId = await getSubonsumerID(trip.subconName);
+    log('id ->${trip.id}');
     var x = await database!.rawUpdate('''
-    update trips set status =? where id =?
-    ''', [trip.status, trip.id]);
-    log('update Consumer -> $x');
+    update trips set sub_consumer_id =? , date = ?,road=?,cause=? where id =?
+    ''', [subId, dateString, trip.road, trip.cause, trip.id]);
+    log('update Trip -> $x');
     return x;
   }
 

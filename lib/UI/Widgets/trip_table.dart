@@ -143,16 +143,18 @@ class TripTable extends StatelessWidget {
                                 ));
                           },
                         ),
-                        SettingButton(
-                          onTap: () {
-                            // opPro.checkOperationType(operation);
-                          },
-                          color: Colors.green,
-                          icon: Icons.edit,
-                          topRightRadius: 5.r,
-                          iconColor: Colors.white,
-                          topLiftRadius: 0,
-                        ),
+                        Consumer<TripProvider>(builder: (context, pro, x) {
+                          return SettingButton(
+                            onTap: () {
+                              pro.goToUpdate(trip);
+                            },
+                            color: Colors.green,
+                            icon: Icons.edit,
+                            topRightRadius: 5.r,
+                            iconColor: Colors.white,
+                            topLiftRadius: 0,
+                          );
+                        }),
                         // SettingButton(
                         //     color: Colors.blue,
                         //     icon: Icons.remove_red_eye,
@@ -163,9 +165,12 @@ class TripTable extends StatelessWidget {
                     )),
               DataCell(Center(child: choseStatus(trip))),
               DataCell(Consumer<TripProvider>(builder: (context, pro, x) {
-                return Center(
-                    child: Text('كلبو متر${pro.distation ?? 0}',
-                        textAlign: TextAlign.center));
+                return Row(
+                  children: [
+                    const Text('  كليو متر  ', textAlign: TextAlign.center),
+                    Text('${trip.distation ?? 0}')
+                  ],
+                );
               })),
               DataCell(Center(
                   child: Text('${trip.formattedDate}',

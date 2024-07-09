@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/Model/trip.dart';
+import 'package:fuel_management_app/UI/update_trip.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,14 @@ class TripProvider extends ChangeNotifier {
   TextEditingController recordBeforCon = TextEditingController();
   TextEditingController recordCon = TextEditingController();
   TextEditingController roadCon = TextEditingController();
+  Trip? _updatedTrip;
+
+  Trip? get updatedTrip => _updatedTrip;
+
+  set updatedTrip(Trip? value) {
+    _updatedTrip = value;
+  }
+
   Status _status = Status.created;
   int? _recordBefor;
   int? _distation;
@@ -222,26 +231,36 @@ class TripProvider extends ChangeNotifier {
     }
   }
 
-  void onTapUpdate(Trip trip) async {
+  void goToUpdate(Trip trip) async {
     getConusmersNames();
     roadCon.text = '${trip.road}';
     subNameCon.text = '${trip.subconName}';
+    reasonCon.text = '${trip.cause}';
     setSubConName(trip.subconName);
-    setConName(getConusmersName(trip.subconName));
+    String? conname = await getConusmersName(trip.subconName);
+    setConName(conname);
+    updatedTrip = trip;
+    Get.to(const UpdateTrip());
+  }
 
-    var x = await updateTrip(Trip(
-        subconName: subConName,
-        status: status,
-        date: date,
-        road: roadCon.text,
-        cause: reasonCon.text));
-    roadCon.clear();
-    reasonCon.clear();
-    setSubConName(null);
-    setConName(null);
-    getTrips();
-    if (x != 0) {
-      MySnackbar.doneSnack(massege: 'تم تعديل الرحلة بنجاح');
+  void onTapUpdate() async {
+    if (formKey.currentState!.validate()) {
+      var x = await updateTrip(Trip(
+          id: updatedTrip?.id,
+          subconName: subConName,
+          status: status,
+          date: date,
+          road: roadCon.text,
+          cause: reasonCon.text));
+
+      if (x != 0) {
+        MySnackbar.doneSnack(massege: 'تم تعديل الرحلة بنجاح');
+        roadCon.clear();
+        reasonCon.clear();
+        setSubConName(null);
+        setConName(null);
+        getTrips();
+      }
     }
   }
 
@@ -255,7 +274,7 @@ class TripProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getConusmersName(String? subName) async {
+  Future<String?> getConusmersName(String? subName) async {
     String? name = await _dbModel.getConsumerName(subName);
     return name;
   }
@@ -275,11 +294,12 @@ class TripProvider extends ChangeNotifier {
   void getTrips() async {
     List<Map<String, Object?>> re = await _dbModel.getTrips();
     log('$re');
-    trips = re
-        .map(
-          (e) => Trip.fromMap(e),
-        )
-        .toList();
+    trips = re.map(
+      (e) {
+        log('$e');
+        return Trip.fromMap(e);
+      },
+    ).toList();
     notifyListeners();
   }
 
