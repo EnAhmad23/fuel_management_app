@@ -987,22 +987,22 @@ class OpProvider extends ChangeNotifier {
                 ),
               ],
             ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              children: [
-                pw.Text(DateFormat('yyyy-MM-dd').format(DateTime.now())),
-                pw.SizedBox(
-                  width: 50,
-                ),
-                pw.Align(
-                  child: pw.Container(
-                    child: pw.Image(body),
-                    width: 300, // Adjust the width as needed
-                    height: 150, // Adjust the height as needed
-                  ),
-                  alignment: pw.Alignment.centerRight,
-                ),
-              ],
+            pw.Align(
+              child: pw.Text(
+                  DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+                  textAlign: pw.TextAlign.right),
+              alignment: pw.Alignment.topLeft,
+            ),
+            pw.SizedBox(
+              width: 50,
+            ),
+            pw.Align(
+              child: pw.Container(
+                child: pw.Image(body),
+                width: 300, // Adjust the width as needed
+                height: 150, // Adjust the height as needed
+              ),
+              alignment: pw.Alignment.centerRight,
             ),
             pw.SizedBox(height: 50),
             pw.Table.fromTextArray(
