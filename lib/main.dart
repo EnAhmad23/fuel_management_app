@@ -61,6 +61,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
             primaryIconTheme: const IconThemeData(color: Colors.white),
             iconTheme: const IconThemeData(color: Colors.white),
+            fontFamily: 'Calibri',
             // iconTheme: const IconThemeData(color: Colors.white),
             textTheme: TextTheme(
               bodyLarge:

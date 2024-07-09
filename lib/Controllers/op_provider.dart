@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 // import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fuel_management_app/Model/fuel_available_amount.dart';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/UI/Widgets/fuel_amount_table.dart';
@@ -15,6 +17,9 @@ import 'package:intl/intl.dart';
 import '../Model/DBModel.dart';
 import '../Model/operationT.dart';
 import '../UI/update_operation_sarf.dart';
+import 'package:flutter_to_pdf/flutter_to_pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
 
 class OpProvider extends ChangeNotifier {
   final DBModel _dbModel = DBModel();
@@ -924,5 +929,124 @@ class OpProvider extends ChangeNotifier {
     changeCheck(false);
     setDate(null);
     setHintText('yyyy-MM-dd');
+  }
+
+  Future<void> generatePdf(
+      BuildContext context, List<OperationT> operations) async {
+    final pdf = pw.Document();
+
+    // Load the fonts
+    final beirutiFont = pw.Font.ttf(
+        await rootBundle.load('assets/fonts/Beiruti-VariableFont_wght.ttf'));
+
+    // Load the images
+    final right = pw.MemoryImage(
+      (await rootBundle.load('assets/images/right.jpeg')).buffer.asUint8List(),
+    );
+    final body = pw.MemoryImage(
+      (await rootBundle.load('assets/images/bady.png')).buffer.asUint8List(),
+    );
+    final left = pw.MemoryImage(
+      (await rootBundle.load('assets/images/left.jpeg')).buffer.asUint8List(),
+    );
+    final mid = pw.MemoryImage(
+      (await rootBundle.load('assets/images/mid.jpeg')).buffer.asUint8List(),
+    );
+    var myTheme = pw.ThemeData.withFont(
+      base: pw.Font.ttf(
+          await rootBundle.load("assets/fonts/Beiruti-VariableFont_wght.ttf")),
+    );
+
+    // Add a page with the images and table
+    pdf.addPage(
+      pw.Page(
+        theme: myTheme,
+        build: (pw.Context context) {
+          return pw.Column(children: [
+            pw.Row(
+              children: [
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Container(
+                    child: pw.Image(left),
+                    width: 170, // Adjust the width as needed
+                    height: 150, // Adjust the height as needed
+                  ),
+                ),
+                pw.SizedBox(width: 20),
+                pw.Container(
+                  child: pw.Image(mid),
+                  width: 120, // Adjust the width as needed
+                  height: 150, // Adjust the height as needed
+                ),
+                pw.SizedBox(width: 10),
+                pw.Container(
+                  child: pw.Image(right),
+                  width: 170, // Adjust the width as needed
+                  height: 150, // Adjust the height as needed
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Text(DateFormat('yyyy-MM-dd').format(DateTime.now())),
+                pw.SizedBox(
+                  width: 50,
+                ),
+                pw.Align(
+                  child: pw.Container(
+                    child: pw.Image(body),
+                    width: 300, // Adjust the width as needed
+                    height: 150, // Adjust the height as needed
+                  ),
+                  alignment: pw.Alignment.centerRight,
+                ),
+              ],
+            ),
+            pw.SizedBox(height: 50),
+            pw.Table.fromTextArray(
+              headers: [
+                'التاريخ',
+                'الكمية',
+                'نوع الوقود',
+                'سند الصرف',
+                'النوع',
+                'اسم المستلم',
+                'المستهلك الأساسي',
+                'المستهلك',
+                '#'
+              ],
+              data: operations.map((operation) {
+                return [
+                  operation.formattedDate ?? '',
+                  operation.amount ?? '',
+                  operation.foulType ?? '',
+                  operation.dischangeNumber ?? '',
+                  operation.type ?? '',
+                  operation.receiverName ?? '',
+                  operation.consumerName ?? '',
+                  operation.subConsumerDetails ?? '',
+                  operations.indexOf(operation) + 1
+                ];
+              }).toList(),
+              // headerStyle: pw.TextStyle(font: calibriFont),
+              // cellStyle: pw.TextStyle(font: calibriFont),
+            )
+          ]);
+        },
+      ),
+    );
+
+    // Save the PDF file
+    final output = await getTemporaryDirectory();
+    final file = File("${output.path}/operations8.pdf");
+
+    await file.writeAsBytes(await pdf.save());
+
+    // Show a snackbar with the file path
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("PDF saved at ${file.path}")),
+    );
   }
 }

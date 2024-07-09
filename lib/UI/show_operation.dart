@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
+import 'package:fuel_management_app/UI/Widgets/my_button.dart';
 import 'package:fuel_management_app/UI/Widgets/operationTable.dart';
 import 'package:provider/provider.dart';
 
@@ -68,6 +69,13 @@ class ShowOperation extends StatelessWidget {
                         SizedBox(
                           height: 30.h,
                         ),
+                        Consumer<OpProvider>(builder: (context, pro, x) {
+                          return MyButton(
+                              text: 'export',
+                              onTap: () {
+                                pro.generatePdf(context, pro.operations ?? []);
+                              });
+                        })
                       ],
                     ),
                   ),
