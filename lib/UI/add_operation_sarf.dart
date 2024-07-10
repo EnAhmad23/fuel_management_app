@@ -88,8 +88,6 @@ class AddSarf extends StatelessWidget {
                                             provider.subconsumerNames ?? [],
                                         onchanged: (value) {
                                           provider.setSubConName(value);
-                                          provider.getSubonsumersNames(
-                                              provider.conName);
                                         },
                                         value: provider.subconName,
                                         validator: provider.subNameValidet,
@@ -104,6 +102,8 @@ class AddSarf extends StatelessWidget {
                                         itemsList: provider.consumerNames ?? [],
                                         onchanged: (value) {
                                           provider.setConName(value);
+                                          provider.getSubonsumersNames(
+                                              provider.conName);
                                         },
                                         value: provider.conName,
                                         validator: provider.conNameValidet,
@@ -137,6 +137,7 @@ class AddSarf extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: MyTextFormField(
+                                        fontSize: 16,
                                         validator:
                                             provider.dischangeNumberValidet,
                                         labelText: 'رقم سند الصرف',
@@ -208,6 +209,7 @@ class AddSarf extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: MyTextFormField(
+                                        fontSize: 16,
                                         keyboardType: TextInputType.number,
                                         validator: provider.amontValidet,
                                         labelText: 'الكمية',

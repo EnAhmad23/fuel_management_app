@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:fuel_management_app/Model/consumer.dart';
 import 'package:fuel_management_app/Model/operation.dart';
@@ -6,6 +7,7 @@ import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/Model/trip.dart';
 import 'package:fuel_management_app/Model/user.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -30,6 +32,43 @@ class DBModel {
     String dataBasePath = await getDatabasesPath();
     String path = join(dataBasePath, 'fuel_managment.db');
     await deleteDatabase(path);
+  }
+
+  Future<void> backupDatabase() async {
+    try {
+      // Get the database path
+      var databasesPath = await getDatabasesPath();
+      var dbPath = join(databasesPath, 'fuel_managment.db');
+
+      // Get the backup path (e.g., external storage directory)
+      Directory? backupDirectory = await getExternalStorageDirectory();
+      var backupPath = join(backupDirectory!.path, 'backup_fuel_managment.db');
+
+      // Copy the database file to the backup location
+      await File(dbPath).copy(backupPath);
+      log('Database backup completed!');
+    } catch (e) {
+      log('Error during backup: $e');
+    }
+  }
+
+  Future<void> restoreDatabase() async {
+    try {
+      // Get the database path
+      var databasesPath = await getDatabasesPath();
+      var dbPath = join(databasesPath, 'fuel_managment.db');
+
+      // Get the backup path (e.g., external storage directory)
+      Directory? backupDirectory = await getExternalStorageDirectory();
+      var backupPath =
+          join(backupDirectory?.path ?? '', 'backup_fuel_managment.db');
+
+      // Copy the backup file to the database location
+      await File(backupPath).copy(dbPath);
+      log('Database restore completed!');
+    } catch (e) {
+      log('Error during restore: $e');
+    }
   }
 
   _onCreate(Database database, int version) async {
@@ -327,6 +366,16 @@ WHERE type = ?
     WHERE sub_consumer_id = ?
       AND type = 'صرف' and is_deleted=0;
 ''', [subconsumerId]);
+    return Sqflite.firstIntValue(re) ?? 0;
+  }
+
+  getNumOfAllOp() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re =
+        await database!.rawQuery('''SELECT COUNT(*) AS operation_count
+    FROM operations
+    WHERE is_deleted=0;
+''');
     return Sqflite.firstIntValue(re) ?? 0;
   }
 

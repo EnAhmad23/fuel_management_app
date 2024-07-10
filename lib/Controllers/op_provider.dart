@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 // import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fuel_management_app/Model/fuel_available_amount.dart';
@@ -62,6 +63,7 @@ class OpProvider extends ChangeNotifier {
   String? _toHintText;
   String? _subTitle;
   int? _amount;
+  int? _numOfOp;
   String? _reportType;
   String? _operationType;
   String? _dailySarf;
@@ -160,6 +162,10 @@ class OpProvider extends ChangeNotifier {
 
   int? get amount {
     return _amount;
+  }
+
+  int? get numOfOp {
+    return _numOfOp;
   }
 
   setUpdatedOperation(OperationT op) {
@@ -306,6 +312,13 @@ class OpProvider extends ChangeNotifier {
     }
   }
 
+  setNumOfOp(int? num) {
+    if (num != null) {
+      _numOfOp = num;
+      notifyListeners();
+    }
+  }
+
   setFuelType(String? value) {
     _fuelType = value;
     notifyListeners();
@@ -428,6 +441,13 @@ class OpProvider extends ChangeNotifier {
       },
     ).toList();
     notifyListeners();
+  }
+
+  getNumOfAllOp() async {
+    int? temp = await _dbModel.getNumOfAllOp();
+    setNumOfOp(temp);
+    notifyListeners();
+    log('numOfOp = $numOfOp');
   }
 
   void getDailySarf() async {
@@ -789,7 +809,7 @@ class OpProvider extends ChangeNotifier {
   void onTopSarf() async {
     if (formKey.currentState!.validate()) {
       setAmount(amountCon.text);
-      setDate(fromdate!.difference(todate!).inDays as DateTime?);
+      // setDate(fromdate!.difference(todate!).inDays as DateTime?);
       var x = await addOperationSarf(
         OperationT(
             subConsumerDetails: subconName,
@@ -938,6 +958,10 @@ class OpProvider extends ChangeNotifier {
     // Load the fonts
     final beirutiFont = pw.Font.ttf(
         await rootBundle.load('assets/fonts/Beiruti-VariableFont_wght.ttf'));
+    final arialFont = pw.Font.ttf(
+        await rootBundle.load('assets/fonts/arfonts-arial-bold.ttf'));
+    final segoeFont =
+        pw.Font.ttf(await rootBundle.load('assets/fonts/segoe.UI.ttf'));
 
     // Load the images
     final right = pw.MemoryImage(
@@ -952,60 +976,86 @@ class OpProvider extends ChangeNotifier {
     final mid = pw.MemoryImage(
       (await rootBundle.load('assets/images/mid.jpeg')).buffer.asUint8List(),
     );
-    var myTheme = pw.ThemeData.withFont(
-      base: pw.Font.ttf(
-          await rootBundle.load("assets/fonts/Beiruti-VariableFont_wght.ttf")),
-    );
 
-    // Add a page with the images and table
+    // Add a multi-page with the images and table
     pdf.addPage(
-      pw.Page(
-        theme: myTheme,
-        build: (pw.Context context) {
+      pw.MultiPage(
+        textDirection: pw.TextDirection.rtl,
+        theme: pw.ThemeData.withFont(
+          base: beirutiFont,
+          bold: arialFont,
+        ),
+        header: (pw.Context context) {
+          // Custom header for the table on each page
           return pw.Column(children: [
             pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
-                pw.Align(
-                  alignment: pw.Alignment.centerLeft,
-                  child: pw.Container(
-                    child: pw.Image(left),
-                    width: 170, // Adjust the width as needed
-                    height: 150, // Adjust the height as needed
-                  ),
+                pw.Container(
+                  width: 170,
+                  height: 150,
+                  child: pw.Image(right),
                 ),
                 pw.SizedBox(width: 20),
                 pw.Container(
+                  width: 120,
+                  height: 150,
                   child: pw.Image(mid),
-                  width: 120, // Adjust the width as needed
-                  height: 150, // Adjust the height as needed
                 ),
-                pw.SizedBox(width: 10),
+                pw.SizedBox(width: 20),
                 pw.Container(
-                  child: pw.Image(right),
-                  width: 170, // Adjust the width as needed
-                  height: 150, // Adjust the height as needed
+                  width: 170,
+                  height: 150,
+                  child: pw.Image(left),
                 ),
               ],
             ),
+            pw.SizedBox(height: 10),
             pw.Align(
+              alignment: pw.Alignment.centerLeft,
               child: pw.Text(
-                  DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-                  textAlign: pw.TextAlign.right),
-              alignment: pw.Alignment.topLeft,
-            ),
-            pw.SizedBox(
-              width: 50,
-            ),
-            pw.Align(
-              child: pw.Container(
-                child: pw.Image(body),
-                width: 300, // Adjust the width as needed
-                height: 150, // Adjust the height as needed
+                DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+                textAlign: pw.TextAlign.right,
               ),
-              alignment: pw.Alignment.centerRight,
+            ),
+            // pw.SizedBox(height: 10),
+            pw.Align(
+              alignment: pw.Alignment.topRight,
+              child: pw.Container(
+                width: 300,
+                height: 150,
+                child: pw.Image(body),
+              ),
             ),
             pw.SizedBox(height: 50),
-            pw.Table.fromTextArray(
+          ]);
+        },
+        footer: (pw.Context context) {
+          // Only show the footer on the last page
+          if (context.pageNumber == context.pagesCount) {
+            return pw.Align(
+              alignment: pw.Alignment.topLeft,
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                children: [
+                  pw.Text(
+                    'التوقيع',
+                    style: pw.TextStyle(font: beirutiFont, fontSize: 18),
+                  ),
+                  pw.Text(
+                    'رئيس قسم المحروقات',
+                    style: pw.TextStyle(font: beirutiFont, fontSize: 18),
+                  ),
+                ],
+              ),
+            );
+          }
+          return pw.Container(); // Return an empty container for non-last pages
+        },
+        build: (pw.Context context) {
+          // Custom table build function
+          return [
+            pw.TableHelper.fromTextArray(
               headers: [
                 'التاريخ',
                 'الكمية',
@@ -1017,6 +1067,9 @@ class OpProvider extends ChangeNotifier {
                 'المستهلك',
                 '#'
               ],
+              headerStyle: pw.TextStyle(font: beirutiFont, fontSize: 12),
+              cellStyle: pw.TextStyle(font: beirutiFont, fontSize: 10),
+              cellAlignment: pw.Alignment.center,
               data: operations.map((operation) {
                 return [
                   operation.formattedDate ?? '',
@@ -1030,23 +1083,34 @@ class OpProvider extends ChangeNotifier {
                   operations.indexOf(operation) + 1
                 ];
               }).toList(),
-              // headerStyle: pw.TextStyle(font: calibriFont),
-              // cellStyle: pw.TextStyle(font: calibriFont),
-            )
-          ]);
+            ),
+            pw.TableHelper.fromTextArray(
+              headers: ['القيمة', 'التفاصيل'],
+              headerStyle: pw.TextStyle(font: beirutiFont, fontSize: 12),
+              cellStyle: pw.TextStyle(font: beirutiFont, fontSize: 10),
+              cellAlignment: pw.Alignment.center,
+              data: [],
+            ),
+          ];
         },
       ),
     );
 
-    // Save the PDF file
-    final output = await getTemporaryDirectory();
-    final file = File("${output.path}/operations8.pdf");
+    // Let the user pick a directory and save the PDF file
+    String? outputFilePath = await FilePicker.platform.saveFile(
+      dialogTitle: 'Save PDF',
+      fileName: 'operations.pdf',
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (outputFilePath == null) {
+      // User canceled the file picker
+      return;
+    }
+
+    final file = File(outputFilePath);
 
     await file.writeAsBytes(await pdf.save());
-
-    // Show a snackbar with the file path
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("PDF saved at ${file.path}")),
-    );
   }
 }
