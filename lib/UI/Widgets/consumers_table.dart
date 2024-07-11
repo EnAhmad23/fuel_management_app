@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/db_provider.dart';
+import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/consumer.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+import '../show_sub_of_con.dart';
 import '../update_consumer.dart';
 
 class ConsumersTable extends StatelessWidget {
@@ -107,12 +109,19 @@ class ConsumersTable extends StatelessWidget {
                     iconColor: Colors.white,
                     topLiftRadius: 0,
                   ),
-                  SettingButton(
-                      color: Colors.blue,
-                      icon: Icons.remove_red_eye,
-                      topRightRadius: 5.r,
-                      topLiftRadius: 0,
-                      iconColor: Colors.white),
+                  Consumer<SubProvider>(builder: (context, subPro, x) {
+                    return SettingButton(
+                        onTap: () {
+                          db.setConsumer(consumer);
+                          subPro.getSubConsumerOfCon(consumer.name);
+                          Get.to(const ShowSubOfCon());
+                        },
+                        color: Colors.blue,
+                        icon: Icons.remove_red_eye,
+                        topRightRadius: 5.r,
+                        topLiftRadius: 0,
+                        iconColor: Colors.white);
+                  }),
                 ],
               );
             }),

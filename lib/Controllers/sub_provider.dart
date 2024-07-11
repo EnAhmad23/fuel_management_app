@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
+import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/Model/subconsumer.dart';
 import 'package:fuel_management_app/Model/subconsumerT.dart';
 import 'package:get/get.dart';
@@ -24,8 +25,9 @@ class SubProvider extends ChangeNotifier {
   TextEditingController subDescription = TextEditingController();
   TextEditingController dateCon = TextEditingController();
   TextEditingController recordCon = TextEditingController();
-  List<SubConsumer>? subconsumer;
+  List<SubConsumerT>? subconsumerOfCon;
   List<SubConsumerT>? subconsumerT;
+  List<OperationT>? subOperations;
   SubConsumerT? _updatedSub;
   DateTime? _date;
   List<String>? consumersNames;
@@ -110,6 +112,35 @@ class SubProvider extends ChangeNotifier {
       },
     ).toList();
     subconsumerT = temp;
+    notifyListeners();
+    log('subconsumerT length = ${subconsumerT?.length}');
+    return subconsumerT;
+  }
+
+  Future<List<OperationT>?> getAllSubOp(int? id) async {
+    List<Map<String, Object?>> re = await _dbModel.getAllSubOp(id);
+    List<OperationT>? temp = re.map(
+      (e) {
+        log('${e}');
+        return OperationT.fromMap(e);
+      },
+    ).toList();
+    subOperations = temp;
+    notifyListeners();
+    log('subOperations length = ${subOperations?.length}');
+    return subOperations;
+  }
+
+  Future<List<SubConsumerT>?> getSubConsumerOfCon(String? conName) async {
+    List<Map<String, Object?>> re =
+        await _dbModel.getSubconsumersOfCon(conName);
+    List<SubConsumerT>? temp = re.map(
+      (e) {
+        log('${e}');
+        return SubConsumerT.fromMap(e);
+      },
+    ).toList();
+    subconsumerOfCon = temp;
     notifyListeners();
     log('subconsumerT length = ${subconsumerT?.length}');
     return subconsumerT;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/db_provider.dart';
 import 'package:fuel_management_app/Controllers/login_provider.dart';
@@ -13,12 +14,15 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'UI/home_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized;
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize sqflite for desktop support
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
-  // await DBModel().delDatabase();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  // Initialize the database
   await DBModel().intiDataBase();
-  // await DBModel().addUser('123', '123123123');
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -35,7 +39,7 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (context) => LoginProvider(),
-      )
+      ),
     ],
     child: const MyApp(),
   ));

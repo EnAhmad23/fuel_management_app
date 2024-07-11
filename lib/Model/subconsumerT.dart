@@ -22,7 +22,7 @@ class SubConsumerT {
         details: map['details'] as String,
         description: map['description'] as String,
         id: int.parse('${map['id']}'),
-        consumerName: map['consumerName'] as String,
+        consumerName: map['consumerName'] as String?,
         numOfOP: int.parse('${map['numberOfOperations']}'),
         hasRecord: int.parse('${map['hasRecord']}'));
   }

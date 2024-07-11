@@ -211,9 +211,32 @@ LIMIT 10;
 FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
-WHERE o.is_deleted = 0;
 
 ''');
+    return re;
+  }
+
+  Future<List<Map<String, Object?>>> getAllSubOp(int? id) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+     SELECT 
+    s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+where s.id = ?
+
+''', [id]);
     return re;
   }
 
@@ -438,6 +461,26 @@ WHERE type = 'صرف' AND is_deleted = 0;
     return re.first;
   }
 
+  getTotalSolarSarf() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    SUM(amount) AS total_exchange_amount
+FROM operations
+WHERE type = 'صرف' and foulType='سولار' AND is_deleted = 0;
+''');
+    return re.first;
+  }
+
+  getTotaBansenSarf() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    SUM(amount) AS total_exchange_amount
+FROM operations
+WHERE type = 'صرف' and foulType='بنزين' AND is_deleted = 0;
+''');
+    return re.first;
+  }
+
   getMonthlyWard() async {
     Database? database = await db;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
@@ -459,10 +502,26 @@ WHERE is_deleted = 0
     SUM(amount) AS total_exchange_amount
 FROM operations
 WHERE type = 'وارد' AND is_deleted = 0;
+''');
+    return re.first;
+  }
 
+  getTotalSolarWard() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    SUM(amount) AS total_exchange_amount
+FROM operations
+WHERE type = 'وارد' and foulType='سولار' AND is_deleted = 0;
+''');
+    return re.first;
+  }
 
-
-
+  getTotalBanzenWard() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    SUM(amount) AS total_exchange_amount
+FROM operations
+WHERE type = 'وارد' and foulType='بنزين' AND is_deleted = 0;
 ''');
     return re.first;
   }
@@ -479,26 +538,56 @@ WHERE type = 'وارد' AND is_deleted = 0;
   Future<List<Map<String, Object?>>> getSubconsumerForTable() async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery("""
-   SELECT 
-    sc.id,
-    c.name AS consumerName,
-    sc.details,
-    sc.description,
-    sc.hasRecord ,
-    COUNT(o.id) AS numberOfOperations
-FROM 
-    sub_consumers sc
-JOIN 
-    consumers c ON sc.consumer_id = c.id
-LEFT JOIN 
-    operations o ON sc.id = o.sub_consumer_id
-GROUP BY 
-    sc.id, c.name, sc.details, sc.description
-ORDER BY 
-    sc.id;
-where  is_deleted=0
+    SELECT 
+      sc.id,
+      c.name AS consumerName,
+      sc.details,
+      sc.description,
+      sc.hasRecord,
+      COUNT(o.id) AS numberOfOperations
+    FROM 
+      sub_consumers sc
+    JOIN 
+      consumers c ON sc.consumer_id = c.id
+    LEFT JOIN 
+      operations o ON sc.id = o.sub_consumer_id
+    WHERE 
+      c.is_deleted = 0 AND
+      sc.is_deleted = 0 AND
+      o.is_deleted = 0
+    GROUP BY 
+      sc.id, c.name, sc.details, sc.description, sc.hasRecord
+    ORDER BY 
+      sc.id
+  """);
+    log('${re.length}');
+    log('${re}');
+    return re;
+  }
 
-    """);
+  Future<List<Map<String, Object?>>> getSubconsumersOfCon(
+      String? conName) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery("""
+    SELECT 
+      sc.id,
+      sc.details,
+      sc.description,
+      sc.hasRecord,
+      COUNT(o.id) AS numberOfOperations
+    FROM 
+      sub_consumers sc
+    JOIN 
+      consumers c ON sc.consumer_id = c.id
+    LEFT JOIN 
+      operations o ON sc.id = o.sub_consumer_id
+    WHERE 
+      c.name = ? AND c.is_deleted = 0 AND sc.is_deleted = 0
+    GROUP BY 
+      sc.id, sc.details, sc.description
+    ORDER BY 
+      sc.id
+  """, [conName]);
     log('${re.length}');
     log('${re}');
     return re;
@@ -508,19 +597,20 @@ where  is_deleted=0
     Database? database = await db;
     List<Map<String, Object?>> result = await database!.rawQuery('''
     SELECT 
-        c.id as consumer_id,
+        c.id AS consumer_id,
         c.name AS consumer_name,
-        COUNT(DISTINCT sc.id) AS number_of_subconsumers,
-        COUNT(DISTINCT o.id) AS number_of_operations
+        COUNT(DISTINCT CASE WHEN sc.is_deleted = 0 THEN sc.id ELSE NULL END) AS number_of_subconsumers,
+        COUNT(DISTINCT CASE WHEN o.is_deleted = 0 THEN o.id ELSE NULL END) AS number_of_operations
     FROM 
         consumers c
     LEFT JOIN 
         sub_consumers sc ON c.id = sc.consumer_id
     LEFT JOIN 
         operations o ON sc.id = o.sub_consumer_id
+    WHERE 
+        c.is_deleted = 0
     GROUP BY 
-        c.name;
-        where is_deleted=0
+        c.id, c.name
   ''');
     log('$result');
     return result;
@@ -616,8 +706,9 @@ WHERE
   Future<int?> getNumOfSubconsumers() async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery(
-        '''Select COUNT(DISTINCT id) from sub_consumers  where  is_deleted=0''');
-    return Sqflite.firstIntValue(re) ?? -1;
+        '''SELECT COUNT(DISTINCT id) FROM sub_consumers WHERE is_deleted = 0''');
+    log('+++++++++++++++++++++++++++++$re');
+    return Sqflite.firstIntValue(re) ?? 0;
   }
 
   Future<int> addConsumer(String name) async {
@@ -922,9 +1013,10 @@ WHERE id = ?;
 
   Future<int> deleteOperation(int id) async {
     Database? database = await db;
-    return await database!.rawUpdate('''UPDATE operations
-SET is_deleted = 1
-WHERE id = ?;
-''', [id]);
+    return database!.delete(
+      'operations',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }

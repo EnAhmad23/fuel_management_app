@@ -34,6 +34,11 @@ class OpProvider extends ChangeNotifier {
     getTotalWard();
     getMonthlyWard();
     getTotalAvailable();
+    getNumOfAllOp();
+    getTotalSolarSarf();
+    getTotalBazenSarf();
+    getTotalSolarWard();
+    getTotalBazenWard();
   }
   factory OpProvider() {
     return _opProvider;
@@ -71,6 +76,10 @@ class OpProvider extends ChangeNotifier {
   String? _monthlySarf;
   String? _monthlyWard;
   String? _totalSarf;
+  String? _totalBazenSarf;
+  String? _totalSolarSarf;
+  String? _totalBazenWard;
+  String? _totalSolarWard;
   String? _totalWard;
   String? _weeklySarf;
   String? _fuelType;
@@ -84,6 +93,22 @@ class OpProvider extends ChangeNotifier {
 
   String? get subTitle {
     return _subTitle;
+  }
+
+  String? get totalBazenSarf {
+    return _totalBazenSarf;
+  }
+
+  String? get totalSolarSarf {
+    return _totalSolarSarf;
+  }
+
+  String? get totalBazenWard {
+    return _totalBazenWard;
+  }
+
+  String? get totalSolarWard {
+    return _totalSolarWard;
   }
 
   String? get reportType {
@@ -224,6 +249,38 @@ class OpProvider extends ChangeNotifier {
   setTotalSarf(String? value) {
     if (value != null) {
       _totalSarf = value;
+
+      notifyListeners();
+    }
+  }
+
+  setTotalSolarSarf(String? value) {
+    if (value != null) {
+      _totalSolarSarf = value;
+
+      notifyListeners();
+    }
+  }
+
+  setTotalBazenSarf(String? value) {
+    if (value != null) {
+      _totalBazenSarf = value;
+
+      notifyListeners();
+    }
+  }
+
+  setTotalSolarWard(String? value) {
+    if (value != null) {
+      _totalSolarWard = value;
+
+      notifyListeners();
+    }
+  }
+
+  setTotalBazenWard(String? value) {
+    if (value != null) {
+      _totalBazenWard = value;
 
       notifyListeners();
     }
@@ -490,6 +547,26 @@ class OpProvider extends ChangeNotifier {
     }
   }
 
+  void getTotalSolarSarf() async {
+    Map<String, dynamic> re = await _dbModel.getTotalSolarSarf();
+    log('Total Sarf -> ${re['total_exchange_amount']}');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setTotalSolarSarf('${re['total_exchange_amount']}');
+    } else {
+      setTotalSolarSarf('0.0');
+    }
+  }
+
+  void getTotalBazenSarf() async {
+    Map<String, dynamic> re = await _dbModel.getTotaBansenSarf();
+    log('Total Sarf -> ${re['total_exchange_amount']}');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setTotalBazenSarf('${re['total_exchange_amount']}');
+    } else {
+      setTotalBazenSarf('0.0');
+    }
+  }
+
   void getTotalAvailable() async {
     Map<String, dynamic> re = await _dbModel.getTotalAvailable();
     log('Total Available -> ${re['net_amount']}');
@@ -507,6 +584,26 @@ class OpProvider extends ChangeNotifier {
       setTotalWard('${re['total_exchange_amount']}');
     } else {
       setTotalWard('0.0');
+    }
+  }
+
+  void getTotalSolarWard() async {
+    Map<String, dynamic> re = await _dbModel.getTotalSolarWard();
+    log('Total Ward -> ${re['total_exchange_amount']}');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setTotalSolarWard('${re['total_exchange_amount']}');
+    } else {
+      setTotalSolarWard('0.0');
+    }
+  }
+
+  void getTotalBazenWard() async {
+    Map<String, dynamic> re = await _dbModel.getTotalBanzenWard();
+    log('Total Ward -> ${re['total_exchange_amount']}');
+    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+      setTotalBazenWard('${re['total_exchange_amount']}');
+    } else {
+      setTotalBazenWard('0.0');
     }
   }
 
@@ -728,6 +825,9 @@ class OpProvider extends ChangeNotifier {
     getAllOpT();
     getLastTenOpT();
     getTotalAvailable();
+    getNumOfAllOp();
+    getTotalSolarWard();
+    getTotalBazenWard();
     return x;
   }
 
@@ -741,6 +841,9 @@ class OpProvider extends ChangeNotifier {
     getAllOpT();
     getLastTenOpT();
     getTotalAvailable();
+    getNumOfAllOp();
+    getTotalSolarSarf();
+    getTotalBazenSarf();
     return x;
   }
 
@@ -755,6 +858,9 @@ class OpProvider extends ChangeNotifier {
     getAllOpT();
     getLastTenOpT();
     getTotalAvailable();
+    getNumOfAllOp();
+    getTotalSolarSarf();
+    getTotalBazenSarf();
     return x;
   }
 
@@ -766,6 +872,9 @@ class OpProvider extends ChangeNotifier {
     getMonthlyWard();
     getAllOpT();
     getLastTenOpT();
+    getNumOfAllOp();
+    getTotalSolarWard();
+    getTotalBazenWard();
     return x;
   }
 
@@ -780,6 +889,11 @@ class OpProvider extends ChangeNotifier {
     getDailySarf();
     getAllOpT();
     getLastTenOpT();
+    getNumOfAllOp();
+    getTotalSolarSarf();
+    getTotalBazenSarf();
+    getTotalSolarWard();
+    getTotalBazenWard();
     return x;
   }
 
@@ -1084,12 +1198,38 @@ class OpProvider extends ChangeNotifier {
                 ];
               }).toList(),
             ),
-            pw.TableHelper.fromTextArray(
-              headers: ['القيمة', 'التفاصيل'],
-              headerStyle: pw.TextStyle(font: beirutiFont, fontSize: 12),
-              cellStyle: pw.TextStyle(font: beirutiFont, fontSize: 10),
-              cellAlignment: pw.Alignment.center,
-              data: [],
+            pw.SizedBox(
+              height: 10,
+            ),
+            pw.Row(
+              children: [
+                pw.SizedBox(
+                  width: 50,
+                ),
+                pw.TableHelper.fromTextArray(
+                  headers: ['القيمة', 'التفاصيل'],
+                  headerStyle: pw.TextStyle(font: beirutiFont, fontSize: 12),
+                  cellStyle: pw.TextStyle(font: beirutiFont, fontSize: 10),
+                  cellAlignment: pw.Alignment.center,
+                  data: [
+                    (numOfOp != null && numOfOp != 0)
+                        ? ['$numOfOp', 'عدد العمليات']
+                        : [],
+                    (totalSolarSarf != null && totalSolarSarf != '0.0')
+                        ? [totalSolarSarf, 'كمبة السولار المصروفة']
+                        : [],
+                    (totalBazenSarf != null && totalBazenSarf != '0.0')
+                        ? [totalBazenSarf, 'كمبة البنزين المصروفة']
+                        : [],
+                    (totalSolarWard != null && totalSolarWard != '0.0')
+                        ? [totalSolarWard, 'كمبة السولار الواردة']
+                        : [],
+                    (totalBazenWard != null && totalBazenWard != '0.0')
+                        ? [totalBazenWard, 'كمبة البنزين الواردة']
+                        : [],
+                  ],
+                ),
+              ],
             ),
           ];
         },

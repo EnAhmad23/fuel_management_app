@@ -3,17 +3,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyButton extends StatelessWidget {
   const MyButton(
-      {super.key, required this.text, required this.onTap, this.doneMassege});
+      {super.key,
+      required this.text,
+      required this.onTap,
+      this.doneMassege,
+      this.width});
   final String text;
   final String? doneMassege;
   final void Function()? onTap;
+  final double? width;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(5.r),
       child: Container(
-        width: 70,
+        width: width ?? 70,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.r),
           color: Colors.blue,

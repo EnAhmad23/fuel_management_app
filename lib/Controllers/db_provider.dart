@@ -85,7 +85,7 @@ class DbProvider extends ChangeNotifier {
 
   void getNumOfSubconsumers() async {
     numOfSub = await _dbModel.getNumOfSubconsumers() ?? 0;
-    log('Number of consumers -> $numOfSub');
+    log('Number of Subconsumers -> $numOfSub');
     notifyListeners();
   }
 

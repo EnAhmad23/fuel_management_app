@@ -42,7 +42,7 @@ class AddSarf extends StatelessWidget {
                       height: 60,
                       color: Colors.blue,
                       width: double.infinity,
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: Text('إنشاء عملية صرف جديدة',

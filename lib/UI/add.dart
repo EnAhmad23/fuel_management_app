@@ -71,6 +71,9 @@ class Add extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: MyButton(text: 'إنشاء', onTap: dbprovider.opTap),
                       ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
                     ],
                   ),
                 );
