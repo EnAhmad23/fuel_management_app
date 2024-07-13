@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
@@ -8,6 +10,7 @@ import 'package:fuel_management_app/UI/show_sub_of_con.dart';
 import 'package:fuel_management_app/UI/subconsumer_details.dart';
 import 'package:fuel_management_app/UI/update_subconsumer.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class SubOfConTable extends StatelessWidget {
@@ -46,7 +49,58 @@ class SubOfConTable extends StatelessWidget {
                       topRightRadius: 0,
                       iconColor: Colors.white,
                       onTap: () {
-                        subPro.deleteSubconsumer(subconsumer.id ?? 0);
+                        Get.defaultDialog(
+                            title: 'حذف',
+                            backgroundColor: Colors.white,
+                            content: Padding(
+                              padding: EdgeInsets.all(10.w),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                      height: 100.h,
+                                      width: 200.h,
+                                      child:
+                                          Lottie.asset('assets/warning.json')),
+                                  SizedBox(
+                                    height: 5.h,
+                                  ),
+                                  const Text('هل متاكد من حذف العنصر؟'),
+                                ],
+                              ),
+                            ),
+                            confirm: InkWell(
+                              onTap: () {
+                                subPro.deleteSubconsumer(subconsumer.id ?? 0);
+                                subPro.getSubConsumerOfCon(
+                                    subconsumer.consumerName);
+                                Get.back();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(5.r)),
+                                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                                padding: EdgeInsets.all(10.w),
+                                child: const Text(
+                                  'نعم',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                            cancel: InkWell(
+                              onTap: () => Get.back(),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(5.r)),
+                                padding: EdgeInsets.all(10.w),
+                                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                                child: const Text(
+                                  'لا',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ));
                       },
                     ),
                     SettingButton(
@@ -67,8 +121,14 @@ class SubOfConTable extends StatelessWidget {
                       topLiftRadius: 0,
                     ),
                     SettingButton(
-                        onTap: () {
+                        onTap: () async {
+                          subPro.id = subconsumer.id;
+                          subPro.getMovementRecord(subconsumer.id ?? 0);
                           subPro.getAllSubOp(subconsumer.id);
+                          log('Consuer Name -> ${subconsumer.consumerName}');
+                          log('Consuer Name -> ${subconsumer.details}');
+                          await subPro.getDistanceBetweenLastTwoRecords(
+                              subconsumer.id ?? 0);
                           Get.to(SubonsumerDetails(subConsumer: subconsumer));
                         },
                         color: Colors.blue,

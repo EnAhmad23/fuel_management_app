@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
+import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
 import 'package:fuel_management_app/UI/update_operation_sarf.dart';
@@ -93,23 +94,29 @@ class OperationTable extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              confirm: InkWell(
-                                onTap: () {
-                                  opPro.deleteOperation(operation.id ?? 0);
-                                  Get.back();
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(5.r)),
-                                  margin: EdgeInsets.symmetric(horizontal: 5.w),
-                                  padding: EdgeInsets.all(10.w),
-                                  child: const Text(
-                                    'نعم',
-                                    style: TextStyle(color: Colors.white),
+                              confirm: Consumer<SubProvider>(
+                                  builder: (context, sub, x) {
+                                return InkWell(
+                                  onTap: () {
+                                    opPro.deleteOperation(operation.id ?? 0);
+                                    sub.getAllSubOp(sub.id);
+                                    Get.back();
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius:
+                                            BorderRadius.circular(5.r)),
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 5.w),
+                                    padding: EdgeInsets.all(10.w),
+                                    child: const Text(
+                                      'نعم',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              }),
                               cancel: InkWell(
                                 onTap: () => Get.back(),
                                 child: Container(

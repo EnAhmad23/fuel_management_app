@@ -210,19 +210,21 @@ class HomePage extends StatelessWidget {
                           color: Colors.white),
                       children: [
                         Consumer<OpProvider>(builder: (context, provider, x) {
-                          return ListTile(
-                            onTap: () {
-                              provider.getConsumersNames();
-                              Get.to(const AddSarf());
-                            },
-                            title: Text('صرف',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(color: Colors.white)),
-                            leading: const Icon(Icons.arrow_upward,
-                                color: Colors.white),
-                          );
+                          return (int.parse(provider.totalAvailable ?? '0') > 0)
+                              ? ListTile(
+                                  onTap: () {
+                                    provider.getConsumersNames();
+                                    Get.to(const AddSarf());
+                                  },
+                                  title: Text('صرف',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Colors.white)),
+                                  leading: const Icon(Icons.arrow_upward,
+                                      color: Colors.white),
+                                )
+                              : SizedBox();
                         }),
                         ListTile(
                           onTap: () {

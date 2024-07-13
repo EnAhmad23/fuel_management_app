@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:fuel_management_app/Model/consumer.dart';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
+import 'package:fuel_management_app/Model/subconsumerT.dart';
 import 'package:fuel_management_app/Model/trip.dart';
 import 'package:fuel_management_app/Model/user.dart';
 import 'package:intl/intl.dart';
@@ -471,6 +472,36 @@ WHERE type = 'صرف' and foulType='سولار' AND is_deleted = 0;
     return re.first;
   }
 
+  Future<double> getDistanceBetweenLastTwoRecords(int subConsumerID) async {
+    Database? database = await db;
+    List<Map<String, dynamic>> result = await database!.rawQuery('''
+    SELECT 
+        sub1.id AS id1, 
+        sub1.record AS record1,
+        sub2.id AS id2, 
+        sub2.record AS record2,
+        ABS(sub1.record - sub2.record) AS distance_km
+    FROM 
+        (SELECT id, record 
+         FROM movement_records 
+         WHERE sub_consumer_id = ? 
+         ORDER BY date DESC 
+         LIMIT 1 OFFSET 1) sub1,
+        (SELECT id, record 
+         FROM movement_records 
+         WHERE sub_consumer_id = ? 
+         ORDER BY date DESC 
+         LIMIT 1) sub2;
+  ''', [subConsumerID, subConsumerID]);
+
+    if (result.isNotEmpty) {
+      double distance = result.first['distance_km']?.toDouble() ?? 0.0;
+      return distance;
+    } else {
+      return 0.0;
+    }
+  }
+
   getTotaBansenSarf() async {
     Database? database = await db;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
@@ -571,6 +602,7 @@ WHERE type = 'وارد' and foulType='بنزين' AND is_deleted = 0;
     List<Map<String, Object?>> re = await database!.rawQuery("""
     SELECT 
       sc.id,
+      c.name as consumerName,
       sc.details,
       sc.description,
       sc.hasRecord,
@@ -620,6 +652,20 @@ WHERE type = 'وارد' and foulType='بنزين' AND is_deleted = 0;
     Database? database = await db;
     List<Map<String, Object?>> re = await database!
         .rawQuery('SELECT name FROM consumers where is_deleted=0');
+    return re;
+  }
+
+  Future<List<Map<String, Object?>>> getMovmentRcords(int subID) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+    SELECT
+      id,
+      sub_consumer_id,
+      record,
+      date
+    FROM movement_records 
+    WHERE  sub_consumer_id = ?
+  ''', [subID]);
     return re;
   }
 
@@ -699,6 +745,14 @@ WHERE
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery(
         '''Select id from sub_consumers  where details = ? and is_deleted=0''',
+        [SubconsumerName]);
+    return Sqflite.firstIntValue(re) ?? -1;
+  }
+
+  Future<int?> getSubonsumerHasRecord(String? SubconsumerName) async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery(
+        '''Select hasRecord from sub_consumers  where details = ? and is_deleted=0''',
         [SubconsumerName]);
     return Sqflite.firstIntValue(re) ?? -1;
   }
@@ -830,6 +884,19 @@ WHERE
           ]);
     }
     return x;
+  }
+
+  addMovementRecord(String subName, int record) async {
+    Database? database = await db;
+    int? subConsumerId = await getSubonsumerID(subName);
+    var date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    return await database!.rawInsert('''
+  INSERT INTO movement_records (sub_consumer_id, record, date)
+  SELECT ?, ?, ?
+  WHERE (
+      SELECT MAX(date) FROM movement_records WHERE sub_consumer_id = ?
+  ) < ?
+''', [subConsumerId, record, date, subConsumerId, date]);
   }
 
   Future<int> updateSubonsumer(SubConsumer subconsumer) async {
@@ -999,6 +1066,13 @@ WHERE id = ?;
   Future<int> deleteTrip(int id) async {
     Database? database = await db;
     return await database!.rawUpdate('''DELETE FROM trips
+WHERE id = ?;
+''', [id]);
+  }
+
+  Future<int> deleteMovementRecord(int id) async {
+    Database? database = await db;
+    return await database!.rawUpdate('''DELETE FROM movement_records
 WHERE id = ?;
 ''', [id]);
   }

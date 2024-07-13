@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/subconsumerT.dart';
+import 'package:fuel_management_app/UI/Widgets/movement_table.dart';
 import 'package:fuel_management_app/UI/Widgets/operationTable.dart';
 import 'package:provider/provider.dart';
 
@@ -12,12 +14,15 @@ class SubonsumerDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SubProvider>(builder: (context, sub, x) {
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text('المستهلك (${subConsumer?.details})'),
+          centerTitle: true,
+          elevation: 3,
+          title: Text('المستهلك (${subConsumer.details})'),
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 50),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -26,36 +31,46 @@ class SubonsumerDetails extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InfoBox(
-                      title: 'المستهلك',
-                      content: subConsumer.details ?? '',
+                      title: 'المسافة المقطوعة بين آخر قراءتي عدّاد',
+                      content: '${sub.distance} كيلو متر',
                     ),
                     InfoBox(
                       title: 'المستهلك الرئيسي',
                       content: subConsumer.consumerName ?? '',
                     ),
                     InfoBox(
-                        title: 'المسافة المقطوعة بين آخر قراءتي عدّاد',
-                        content: '' // '${sub.get.} كيلو متر',
-                        ),
+                      title: 'المستهلك',
+                      content: subConsumer.details ?? '',
+                    ),
                   ],
                 ),
 
-                const SizedBox(height: 16.0),
+                SizedBox(height: 16.0.h),
 
                 // Operations section
-                if (sub.subOperations!.isNotEmpty ||
+                if ((sub.subOperations != null &&
+                        sub.subOperations!.isNotEmpty) ||
                     // movementRecords.isNotEmpty ||
                     subConsumer.description != null)
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Text(
-                        'التفاصيل',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'التفاصيل',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          Icon(
+                            Icons.draw_rounded,
+                            color: Colors.blue,
+                          )
+                        ],
                       ),
                       const SizedBox(height: 16.0),
 
@@ -71,50 +86,110 @@ class SubonsumerDetails extends StatelessWidget {
                       const SizedBox(height: 16.0),
 
                       // Operations table
-                      if (sub.subOperations!.isNotEmpty)
-                        Card(
-                          child: OperationTable(
-                              operations: sub.subOperations ?? []),
+                      if (sub.subOperations != null &&
+                          sub.subOperations!.isNotEmpty)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Card(
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 30.w,
+                                  ),
+                                  child: const Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text('اخر العمليات'),
+                                  ),
+                                ),
+                                // Divider(
+                                //   color: Colors.black,
+                                //   thickness: 1.2.w,
+                                // ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child: Card(
+                                    shape: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey)),
+                                    elevation: 5,
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          Consumer<SubProvider>(
+                                              builder: (context, provider, x) {
+                                            return OperationTable(
+                                                operations:
+                                                    provider.subOperations ??
+                                                        []);
+                                          }),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
 
-                      const SizedBox(height: 16.0),
+                      const SizedBox(height: 5.0),
 
                       // Movement records table
-                      // if (movementRecords.isNotEmpty)
-                      //   Card(
-                      //     child: Column(
-                      //       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      //       children: [
-                      //         Padding(
-                      //           padding: EdgeInsets.all(16.0),
-                      //           child: Text(
-                      //             'جدول قراءات العدّاد',
-                      //             style: TextStyle(
-                      //               fontSize: 18.0,
-                      //               fontWeight: FontWeight.bold,
-                      //             ),
-                      //           ),
-                      //         ),
-                      //         DataTable(
-                      //           columns: [
-                      //             DataColumn(label: Text('#')),
-                      //             DataColumn(label: Text('قراءة العدّاد')),
-                      //             DataColumn(label: Text('التاريخ')),
-                      //           ],
-                      //           rows: List.generate(
-                      //             movementRecords.length,
-                      //                 (index) => DataRow(
-                      //               cells: [
-                      //                 DataCell(Text('${index + 1}')),
-                      //                 DataCell(Text('${movementRecords[index].record}')),
-                      //                 DataCell(Text(movementRecords[index].date)),
-                      //               ],
-                      //             ),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
+                      if (sub.movementRecords != null &&
+                          sub.movementRecords!.isNotEmpty)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Card(
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 30.w,
+                                  ),
+                                  child: const Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text('جدول قراءات العداد'),
+                                  ),
+                                ),
+                                // Divider(
+                                //   color: Colors.black,
+                                //   thickness: 1.2.w,
+                                // ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child: Card(
+                                    shape: const OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey)),
+                                    elevation: 5,
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          Consumer<SubProvider>(
+                                              builder: (context, provider, x) {
+                                            return MovementTable(
+                                                movements:
+                                                    provider.movementRecords ??
+                                                        []);
+                                          }),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                     ],
                   ),
               ],

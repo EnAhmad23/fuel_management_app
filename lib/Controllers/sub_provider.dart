@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
+import 'package:fuel_management_app/Model/movement.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/Model/subconsumer.dart';
 import 'package:fuel_management_app/Model/subconsumerT.dart';
@@ -27,13 +28,17 @@ class SubProvider extends ChangeNotifier {
   TextEditingController recordCon = TextEditingController();
   List<SubConsumerT>? subconsumerOfCon;
   List<SubConsumerT>? subconsumerT;
+  List<Movement>? movementRecords;
   List<OperationT>? subOperations;
+  double? distance;
   SubConsumerT? _updatedSub;
+  int? id;
   DateTime? _date;
   List<String>? consumersNames;
   String? dropdownValue;
   bool _hasRecord = false;
   String? _hintText;
+
   bool get hasRcord {
     return _hasRecord;
   }
@@ -103,6 +108,15 @@ class SubProvider extends ChangeNotifier {
     return null;
   }
 
+  String? recordValidtor(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'أدخل قراءة العداد';
+    } else if (!value.isNumericOnly) {
+      return 'أدخل قيمة صحيحة';
+    }
+    return null;
+  }
+
   Future<List<SubConsumerT>?> getSubConsumerT() async {
     List<Map<String, Object?>> re = await _dbModel.getSubconsumerForTable();
     List<SubConsumerT>? temp = re.map(
@@ -146,11 +160,21 @@ class SubProvider extends ChangeNotifier {
     return subconsumerT;
   }
 
+  getHasRecord(String? subName) async {
+    int? temp = await _dbModel.getSubonsumerHasRecord(subName);
+    changRecord(temp == 1);
+  }
+
   getNumOfOp(int subconsumerId) async {
     int? temp = await _dbModel.getNumOfOp(subconsumerId);
     numOfOp = temp;
     notifyListeners();
     log('numOfOp = $numOfOp');
+  }
+
+  getDistanceBetweenLastTwoRecords(int subconsumerId) async {
+    distance = await _dbModel.getDistanceBetweenLastTwoRecords(subconsumerId);
+    log('getDistanceBetweenLastTwoRecords -> $distance');
   }
 
   Future<List<String>?> getConsumersNames() async {
@@ -167,6 +191,17 @@ class SubProvider extends ChangeNotifier {
     return consumersNames;
   }
 
+  getMovementRecord(int subID) async {
+    List<Map<String, Object?>> re = await _dbModel.getMovmentRcords(subID);
+    movementRecords = re.map(
+      (e) {
+        log('movemnet - > $e');
+        return Movement.fromMap(e);
+      },
+    ).toList();
+    notifyListeners();
+  }
+
   Future<int> addSubonsumer(SubConsumer subconsumer) async {
     var x = await _dbModel.addSubonsumer(subconsumer);
     getSubConsumerT();
@@ -174,9 +209,22 @@ class SubProvider extends ChangeNotifier {
     return x;
   }
 
+  Future<int> addMovementRecord(String subName, int record) async {
+    var x = await _dbModel.addMovementRecord(subName, record);
+    log('{$x}');
+    return x;
+  }
+
   Future<int> deleteSubconsumer(int id) async {
     var x = await _dbModel.deleteSubconsumer(id);
     getSubConsumerT();
+    log(' delete{$x}');
+    return x;
+  }
+
+  Future<int> deleteMovement(int id, int subID) async {
+    var x = await _dbModel.deleteMovementRecord(id);
+    getMovementRecord(subID);
     log(' delete{$x}');
     return x;
   }

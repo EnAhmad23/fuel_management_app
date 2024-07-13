@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
+import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
@@ -82,16 +84,20 @@ class AddSarf extends StatelessWidget {
                                       width: 10,
                                     ),
                                     Expanded(
-                                      child: MyDropdown(
-                                        lable: 'المستهلك الفرعي',
-                                        itemsList:
-                                            provider.subconsumerNames ?? [],
-                                        onchanged: (value) {
-                                          provider.setSubConName(value);
-                                        },
-                                        value: provider.subconName,
-                                        validator: provider.subNameValidet,
-                                      ),
+                                      child: Consumer<SubProvider>(
+                                          builder: (context, sub, x) {
+                                        return MyDropdown(
+                                          lable: 'المستهلك الفرعي',
+                                          itemsList:
+                                              provider.subconsumerNames ?? [],
+                                          onchanged: (value) {
+                                            provider.setSubConName(value);
+                                            sub.getHasRecord(value);
+                                          },
+                                          value: provider.subconName,
+                                          validator: provider.subNameValidet,
+                                        );
+                                      }),
                                     ),
                                     const SizedBox(
                                       width: 10,
@@ -112,7 +118,7 @@ class AddSarf extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
                                 Row(
                                   children: [
@@ -148,7 +154,7 @@ class AddSarf extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
                                 Row(
                                   children: [
@@ -220,7 +226,23 @@ class AddSarf extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(
-                                  height: 20,
+                                  height: 10,
+                                ),
+                                Consumer<SubProvider>(
+                                  builder: (context, sub, child) {
+                                    return (sub.hasRcord)
+                                        ? MyTextFormField(
+                                            fontSize: 16,
+                                            validator: sub.recordValidtor,
+                                            labelText: ' قراءة العداد',
+                                            hintText: 'أدخل قراءة العداد',
+                                            controller: provider.recordCon,
+                                          )
+                                        : const SizedBox();
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10.h,
                                 ),
                                 const CustomSwitch(),
                               ],
@@ -270,7 +292,8 @@ class AddSarf extends StatelessWidget {
                           const SizedBox(
                             height: 20,
                           ),
-                          Consumer<OpProvider>(builder: (context, provider, x) {
+                          Consumer2<OpProvider, SubProvider>(
+                              builder: (context, provider, sub, x) {
                             return Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 30),

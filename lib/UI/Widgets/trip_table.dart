@@ -168,7 +168,8 @@ class TripTable extends StatelessWidget {
                 return Row(
                   children: [
                     const Text('  كليو متر  ', textAlign: TextAlign.center),
-                    Text('${trip.distation ?? 0}')
+                    Text(
+                        '${trip.distation != null ? (trip.distation! < 0 ? 0 : trip.distation) : 0.0}')
                   ],
                 );
               })),

@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fuel_management_app/Model/fuel_available_amount.dart';
 import 'package:fuel_management_app/Model/operation.dart';
-import 'package:fuel_management_app/UI/Widgets/fuel_amount_table.dart';
 import 'package:fuel_management_app/UI/Widgets/my_snackbar.dart';
-import 'package:fuel_management_app/UI/search_operation.dart';
 import 'package:fuel_management_app/UI/show_operation.dart';
 import 'package:fuel_management_app/UI/update_operation_estrad.dart';
 import 'package:get/get.dart';
@@ -18,9 +16,7 @@ import 'package:intl/intl.dart';
 import '../Model/DBModel.dart';
 import '../Model/operationT.dart';
 import '../UI/update_operation_sarf.dart';
-import 'package:flutter_to_pdf/flutter_to_pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
 
 class OpProvider extends ChangeNotifier {
   final DBModel _dbModel = DBModel();
@@ -51,6 +47,7 @@ class OpProvider extends ChangeNotifier {
   TextEditingController fuelTypeCon = TextEditingController();
   TextEditingController consumerName = TextEditingController();
   TextEditingController receiverName = TextEditingController();
+  TextEditingController recordCon = TextEditingController();
   TextEditingController dateCon = TextEditingController();
   DateTime? _date;
   DateTime? _fromdate;
@@ -86,6 +83,7 @@ class OpProvider extends ChangeNotifier {
   String? _conName;
   String? _subconName;
   bool? _checked;
+  bool? hasRecord;
 
   OperationT? get operationT {
     return _operationT;
@@ -937,11 +935,21 @@ class OpProvider extends ChangeNotifier {
             newDate: date,
             description: description.text),
       );
+      log('////////////////////////// -> ${recordCon.text}');
+      var addRecord =
+          addMovementRecord(subconName ?? '', int.parse(recordCon.text));
+      recordCon.text = '';
       clearSarfFeild();
-      if (x != 0) {
+      if (x != 0 && addRecord != 0) {
         MySnackbar.doneSnack(massege: 'تم إضافة العملية بنجاح');
       }
     }
+  }
+
+  Future<int> addMovementRecord(String subName, int record) async {
+    var x = await _dbModel.addMovementRecord(subName, record);
+    log('{$x}');
+    return x;
   }
 
   void onTopSearch() async {
