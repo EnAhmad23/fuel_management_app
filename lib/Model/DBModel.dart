@@ -889,14 +889,44 @@ WHERE
   addMovementRecord(String subName, int record) async {
     Database? database = await db;
     int? subConsumerId = await getSubonsumerID(subName);
-    var date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    return await database!.rawInsert('''
+
+    int lastRecord = await getSubRecord(subConsumerId ?? 0);
+    log('llllllllllllllllllllllllllllllll$lastRecord');
+    if (record > lastRecord) {
+      return await database!.rawInsert('''
   INSERT INTO movement_records (sub_consumer_id, record, date)
-  SELECT ?, ?, ?
-  WHERE (
-      SELECT MAX(date) FROM movement_records WHERE sub_consumer_id = ?
-  ) < ?
-''', [subConsumerId, record, date, subConsumerId, date]);
+  values(?,?,?)
+''', [subConsumerId, record, DateFormat('yyyy-MM-dd').format(DateTime.now())]);
+    }
+    return -1;
+  }
+
+  Future<int> getSubRecord(int subId) async {
+    Database? database = await db;
+
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+  SELECT *
+FROM movement_records
+WHERE sub_consumer_id = ?
+ORDER BY date DESC
+LIMIT 1;
+
+''', [subId]);
+    return Sqflite.firstIntValue(re) ?? -1;
+  }
+
+  Future<int> getSubRecordName(String? subName) async {
+    Database? database = await db;
+    int? subConsumerId = await getSubonsumerID(subName);
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+  SELECT *
+FROM movement_records
+WHERE sub_consumer_id = ?
+ORDER BY date DESC
+LIMIT 1;
+
+''', [subConsumerId]);
+    return Sqflite.firstIntValue(re) ?? -1;
   }
 
   Future<int> updateSubonsumer(SubConsumer subconsumer) async {

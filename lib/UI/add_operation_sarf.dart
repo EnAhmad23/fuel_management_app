@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
+import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
@@ -233,7 +234,12 @@ class AddSarf extends StatelessWidget {
                                     return (sub.hasRcord)
                                         ? MyTextFormField(
                                             fontSize: 16,
-                                            validator: sub.recordValidtor,
+                                            validator: (value) {
+                                              sub.recordValidtor(value);
+                                              DBModel db = DBModel();
+                                              db.getSubRecordName(provider
+                                                  .subconName); //                                  not done!?
+                                            },
                                             labelText: ' قراءة العداد',
                                             hintText: 'أدخل قراءة العداد',
                                             controller: provider.recordCon,

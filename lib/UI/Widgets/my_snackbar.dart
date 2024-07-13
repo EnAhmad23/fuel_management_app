@@ -14,4 +14,17 @@ class MySnackbar {
       duration: const Duration(seconds: 2),
     );
   }
+
+  static errorSnack({required String massege}) {
+    Get.snackbar(
+      'خطأ',
+      massege,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      snackStyle: SnackStyle.FLOATING,
+      icon: const Icon(Icons.error, color: Colors.white),
+      isDismissible: true,
+      duration: const Duration(seconds: 3),
+    );
+  }
 }

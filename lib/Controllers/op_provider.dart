@@ -65,6 +65,7 @@ class OpProvider extends ChangeNotifier {
   String? _toHintText;
   String? _subTitle;
   int? _amount;
+  int? _subRecord;
   int? _numOfOp;
   String? _reportType;
   String? _operationType;
@@ -185,6 +186,10 @@ class OpProvider extends ChangeNotifier {
 
   int? get amount {
     return _amount;
+  }
+
+  int? get subRecord {
+    return _subRecord;
   }
 
   int? get numOfOp {
@@ -363,6 +368,13 @@ class OpProvider extends ChangeNotifier {
   setAmount(String? amount) {
     if (amount != null) {
       _amount = int.parse(amount);
+      notifyListeners();
+    }
+  }
+
+  setSubRecord(String? amount) {
+    if (amount != null) {
+      _subRecord = int.parse(amount);
       notifyListeners();
     }
   }
@@ -937,18 +949,22 @@ class OpProvider extends ChangeNotifier {
       );
       log('////////////////////////// -> ${recordCon.text}');
       var addRecord =
-          addMovementRecord(subconName ?? '', int.parse(recordCon.text));
+          await addMovementRecord(subconName ?? '', int.parse(recordCon.text));
       recordCon.text = '';
-      clearSarfFeild();
-      if (x != 0 && addRecord != 0) {
+
+      if (x != 0 && addRecord > 0) {
         MySnackbar.doneSnack(massege: 'تم إضافة العملية بنجاح');
+        clearSarfFeild();
+      } else if (addRecord == -1) {
+        MySnackbar.errorSnack(
+            massege: 'يجب ان تكون قيمة العداد اكبر من القيمة السابقة');
       }
     }
   }
 
   Future<int> addMovementRecord(String subName, int record) async {
     var x = await _dbModel.addMovementRecord(subName, record);
-    log('{$x}');
+    log('///{$x}');
     return x;
   }
 
@@ -1212,7 +1228,7 @@ class OpProvider extends ChangeNotifier {
             pw.Row(
               children: [
                 pw.SizedBox(
-                  width: 50,
+                  width: 70,
                 ),
                 pw.TableHelper.fromTextArray(
                   headers: ['القيمة', 'التفاصيل'],
