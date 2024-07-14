@@ -129,11 +129,7 @@ class HomePage extends StatelessWidget {
                       return ListTile(
                         onTap: () {
                           provider.getSubConsumerT();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ShowSubconsumer(),
-                              ));
+                          Get.to(const ShowSubconsumer());
                         },
                         title: Text(
                           'عرض',

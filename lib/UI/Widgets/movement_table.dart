@@ -28,19 +28,25 @@ class MovementTable extends StatelessWidget {
         ),
         columns: const [
           DataColumn(
-              label: Text(
-            'الإعدادات',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18),
+              label: Center(
+            child: Text(
+              'الإعدادات',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+            ),
           )),
           DataColumn(
               label: Center(
-                  child: Text(
-            'التاريخ',
-            style: TextStyle(fontSize: 18),
+                  child: Center(
+            child: Text(
+              'التاريخ',
+              style: TextStyle(fontSize: 18),
+            ),
           ))),
-          DataColumn(label: Text('قراءة العداد', textAlign: TextAlign.center)),
-          DataColumn(label: Text('#')),
+          DataColumn(
+              label: Center(
+                  child: Text('قراءة العداد', textAlign: TextAlign.center))),
+          DataColumn(label: Center(child: Text('#'))),
         ],
         rows: movements.map((movement) {
           return DataRow(

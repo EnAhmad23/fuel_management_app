@@ -33,12 +33,16 @@ class SubonsumersTable extends StatelessWidget {
               outside: BorderSide(color: Colors.grey),
             ),
             columns: const [
-              DataColumn(label: Text('الإعدادات', textAlign: TextAlign.center)),
               DataColumn(
-                  label: Text('عدد عمليات الصرف', textAlign: TextAlign.center)),
-              DataColumn(label: Text('وصف')),
-              DataColumn(label: Text('المستهلك الرئيسي')),
-              DataColumn(label: Text('المستهلك')),
+                  label: Center(
+                      child: Text('الإعدادات', textAlign: TextAlign.center))),
+              DataColumn(
+                  label: Center(
+                      child: Text('عدد عمليات الصرف',
+                          textAlign: TextAlign.center))),
+              DataColumn(label: Center(child: Text('وصف'))),
+              DataColumn(label: Center(child: Text('المستهلك الرئيسي'))),
+              DataColumn(label: Center(child: Text('المستهلك'))),
               DataColumn(label: Text('#')),
             ],
             rows: subconsumers.map((subconsumer) {

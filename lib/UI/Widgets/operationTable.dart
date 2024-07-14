@@ -25,7 +25,7 @@ class OperationTable extends StatelessWidget {
             child: SizedBox(
                 height: 300.h,
                 width: 600.h,
-                child: Lottie.asset('assets/warning.json')),
+                child: Lottie.asset('assets/nodata.json')),
           )
         : SingleChildScrollView(
             scrollDirection: Axis.horizontal,

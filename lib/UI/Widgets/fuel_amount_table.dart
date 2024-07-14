@@ -27,10 +27,14 @@ class FuelAmountTable extends StatelessWidget {
             ),
             columns: const [
               DataColumn(
-                  label: Text('الكمية المتوفرة (لتر)',
-                      textAlign: TextAlign.center)),
-              DataColumn(label: Text('نوع الوقود')),
-              DataColumn(label: Text('#')),
+                  label: Center(
+                child:
+                    Text('الكمية المتوفرة (لتر)', textAlign: TextAlign.center),
+              )),
+              DataColumn(
+                  label: Center(
+                      child: Text('نوع الوقود', textAlign: TextAlign.center))),
+              DataColumn(label: Center(child: Text('#'))),
             ],
             rows: fuelTypes.map((fuelType) {
               return DataRow(cells: [

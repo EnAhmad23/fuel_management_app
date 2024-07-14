@@ -49,6 +49,8 @@ class OpProvider extends ChangeNotifier {
   TextEditingController receiverName = TextEditingController();
   TextEditingController recordCon = TextEditingController();
   TextEditingController dateCon = TextEditingController();
+  TextEditingController fromDateCon = TextEditingController();
+
   DateTime? _date;
   DateTime? _fromdate;
   DateTime? _todate;
@@ -218,11 +220,8 @@ class OpProvider extends ChangeNotifier {
   }
 
   setOperationType(String? text) {
-    if (text != null) {
-      _operationType = text;
-
-      notifyListeners();
-    }
+    _operationType = text;
+    notifyListeners();
   }
 
   setSubTitle(String? name) {
@@ -482,7 +481,9 @@ class OpProvider extends ChangeNotifier {
   String? toDateValidet(String? value) {
     //-------------------------------------------------check the history for see if it was wark well
     log('$value');
-    if (toHintText == 'yyyy-MM-dd' || toHintText.isEmpty) {
+    if (fromHintText == 'yyyy-MM-dd' && toHintText == 'yyyy-MM-dd') {
+      return null;
+    } else if (toHintText == 'yyyy-MM-dd' || toHintText.isEmpty) {
       return 'الرجاء ادخال التاريخ ';
     }
     return null;
@@ -969,6 +970,7 @@ class OpProvider extends ChangeNotifier {
       log('$todate');
       log('$fromdate');
       log('$x');
+
       setDate(fromdate?.add(x!));
       searchOperation(
         OperationT(

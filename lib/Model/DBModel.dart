@@ -277,21 +277,21 @@ WHERE DATE(date) = DATE('now')
   getTrips() async {
     Database? database = await db;
     List<Map<String, dynamic>> re = await database!.rawQuery('''
-   SELECT 
+  SELECT 
     sc.details,
     t.id,
     t.road,
     t.cause,
     t.date,
     t.status,
-    t.recordBefore ,
-    t.recordAfter 
+    t.recordBefore,
+    t.recordAfter
 FROM 
     trips t
 JOIN 
-    sub_consumers sc
-ON 
-    t.sub_consumer_id = sc.id;
+    sub_consumers sc ON t.sub_consumer_id = sc.id
+ORDER BY 
+    t.created_at DESC;
 ''');
     log('${re}');
     return re;
@@ -569,29 +569,29 @@ WHERE type = 'وارد' and foulType='بنزين' AND is_deleted = 0;
   Future<List<Map<String, Object?>>> getSubconsumerForTable() async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery("""
-    SELECT 
-      sc.id,
-      c.name AS consumerName,
-      sc.details,
-      sc.description,
-      sc.hasRecord,
-      COUNT(o.id) AS numberOfOperations
-    FROM 
-      sub_consumers sc
-    JOIN 
-      consumers c ON sc.consumer_id = c.id
-    LEFT JOIN 
-      operations o ON sc.id = o.sub_consumer_id
-    WHERE 
-      c.is_deleted = 0 AND
-      sc.is_deleted = 0 AND
-      o.is_deleted = 0
-    GROUP BY 
-      sc.id, c.name, sc.details, sc.description, sc.hasRecord
-    ORDER BY 
-      sc.id
+   SELECT 
+  sc.id,
+  c.name AS consumerName,
+  sc.details,
+  sc.description,
+  sc.hasRecord,
+  COUNT(o.id) AS numberOfOperations
+FROM 
+  sub_consumers sc
+JOIN 
+  consumers c ON sc.consumer_id = c.id
+LEFT JOIN 
+  operations o ON sc.id = o.sub_consumer_id
+WHERE 
+  c.is_deleted = 0 AND
+  sc.is_deleted = 0
+GROUP BY 
+  sc.id, c.name, sc.details, sc.description, sc.hasRecord
+ORDER BY 
+  sc.id;
+
   """);
-    log('${re.length}');
+    log('sub length${re.length}');
     log('${re}');
     return re;
   }

@@ -68,7 +68,11 @@ class SearchOperation extends StatelessWidget {
                                         'تقرير لفترة'
                                       ],
                                       onchanged: (value) {
-                                        provider.setReportType(value);
+                                        if (value != 'اختر نوع التقرير') {
+                                          provider.setReportType(value);
+                                        } else {
+                                          provider.setReportType(null);
+                                        }
                                       },
                                       value: provider.reportType ??
                                           'اختر نوع التقرير',
@@ -86,7 +90,11 @@ class SearchOperation extends StatelessWidget {
                                         'سولار'
                                       ],
                                       onchanged: (value) {
-                                        provider.setFuelType(value);
+                                        if (value != 'اختر نوع الوقود') {
+                                          provider.setFuelType(value);
+                                        } else {
+                                          provider.setFuelType(null);
+                                        }
                                       },
                                       value: provider.fuelType ??
                                           'اختر نوع الوقود',
@@ -104,7 +112,11 @@ class SearchOperation extends StatelessWidget {
                                         'وارد'
                                       ],
                                       onchanged: (value) {
-                                        provider.setOperationType(value);
+                                        if (value != 'اختر نوع العملية') {
+                                          provider.setOperationType(value);
+                                        } else {
+                                          provider.setOperationType(null);
+                                        }
                                       },
                                       value: provider.operationType ??
                                           'اختر نوع العملية',
@@ -138,7 +150,7 @@ class SearchOperation extends StatelessWidget {
                                           Expanded(
                                             child: MyTextFormField(
                                               fontSize: 16,
-                                              validator: (String) {},
+                                              validator: (value) {},
                                               labelText: 'اسم المستلم',
                                               hintText: 'أدخل اسم المستلم',
                                               controller: provider.receiverName,
@@ -263,7 +275,8 @@ class SearchOperation extends StatelessWidget {
                                                   style: const TextStyle(
                                                       fontSize: 16),
                                                   // textAlign: TextAlign.right,
-                                                  controller: provider.dateCon,
+                                                  controller:
+                                                      provider.fromDateCon,
                                                   // textDirection: TextDirection.rtl,
                                                   decoration: InputDecoration(
                                                       // alignLabelWithHint: true,
@@ -321,6 +334,10 @@ class SearchOperation extends StatelessWidget {
                                                   height: 10,
                                                 ),
                                                 TextFormField(
+                                                  validator: (value) {
+                                                    provider
+                                                        .toDateValidet(value);
+                                                  },
                                                   style: const TextStyle(
                                                       fontSize: 16),
                                                   // textAlign: TextAlign.right,

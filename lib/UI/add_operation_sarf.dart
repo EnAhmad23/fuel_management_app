@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
-import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
@@ -108,9 +107,12 @@ class AddSarf extends StatelessWidget {
                                         lable: 'المستهلك الرئيسي',
                                         itemsList: provider.consumerNames ?? [],
                                         onchanged: (value) {
-                                          provider.setConName(value);
-                                          provider.getSubonsumersNames(
-                                              provider.conName);
+                                          if (value !=
+                                              'اختر المستهلك الرئيسي') {
+                                            provider.setConName(value);
+                                            provider.getSubonsumersNames(
+                                                provider.conName);
+                                          }
                                         },
                                         value: provider.conName,
                                         validator: provider.conNameValidet,
@@ -132,7 +134,11 @@ class AddSarf extends StatelessWidget {
                                           'سولار'
                                         ],
                                         onchanged: (value) {
-                                          provider.setFuelType(value);
+                                          if (value != 'اختر نوع الوقود') {
+                                            provider.setFuelType(value);
+                                          } else {
+                                            provider.setFuelType(null);
+                                          }
                                         },
                                         value: provider.fuelType ??
                                             'اختر نوع الوقود',
@@ -241,7 +247,7 @@ class AddSarf extends StatelessWidget {
                                               if (int.parse(value ?? '0') <
                                                   sub.lastRecord) {
                                                 return 'يجب ان تكون قيمة العداد أكبر او تساوي اخر قيمة (${sub.lastRecord})';
-                                              } //                                   not done!?
+                                              }
                                             },
                                             labelText: ' قراءة العداد',
                                             hintText: 'أدخل قراءة العداد',

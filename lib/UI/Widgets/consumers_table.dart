@@ -23,13 +23,18 @@ class ConsumersTable extends StatelessWidget {
         outside: BorderSide(color: Colors.grey),
       ),
       columns: const [
-        DataColumn(label: Text('الإعدادات', textAlign: TextAlign.center)),
-        DataColumn(label: Text('عدد العمليات', textAlign: TextAlign.center)),
         DataColumn(
             label:
-                Text('عدد المستهلكين الفرعيين', textAlign: TextAlign.center)),
-        DataColumn(label: Text('المستهلك')),
-        DataColumn(label: Text('#')),
+                Center(child: Text('الإعدادات', textAlign: TextAlign.center))),
+        DataColumn(
+            label: Center(
+                child: Text('عدد العمليات', textAlign: TextAlign.center))),
+        DataColumn(
+            label: Center(
+                child: Text('عدد المستهلكين الفرعيين',
+                    textAlign: TextAlign.center))),
+        DataColumn(label: Center(child: Text('المستهلك'))),
+        DataColumn(label: Center(child: Text('#'))),
       ],
       rows: consumers.map((consumer) {
         return DataRow(cells: [

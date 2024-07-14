@@ -33,12 +33,16 @@ class SubOfConTable extends StatelessWidget {
               outside: BorderSide(color: Colors.grey),
             ),
             columns: const [
-              DataColumn(label: Text('الإعدادات', textAlign: TextAlign.center)),
               DataColumn(
-                  label: Text('عدد عمليات الصرف', textAlign: TextAlign.center)),
-              DataColumn(label: Text('وصف إضافي')),
-              DataColumn(label: Text('المستهلك الفرعي')),
-              DataColumn(label: Text('#')),
+                  label: Center(
+                      child: Text('الإعدادات', textAlign: TextAlign.center))),
+              DataColumn(
+                  label: Center(
+                      child: Text('عدد عمليات الصرف',
+                          textAlign: TextAlign.center))),
+              DataColumn(label: Center(child: Text('وصف إضافي'))),
+              DataColumn(label: Center(child: Text('المستهلك الفرعي'))),
+              DataColumn(label: Center(child: Text('#'))),
             ],
             rows: subconsumers.map((subconsumer) {
               return DataRow(
