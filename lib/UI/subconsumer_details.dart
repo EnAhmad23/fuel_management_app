@@ -32,7 +32,7 @@ class SubonsumerDetails extends StatelessWidget {
                   children: [
                     InfoBox(
                       title: 'المسافة المقطوعة بين آخر قراءتي عدّاد',
-                      content: '${sub.distance} كيلو متر',
+                      content: '${(sub.distance ?? 0) / 1000.0}  كيلو متر ',
                     ),
                     InfoBox(
                       title: 'المستهلك الرئيسي',

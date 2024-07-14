@@ -948,16 +948,11 @@ class OpProvider extends ChangeNotifier {
             description: description.text),
       );
       log('////////////////////////// -> ${recordCon.text}');
-      var addRecord =
-          await addMovementRecord(subconName ?? '', int.parse(recordCon.text));
-      recordCon.text = '';
 
-      if (x != 0 && addRecord > 0) {
+      if (x != 0) {
         MySnackbar.doneSnack(massege: 'تم إضافة العملية بنجاح');
         clearSarfFeild();
-      } else if (addRecord == -1) {
-        MySnackbar.errorSnack(
-            massege: 'يجب ان تكون قيمة العداد اكبر من القيمة السابقة');
+        recordCon.text = '';
       }
     }
   }
@@ -1125,48 +1120,50 @@ class OpProvider extends ChangeNotifier {
         ),
         header: (pw.Context context) {
           // Custom header for the table on each page
-          return pw.Column(children: [
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              children: [
-                pw.Container(
-                  width: 170,
-                  height: 150,
-                  child: pw.Image(right),
-                ),
-                pw.SizedBox(width: 20),
-                pw.Container(
-                  width: 120,
-                  height: 150,
-                  child: pw.Image(mid),
-                ),
-                pw.SizedBox(width: 20),
-                pw.Container(
-                  width: 170,
-                  height: 150,
-                  child: pw.Image(left),
-                ),
-              ],
-            ),
-            pw.SizedBox(height: 10),
-            pw.Align(
-              alignment: pw.Alignment.centerLeft,
-              child: pw.Text(
-                DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-                textAlign: pw.TextAlign.right,
-              ),
-            ),
-            // pw.SizedBox(height: 10),
-            pw.Align(
-              alignment: pw.Alignment.topRight,
-              child: pw.Container(
-                width: 300,
-                height: 150,
-                child: pw.Image(body),
-              ),
-            ),
-            pw.SizedBox(height: 50),
-          ]);
+          return (context.pageNumber == 1)
+              ? pw.Column(children: [
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Container(
+                        width: 170,
+                        height: 150,
+                        child: pw.Image(right),
+                      ),
+                      pw.SizedBox(width: 20),
+                      pw.Container(
+                        width: 120,
+                        height: 150,
+                        child: pw.Image(mid),
+                      ),
+                      pw.SizedBox(width: 20),
+                      pw.Container(
+                        width: 170,
+                        height: 150,
+                        child: pw.Image(left),
+                      ),
+                    ],
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.Align(
+                    alignment: pw.Alignment.centerLeft,
+                    child: pw.Text(
+                      DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+                      textAlign: pw.TextAlign.right,
+                    ),
+                  ),
+                  // pw.SizedBox(height: 10),
+                  pw.Align(
+                    alignment: pw.Alignment.topRight,
+                    child: pw.Container(
+                      width: 300,
+                      height: 150,
+                      child: pw.Image(body),
+                    ),
+                  ),
+                  pw.SizedBox(height: 50),
+                ])
+              : pw.SizedBox();
         },
         footer: (pw.Context context) {
           // Only show the footer on the last page
@@ -1226,10 +1223,8 @@ class OpProvider extends ChangeNotifier {
               height: 10,
             ),
             pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.start,
               children: [
-                pw.SizedBox(
-                  width: 70,
-                ),
                 pw.TableHelper.fromTextArray(
                   headers: ['القيمة', 'التفاصيل'],
                   headerStyle: pw.TextStyle(font: beirutiFont, fontSize: 12),

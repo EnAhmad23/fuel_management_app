@@ -236,9 +236,12 @@ class AddSarf extends StatelessWidget {
                                             fontSize: 16,
                                             validator: (value) {
                                               sub.recordValidtor(value);
-                                              DBModel db = DBModel();
-                                              db.getSubRecordName(provider
-                                                  .subconName); //                                  not done!?
+                                              sub.getSubRecordName(
+                                                  provider.subconName);
+                                              if (int.parse(value ?? '0') <
+                                                  sub.lastRecord) {
+                                                return 'يجب ان تكون قيمة العداد أكبر او تساوي اخر قيمة (${sub.lastRecord})';
+                                              } //                                   not done!?
                                             },
                                             labelText: ' قراءة العداد',
                                             hintText: 'أدخل قراءة العداد',

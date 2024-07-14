@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
           title: 'First Method',
           // You can use the library anywhere in the app even in theme
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
             primaryIconTheme: const IconThemeData(color: Colors.white),
             iconTheme: const IconThemeData(color: Colors.white),
             fontFamily: 'Calibri',

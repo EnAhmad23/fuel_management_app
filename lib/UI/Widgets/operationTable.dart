@@ -6,6 +6,7 @@ import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
+import 'package:fuel_management_app/UI/operation_details.dart';
 import 'package:fuel_management_app/UI/update_operation_sarf.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -29,17 +30,26 @@ class OperationTable extends StatelessWidget {
         ),
         columns: const [
           DataColumn(
-              label: Text(
-            'الإعدادات',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18),
+              label: SizedBox(
+            width: 110,
+            child: Center(
+              child: Text(
+                'الإعدادات',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
           )),
           DataColumn(
-              label: Center(
-                  child: Text(
-            'التاريخ',
-            style: TextStyle(fontSize: 18),
-          ))),
+              label: SizedBox(
+            width: 80,
+            child: Center(
+                child: Text(
+              textAlign: TextAlign.center,
+              'التاريخ',
+              style: TextStyle(fontSize: 18),
+            )),
+          )),
           DataColumn(
               label: Center(
                   child: Text(
@@ -47,17 +57,53 @@ class OperationTable extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18),
           ))),
-          DataColumn(label: Text('نوع الوقود', textAlign: TextAlign.center)),
           DataColumn(
-              label: SizedBox(
-            child: Text('سند الصرف', textAlign: TextAlign.center),
-            width: 80,
+              label: Center(
+                  child: Text(
+            'نوع الوقود',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          ))),
+          DataColumn(
+              label: Center(
+            child: SizedBox(
+              width: 87,
+              child: Text(
+                'سند الصرف',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
           )),
-          DataColumn(label: Text('النوع', textAlign: TextAlign.center)),
-          DataColumn(label: Text('اسم المستلم')),
-          DataColumn(label: Text('المستهلك الأساسي')),
-          DataColumn(label: Text('المستهلك')),
-          DataColumn(label: Text('#')),
+          DataColumn(
+              label: Text(
+            'النوع',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          )),
+          DataColumn(
+              label: Text(
+            'اسم المستلم',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          )),
+          DataColumn(
+              label: Text(
+            'المستهلك الأساسي',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          )),
+          DataColumn(
+              label: Text(
+            'المستهلك',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          )),
+          DataColumn(
+              label: Text(
+            '#',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          )),
         ],
         rows: operations.map((operation) {
           return DataRow(
@@ -144,6 +190,9 @@ class OperationTable extends StatelessWidget {
                         topLiftRadius: 0,
                       ),
                       SettingButton(
+                          onTap: () {
+                            Get.to(OperationDetails(operationT: operation));
+                          },
                           color: Colors.blue,
                           icon: Icons.remove_red_eye,
                           topRightRadius: 5.r,
@@ -154,13 +203,24 @@ class OperationTable extends StatelessWidget {
                 }),
               ),
               DataCell(Center(
-                  child: Text('${operation.formattedDate}',
-                      textAlign: TextAlign.center))),
+                  child: Text(
+                '${operation.formattedDate}',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.sp),
+              ))),
               DataCell(Center(
-                  child: Text('${operation.amount}',
-                      textAlign: TextAlign.center))),
-              DataCell(
-                  Text('${operation.foulType}', textAlign: TextAlign.center)),
+                  child: Text(
+                '${operation.amount}',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.sp),
+              ))),
+              DataCell(Center(
+                child: Text(
+                  '${operation.foulType}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16.sp),
+                ),
+              )),
               DataCell(
                 Container(
                   width: 80,
@@ -169,18 +229,36 @@ class OperationTable extends StatelessWidget {
                   child: Text(
                     operation.dischangeNumber ?? '',
                     textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16.sp),
                   ),
                 ),
               ),
               DataCell(Center(
-                  child: Text(operation.type ?? '_',
-                      textAlign: TextAlign.center))),
-              DataCell(Center(child: Text(operation.receiverName ?? '_'))),
-              DataCell(Center(child: Text(operation.consumerName ?? '_'))),
-              DataCell(
-                  Center(child: Text(operation.subConsumerDetails ?? '_'))),
-              DataCell(
-                  Center(child: Text('${operations.indexOf(operation) + 1}'))),
+                  child: Text(
+                operation.type ?? '_',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.sp),
+              ))),
+              DataCell(Center(
+                  child: Text(
+                operation.receiverName ?? '_',
+                style: const TextStyle(fontSize: 16),
+              ))),
+              DataCell(Center(
+                  child: Text(
+                operation.consumerName ?? '_',
+                style: TextStyle(fontSize: 16.sp),
+              ))),
+              DataCell(Center(
+                  child: Text(
+                operation.subConsumerDetails ?? '_',
+                style: TextStyle(fontSize: 16.sp),
+              ))),
+              DataCell(Center(
+                  child: Text(
+                '${operations.indexOf(operation) + 1}',
+                style: TextStyle(fontSize: 16.sp),
+              ))),
             ],
           );
         }).toList(),

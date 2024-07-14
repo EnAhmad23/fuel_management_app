@@ -33,6 +33,7 @@ class SubProvider extends ChangeNotifier {
   double? distance;
   SubConsumerT? _updatedSub;
   int? id;
+  int lastRecord = 0;
   DateTime? _date;
   List<String>? consumersNames;
   String? dropdownValue;
@@ -114,7 +115,6 @@ class SubProvider extends ChangeNotifier {
     } else if (!value.isNumericOnly) {
       return 'أدخل قيمة صحيحة';
     }
-    return null;
   }
 
   Future<List<SubConsumerT>?> getSubConsumerT() async {
@@ -163,6 +163,11 @@ class SubProvider extends ChangeNotifier {
   getHasRecord(String? subName) async {
     int? temp = await _dbModel.getSubonsumerHasRecord(subName);
     changRecord(temp == 1);
+  }
+
+  getSubRecordName(String? subName) async {
+    lastRecord = await _dbModel.getSubRecordName(subName);
+    notifyListeners();
   }
 
   getNumOfOp(int subconsumerId) async {
