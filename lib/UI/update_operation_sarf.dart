@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
+import 'package:fuel_management_app/Controllers/sub_provider.dart';
+import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
+import 'package:fuel_management_app/UI/Widgets/my_button.dart';
 import 'package:provider/provider.dart';
 
-import 'Widgets/custom_switch.dart';
-import 'Widgets/my_button.dart';
+import 'Widgets/My_dropdown.dart';
 
 class UpdateOperationSarf extends StatelessWidget {
   const UpdateOperationSarf({super.key});
@@ -16,7 +19,7 @@ class UpdateOperationSarf extends StatelessWidget {
       appBar: AppBar(
         elevation: 5,
         title: Text(
-          'إنشاء عملية',
+          'تعديل عملية',
           style: Theme.of(context)
               .textTheme
               .bodyLarge
@@ -26,11 +29,11 @@ class UpdateOperationSarf extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 100.w),
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 100),
           child: Card(
             elevation: 5,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.r),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Consumer<OpProvider>(builder: (context, provider, x) {
               return Form(
@@ -38,13 +41,13 @@ class UpdateOperationSarf extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      height: 60.h,
+                      height: 60,
                       color: Colors.blue,
                       width: double.infinity,
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: Text('إنشاء عملية صرف جديدة',
+                        child: Text('تعديل عملية صرف',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -56,205 +59,109 @@ class UpdateOperationSarf extends StatelessWidget {
                     Expanded(
                       child: ListView(
                         children: [
-                          SizedBox(
-                            height: 20.h,
+                          const SizedBox(
+                            height: 20,
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.w),
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Column(
                               children: [
-                                SizedBox(
-                                  width: 10.w,
+                                const SizedBox(
+                                  width: 10,
                                 ),
                                 Row(
                                   children: [
                                     Expanded(
                                       child: MyTextFormField(
-                                        fontSize: 16.sp,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please enter receiver name';
-                                          }
-                                          return null;
-                                        },
+                                        fontSize: 16,
+                                        validator: provider.receiverValidet,
                                         labelText: 'اسم المستلم',
                                         hintText: 'أدخل اسم المستلم',
                                         controller: provider.receiverName,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 10.w,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     Expanded(
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              'المستهلك الفرعي',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10.h,
-                                          ),
-                                          DropdownButtonFormField<String>(
-                                            value: provider.subconName,
-                                            decoration: const InputDecoration(
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            items: provider.subconsumerNames
-                                                ?.map<DropdownMenuItem<String>>(
-                                                    (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text(value),
-                                              );
-                                            }).toList(),
-                                            onChanged: (value) {
-                                              provider.setSubConName(value);
-                                            },
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'Please select a sub consumer';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                        ],
-                                      ),
+                                      child: Consumer<SubProvider>(
+                                          builder: (context, sub, x) {
+                                        return MyDropdown(
+                                          lable: 'المستهلك الفرعي',
+                                          itemsList:
+                                              provider.subconsumerNames ?? [],
+                                          onchanged: (value) {
+                                            provider.setSubConName(value);
+                                            sub.getHasRecord(value);
+                                          },
+                                          value: provider.subconName,
+                                          validator: provider.subNameValidet,
+                                        );
+                                      }),
                                     ),
-                                    SizedBox(
-                                      width: 10.w,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     Expanded(
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              'المستهلك الرئيسي',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10.h,
-                                          ),
-                                          DropdownButtonFormField<String>(
-                                            value: provider.conName,
-                                            decoration: const InputDecoration(
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            items: provider.consumerNames
-                                                ?.map<DropdownMenuItem<String>>(
-                                                    (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text(value),
-                                              );
-                                            }).toList(),
-                                            onChanged: (value) {
-                                              provider.setConName(value);
-                                              provider.getSubonsumersNames(
-                                                  provider.conName);
-                                            },
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'Please select a main consumer';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                        ],
+                                      child: MyDropdown(
+                                        lable: 'المستهلك الرئيسي',
+                                        itemsList: provider.consumerNames ?? [],
+                                        onchanged: (value) {
+                                          if (value !=
+                                              'اختر المستهلك الرئيسي') {
+                                            provider.setConName(value);
+                                            provider.getSubonsumersNames(
+                                                provider.conName);
+                                          }
+                                        },
+                                        value: provider.conName,
+                                        validator: provider.conNameValidet,
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 10,
                                 ),
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: Column(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              'نوع الوقود',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10.h,
-                                          ),
-                                          DropdownButtonFormField<String>(
-                                            value: provider.fuelType,
-                                            decoration: const InputDecoration(
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            items: const [
-                                              DropdownMenuItem(
-                                                  value: 'بنزين',
-                                                  child: Text('بنزين')),
-                                              DropdownMenuItem(
-                                                  value: 'سولار',
-                                                  child: Text('سولار')),
-                                            ],
-                                            onChanged: (value) {
-                                              provider.setFuelType(value);
-                                            },
-                                          ),
+                                      child: MyDropdown(
+                                        lable: 'نوع الوقود',
+                                        itemsList: const [
+                                          'اختر نوع الوقود',
+                                          'بنزين',
+                                          'سولار'
                                         ],
+                                        onchanged: (value) {
+                                          if (value != 'اختر نوع الوقود') {
+                                            provider.setFuelType(value);
+                                          } else {
+                                            provider.setFuelType(null);
+                                          }
+                                        },
+                                        value: provider.fuelType ??
+                                            'اختر نوع الوقود',
+                                        validator: provider.fuelTypeValidator,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 10.w,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     Expanded(
-                                      child: Column(
-                                        children: [
-                                          MyTextFormField(
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'Please enter dischange number';
-                                              }
-                                              return null;
-                                            },
-                                            labelText: 'رقم سند الصرف',
-                                            hintText: 'أدخل رقم الصرف',
-                                            controller:
-                                                provider.dischangeNumberCon,
-                                          ),
-                                        ],
+                                      child: MyTextFormField(
+                                        fontSize: 16,
+                                        validator:
+                                            provider.dischangeNumberValidet,
+                                        labelText: 'رقم سند الصرف',
+                                        hintText: 'أدخل رقم الصرف',
+                                        controller: provider.dischangeNumberCon,
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 10,
                                 ),
                                 Row(
                                   children: [
@@ -267,17 +174,19 @@ class UpdateOperationSarf extends StatelessWidget {
                                               ' التاريخ ',
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .bodyMedium
+                                                  .bodySmall
                                                   ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.bold),
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 10.h,
+                                          const SizedBox(
+                                            height: 10,
                                           ),
                                           TextFormField(
                                             validator: provider.dateValidet,
+                                            style:
+                                                const TextStyle(fontSize: 16),
                                             controller: provider.dateCon,
                                             decoration: InputDecoration(
                                                 // alignLabelWithHint: true,
@@ -308,18 +217,14 @@ class UpdateOperationSarf extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 10.w,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     Expanded(
                                       child: MyTextFormField(
+                                        fontSize: 16,
                                         keyboardType: TextInputType.number,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please enter amount';
-                                          }
-                                          return null;
-                                        },
+                                        validator: provider.amontValidet,
                                         labelText: 'الكمية',
                                         hintText: 'أدخل كمية الوقود',
                                         controller: provider.amountCon,
@@ -327,19 +232,43 @@ class UpdateOperationSarf extends StatelessWidget {
                                     ),
                                   ],
                                 ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Consumer<SubProvider>(
+                                  builder: (context, sub, child) {
+                                    return (sub.hasRcord)
+                                        ? MyTextFormField(
+                                            fontSize: 16,
+                                            validator: (value) {
+                                              sub.recordValidtor(value);
+                                              sub.getSubRecordName(
+                                                  provider.subconName);
+                                              if (int.parse(value ?? '0') <
+                                                  sub.lastRecord) {
+                                                return 'يجب ان تكون قيمة العداد أكبر او تساوي اخر قيمة (${sub.lastRecord})';
+                                              }
+                                            },
+                                            labelText: ' قراءة العداد',
+                                            hintText: 'أدخل قراءة العداد',
+                                            controller: provider.recordCon,
+                                          )
+                                        : const SizedBox();
+                                  },
+                                ),
                                 SizedBox(
-                                  height: 20.h,
+                                  height: 10.h,
                                 ),
                                 const CustomSwitch(),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 10.h,
+                          const SizedBox(
+                            height: 10,
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 30.w,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
                             ), // Add padding as needed
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -354,13 +283,13 @@ class UpdateOperationSarf extends StatelessWidget {
                                           fontWeight: FontWeight
                                               .bold), // Customize the style as needed
                                 ),
-                                SizedBox(
-                                    height: 10
-                                        .h), // Add some space between the label and the TextField
+                                const SizedBox(
+                                    height:
+                                        10), // Add some space between the label and the TextField
                                 Consumer<OpProvider>(
                                     builder: (context, provider, x) {
                                   return TextField(
-                                    style: TextStyle(fontSize: 18.sp),
+                                    style: const TextStyle(fontSize: 18),
                                     // textDirection: TextDirection.rtl,
                                     textAlign: TextAlign.right,
                                     controller: provider.description,
@@ -375,23 +304,24 @@ class UpdateOperationSarf extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 20.h,
+                          const SizedBox(
+                            height: 20,
                           ),
-                          Consumer<OpProvider>(builder: (context, provider, x) {
+                          Consumer2<OpProvider, SubProvider>(
+                              builder: (context, provider, sub, x) {
                             return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.w),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30),
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: MyButton(
-                                  text: 'تعديل',
-                                  onTap: provider.onTopUpdateSarf,
-                                ),
+                                    text: 'تعديل',
+                                    onTap: provider.onTopUpdateSarf),
                               ),
                             );
                           }),
-                          SizedBox(
-                            height: 30.h,
+                          const SizedBox(
+                            height: 30,
                           )
                         ],
                       ),

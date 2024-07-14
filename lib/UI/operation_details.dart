@@ -80,68 +80,113 @@ class OperationDetails extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'رقم سند الصرف',
-                          style: TextStyle(color: Colors.grey, fontSize: 18),
-                        ),
-                        Text(
-                          '${operationT.amount}#',
-                          style: TextStyle(
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.bold),
-                        ),
+                        (operationT.dischangeNumber != null &&
+                                operationT.dischangeNumber != '_')
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Text(
+                                    'رقم سند الصرف',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 18),
+                                  ),
+                                  Text(
+                                    '${operationT.dischangeNumber}#',
+                                    style: TextStyle(
+                                        color: Colors.grey[700],
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(),
                         const SizedBox(
                           height: 10,
                         ),
-                        const Text(
-                          'اسم المستلم',
-                          style: TextStyle(color: Colors.grey, fontSize: 18),
-                        ),
-                        Text(
-                          operationT.receiverName ?? '',
-                          style: TextStyle(
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.bold),
-                        ),
+                        (operationT.receiverName != null &&
+                                operationT.receiverName != '_')
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Text(
+                                    'اسم المستلم',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 18),
+                                  ),
+                                  Text(
+                                    operationT.receiverName ?? '',
+                                    style: TextStyle(
+                                        color: Colors.grey[700],
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(),
                         const SizedBox(
                           height: 10,
                         ),
-                        const Text(
-                          'المستهلك الاساسي',
-                          style: TextStyle(color: Colors.grey, fontSize: 18),
-                        ),
-                        Text(
-                          operationT.consumerName ?? '',
-                          style: TextStyle(
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.bold),
-                        ),
+                        (operationT.consumerName != null &&
+                                operationT.consumerName != '_')
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Text(
+                                    'المستهلك الاساسي',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 18),
+                                  ),
+                                  Text(
+                                    operationT.consumerName ?? '',
+                                    style: TextStyle(
+                                        color: Colors.grey[700],
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(),
                         const SizedBox(
                           height: 10,
                         ),
-                        const Text(
-                          'المستهلك الفرعي',
-                          style: TextStyle(color: Colors.grey, fontSize: 18),
-                        ),
-                        Text(
-                          operationT.subConsumerDetails ?? '',
-                          style: TextStyle(
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.bold),
-                        ),
+                        (operationT.subConsumerDetails != null &&
+                                operationT.subConsumerDetails != '_')
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Text(
+                                    'المستهلك الفرعي',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 18),
+                                  ),
+                                  Text(
+                                    operationT.subConsumerDetails!,
+                                    style: TextStyle(
+                                        color: Colors.grey[700],
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(),
                         const SizedBox(
                           height: 15,
                         ),
-                        const Text(
-                          'الوصف',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          operationT.description ?? '_',
-                          style: TextStyle(
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.bold),
-                        ),
+                        (operationT.description != null &&
+                                operationT.description != '')
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Text(
+                                    'الوصف',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    operationT.description!,
+                                    style: TextStyle(
+                                        color: Colors.grey[700],
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox(),
                         // const Text(
                         //   'المختصر',
                         //   style: TextStyle(fontWeight: FontWeight.bold),
@@ -241,31 +286,34 @@ class OperationDetails extends StatelessWidget {
                             const SizedBox(
                               width: 10,
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                opPro.checkOperationType(operationT);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor:
-                                    Colors.blue, // Text and icon color
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      10), // Rounded corners
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8), // Padding
-                              ),
-                              child: const Row(
-                                children: [
-                                  Text(
-                                    'تعديل',
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  opPro.checkOperationType(operationT);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor:
+                                      Colors.blue, // Text and icon color
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        10), // Rounded corners
                                   ),
-                                  Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                  )
-                                ],
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8), // Padding
+                                ),
+                                child: const Row(
+                                  children: [
+                                    Text(
+                                      'تعديل',
+                                    ),
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           ],
