@@ -1045,7 +1045,8 @@ class OpProvider extends ChangeNotifier {
       setConName('${operation.consumerName}');
       setDate(operation.newDate!);
       log('operation.subConsumerDeails - >${operation.subConsumerDetails}');
-      setSubConName('${operation.subConsumerDetails}');
+      getSubonsumersNames(operation.consumerName);
+      // setSubConName('${operation.subConsumerDetails}');
       setAmount('${int.parse('${operation.amount}')}');
       amountCon.text = '${operation.amount}';
       changeCheck(operation.checked);

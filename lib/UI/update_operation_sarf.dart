@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -112,6 +114,10 @@ class UpdateOperationSarf extends StatelessWidget {
                                             provider.setConName(value);
                                             provider.getSubonsumersNames(
                                                 provider.conName);
+                                            log('33333333333333333333333${provider.operationT?.subConsumerDetails}');
+                                            // provider.setSubConName(provider
+                                            //     .operationT!
+                                            //     .subConsumerDetails);
                                           }
                                         },
                                         value: provider.conName,
