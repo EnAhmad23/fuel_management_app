@@ -1,19 +1,22 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // ignore: must_be_immutable
 class MyTextFormField extends StatelessWidget {
-  MyTextFormField(
-      {super.key,
-      required this.labelText,
-      this.obscureText,
-      required this.hintText,
-      required this.controller,
-      this.validator,
-      this.keyboardType,
-      this.fontSize});
+  MyTextFormField({
+    super.key,
+    required this.labelText,
+    this.obscureText,
+    required this.hintText,
+    required this.controller,
+    this.validator,
+    this.keyboardType,
+    this.fontSize,
+    this.inputFormatters,
+  });
   final String labelText;
   final TextInputType? keyboardType;
   final String hintText;
@@ -21,6 +24,7 @@ class MyTextFormField extends StatelessWidget {
   final TextEditingController controller;
   bool? obscureText;
   double? fontSize;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +44,7 @@ class MyTextFormField extends StatelessWidget {
           height: 10.h,
         ),
         TextFormField(
+          inputFormatters: inputFormatters,
           keyboardType: keyboardType ?? TextInputType.text,
           validator: validator,
           controller: controller,

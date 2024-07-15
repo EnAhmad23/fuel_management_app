@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/UI/Widgets/My_dropdown.dart';
@@ -86,8 +87,19 @@ class AddOperationEstrad extends StatelessWidget {
                                         height: 10,
                                       ),
                                       TextFormField(
+                                        onTap: () async {
+                                          var x = await showDatePicker(
+                                            currentDate: provider.date,
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime(2101),
+                                          );
+                                          provider.setDate(x);
+                                        },
                                         style: const TextStyle(fontSize: 16),
                                         // textAlign: TextAlign.right,
+
                                         controller: provider.dateCon,
                                         // textDirection: TextDirection.rtl,
                                         decoration: InputDecoration(
@@ -117,7 +129,10 @@ class AddOperationEstrad extends StatelessWidget {
                                   SizedBox(width: 10.w),
                                   Expanded(
                                     child: MyTextFormField(
-                                      fontSize: 16.sp,
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      fontSize: 16,
                                       validator: provider.amontValidet,
                                       labelText: 'الكمية',
                                       hintText: 'أدخل كمية الوقود',

@@ -114,6 +114,10 @@ class UpdateOperationSarf extends StatelessWidget {
                                             provider.setConName(value);
                                             provider.getSubonsumersNames(
                                                 provider.conName);
+                                            log('=====================================${provider.subconName}');
+                                            // provider.setSubConName(provider
+                                            //     .operationT
+                                            //     ?.subConsumerDetails);
                                             log('33333333333333333333333${provider.operationT?.subConsumerDetails}');
                                             // provider.setSubConName(provider
                                             //     .operationT!

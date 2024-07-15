@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
-import 'package:fuel_management_app/Model/subconsumer.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class AddSubconsumer extends StatelessWidget {
@@ -55,12 +53,13 @@ class AddSubconsumer extends StatelessWidget {
                               children: [
                                 Align(
                                   alignment: Alignment.centerRight,
-                                  child: Text('المستهلك الرئيسي',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold)),
+                                  child: Text(
+                                    'المستهلك الرئيسي',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(fontWeight: FontWeight.w800),
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 10,
@@ -92,6 +91,7 @@ class AddSubconsumer extends StatelessWidget {
                                   labelText: 'اسم المستهلك',
                                   hintText: 'أدخل اسم المستهلك',
                                   controller: provider.subName,
+                                  fontSize: 16,
                                 ),
                                 const SizedBox(
                                   height: 20,
@@ -100,10 +100,11 @@ class AddSubconsumer extends StatelessWidget {
                                   labelText: 'تفاصيل المستهلك',
                                   hintText: 'أدخل تفاصيل المستهلك',
                                   controller: provider.subDescription,
+                                  fontSize: 16,
                                   // validator: provider.descriptionValidtor,
                                 ),
                                 const SizedBox(
-                                  height: 30,
+                                  height: 10,
                                 ),
                                 Consumer<SubProvider>(
                                     builder: (context, subPro, x) {
@@ -116,7 +117,7 @@ class AddSubconsumer extends StatelessWidget {
                                             .textTheme
                                             .bodyMedium,
                                       ),
-                                      value: subPro.hasRcord ?? false,
+                                      value: subPro.hasRcord,
                                       onChanged: (bool? newValue) {
                                         subPro.changRecord(newValue ?? false);
                                       },
@@ -200,7 +201,7 @@ class AddSubconsumer extends StatelessWidget {
                                         ],
                                       )
                                     : const SizedBox(),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 40),
                                 Consumer<SubProvider>(
                                     builder: (context, subPr, x) {
                                   return Align(

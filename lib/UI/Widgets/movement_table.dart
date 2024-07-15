@@ -52,70 +52,73 @@ class MovementTable extends StatelessWidget {
           return DataRow(
             cells: [
               DataCell(
-                Consumer<SubProvider>(builder: (context, subPro, x) {
-                  return Center(
-                    child: SettingButton(
-                      color: Colors.red,
-                      icon: Icons.delete,
-                      topLiftRadius: 5.r,
-                      topRightRadius: 5.r,
-                      iconColor: Colors.white,
-                      onTap: () {
-                        Get.defaultDialog(
-                            title: 'حذف',
-                            backgroundColor: Colors.white,
-                            content: Padding(
-                              padding: EdgeInsets.all(10.w),
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                      height: 100.h,
-                                      width: 200.h,
-                                      child:
-                                          Lottie.asset('assets/warning.json')),
-                                  SizedBox(
-                                    height: 5.h,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 0),
+                  child: Consumer<SubProvider>(builder: (context, subPro, x) {
+                    return Center(
+                      child: SettingButton(
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        topLiftRadius: 5.r,
+                        topRightRadius: 5.r,
+                        iconColor: Colors.white,
+                        onTap: () {
+                          Get.defaultDialog(
+                              title: 'حذف',
+                              backgroundColor: Colors.white,
+                              content: Padding(
+                                padding: EdgeInsets.all(10.w),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                        height: 100.h,
+                                        width: 200.h,
+                                        child:
+                                            Lottie.asset('assets/warning.json')),
+                                    SizedBox(
+                                      height: 5.h,
+                                    ),
+                                    const Text('هل متاكد من حذف العنصر؟'),
+                                  ],
+                                ),
+                              ),
+                              confirm: InkWell(
+                                onTap: () {
+                                  subPro.deleteMovement(
+                                      movement.id, movement.subId ?? 0);
+                                  Get.back();
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(5.r)),
+                                  margin: EdgeInsets.symmetric(horizontal: 5.w),
+                                  padding: EdgeInsets.all(10.w),
+                                  child: const Text(
+                                    'نعم',
+                                    style: TextStyle(color: Colors.white),
                                   ),
-                                  const Text('هل متاكد من حذف العنصر؟'),
-                                ],
-                              ),
-                            ),
-                            confirm: InkWell(
-                              onTap: () {
-                                subPro.deleteMovement(
-                                    movement.id, movement.subId ?? 0);
-                                Get.back();
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(5.r)),
-                                margin: EdgeInsets.symmetric(horizontal: 5.w),
-                                padding: EdgeInsets.all(10.w),
-                                child: const Text(
-                                  'نعم',
-                                  style: TextStyle(color: Colors.white),
                                 ),
                               ),
-                            ),
-                            cancel: InkWell(
-                              onTap: () => Get.back(),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(5.r)),
-                                padding: EdgeInsets.all(10.w),
-                                margin: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: const Text(
-                                  'لا',
-                                  style: TextStyle(color: Colors.white),
+                              cancel: InkWell(
+                                onTap: () => Get.back(),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(5.r)),
+                                  padding: EdgeInsets.all(10.w),
+                                  margin: EdgeInsets.symmetric(horizontal: 5.w),
+                                  child: const Text(
+                                    'لا',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                            ));
-                      },
-                    ),
-                  );
-                }),
+                              ));
+                        },
+                      ),
+                    );
+                  }),
+                ),
               ),
               DataCell(Center(
                   child: Text('${movement.formattedDate}',

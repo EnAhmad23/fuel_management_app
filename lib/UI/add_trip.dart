@@ -126,6 +126,16 @@ class AddTrip extends StatelessWidget {
                                       height: 10,
                                     ),
                                     TextFormField(
+                                      onTap: () async {
+                                        var x = await showDatePicker(
+                                          currentDate: provider.date,
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime(2101),
+                                        );
+                                        provider.setDate(x);
+                                      },
                                       style: const TextStyle(fontSize: 16),
                                       // textAlign: TextAlign.right,
                                       controller: provider.dateCon,

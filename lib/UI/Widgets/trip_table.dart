@@ -46,23 +46,37 @@ class TripTable extends StatelessWidget {
           DataColumn(
               label: Center(
                   child: Text(
-            'المسافة المقطوعة',
+            '    المسافة المقطوعة',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 18),
           ))),
           DataColumn(
               label: Center(
-                  child: Text('تاريخ الرحلة', textAlign: TextAlign.center))),
+                  child: Text(
+            'تاريخ الرحلة',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          ))),
           DataColumn(
-              label: SizedBox(
-            width: 80,
-            child: Text('سبب الرحلة', textAlign: TextAlign.center),
+              label: Text(
+            'سبب الرحلة',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
           )),
           DataColumn(
-            label:
-                Center(child: Text('وجهة الرحلة', textAlign: TextAlign.center)),
+            label: Center(
+                child: Text(
+              'وجهة الرحلة',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+            )),
           ),
-          DataColumn(label: Center(child: Text('اسم المستهلك'))),
+          DataColumn(
+              label: Center(
+                  child: Text(
+            'اسم المستهلك',
+            style: TextStyle(fontSize: 18),
+          ))),
           DataColumn(label: Text('#')),
         ],
         rows: trips.map((trip) {
@@ -72,116 +86,150 @@ class TripTable extends StatelessWidget {
               DataCell(trip.status == Status.finished.stringValue ||
                       trip.status == Status.canceled.stringValue
                   ? const Center(child: Text('---'))
-                  : ButtonBar(
-                      buttonPadding: const EdgeInsets.all(0),
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SettingButton(
-                          color: Colors.red,
-                          icon: Icons.delete,
-                          topLiftRadius: 5.r,
-                          topRightRadius: 0,
-                          iconColor: Colors.white,
-                          onTap: () {
-                            Get.defaultDialog(
-                                title: 'حذف',
-                                backgroundColor: Colors.white,
-                                content: Padding(
-                                  padding: EdgeInsets.all(10.w),
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                          height: 100.h,
-                                          width: 200.h,
-                                          child: Lottie.asset(
-                                              'assets/warning.json')),
-                                      SizedBox(
-                                        height: 5.h,
-                                      ),
-                                      const Text('هل متاكد من حذف العنصر؟'),
-                                    ],
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 7.0, horizontal: 0),
+                      child: ButtonBar(
+                        buttonPadding: const EdgeInsets.all(0),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SettingButton(
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            topLiftRadius: 5.r,
+                            topRightRadius: 0,
+                            iconColor: Colors.white,
+                            onTap: () {
+                              Get.defaultDialog(
+                                  title: 'حذف',
+                                  backgroundColor: Colors.white,
+                                  content: Padding(
+                                    padding: EdgeInsets.all(10.w),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                            height: 100.h,
+                                            width: 200.h,
+                                            child: Lottie.asset(
+                                                'assets/warning.json')),
+                                        SizedBox(
+                                          height: 5.h,
+                                        ),
+                                        const Text('هل متاكد من حذف العنصر؟'),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                confirm: Consumer<TripProvider>(
-                                    builder: (context, pro, x) {
-                                  return InkWell(
-                                    onTap: () {
-                                      // opPro.deleteOperation(operation.id ?? 0);
-                                      pro.deleteTrip(trip.id!);
-                                      Get.back();
-                                    },
+                                  confirm: Consumer<TripProvider>(
+                                      builder: (context, pro, x) {
+                                    return InkWell(
+                                      onTap: () {
+                                        // opPro.deleteOperation(operation.id ?? 0);
+                                        pro.deleteTrip(trip.id!);
+                                        Get.back();
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius:
+                                                BorderRadius.circular(5.r)),
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 5.w),
+                                        padding: EdgeInsets.all(10.w),
+                                        child: const Text(
+                                          'نعم',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                  cancel: InkWell(
+                                    onTap: () => Get.back(),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                          color: Colors.red,
+                                          color: Colors.green,
                                           borderRadius:
                                               BorderRadius.circular(5.r)),
+                                      padding: EdgeInsets.all(10.w),
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 5.w),
-                                      padding: EdgeInsets.all(10.w),
                                       child: const Text(
-                                        'نعم',
+                                        'لا',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
-                                  );
-                                }),
-                                cancel: InkWell(
-                                  onTap: () => Get.back(),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius:
-                                            BorderRadius.circular(5.r)),
-                                    padding: EdgeInsets.all(10.w),
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 5.w),
-                                    child: const Text(
-                                      'لا',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ));
-                          },
-                        ),
-                        Consumer<TripProvider>(builder: (context, pro, x) {
-                          return SettingButton(
-                            onTap: () {
-                              pro.goToUpdate(trip);
+                                  ));
                             },
-                            color: Colors.green,
-                            icon: Icons.edit,
-                            topRightRadius: 5.r,
-                            iconColor: Colors.white,
-                            topLiftRadius: 0,
-                          );
-                        }),
-                        // SettingButton(
-                        //     color: Colors.blue,
-                        //     icon: Icons.remove_red_eye,
-                        //     topRightRadius: 5.r,
-                        //     topLiftRadius: 0,
-                        //     iconColor: Colors.white),
-                      ],
+                          ),
+                          Consumer<TripProvider>(builder: (context, pro, x) {
+                            return SettingButton(
+                              onTap: () {
+                                pro.goToUpdate(trip);
+                              },
+                              color: Colors.green,
+                              icon: Icons.edit,
+                              topRightRadius: 5.r,
+                              iconColor: Colors.white,
+                              topLiftRadius: 0,
+                            );
+                          }),
+                          // SettingButton(
+                          //     color: Colors.blue,
+                          //     icon: Icons.remove_red_eye,
+                          //     topRightRadius: 5.r,
+                          //     topLiftRadius: 0,
+                          //     iconColor: Colors.white),
+                        ],
+                      ),
                     )),
               DataCell(Center(child: choseStatus(trip))),
               DataCell(Consumer<TripProvider>(builder: (context, pro, x) {
                 return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('  كليو متر  ', textAlign: TextAlign.center),
+                    const Text(
+                      '  كليو متر  ',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15),
+                    ),
                     Text(
-                        '${trip.distation != null ? (trip.distation! < 0 ? 0 : trip.distation) : 0.0}')
+                      '${trip.distation != null ? (trip.distation! < 0 ? 0 : trip.distation! / 1000) : 0.0}',
+                      style: const TextStyle(
+                          fontSize: 17, fontWeight: FontWeight.bold),
+                    )
                   ],
                 );
               })),
               DataCell(Center(
-                  child: Text('${trip.formattedDate}',
-                      textAlign: TextAlign.center))),
-              DataCell(Text('${trip.cause}', textAlign: TextAlign.center)),
-              DataCell(Text('${trip.road}', textAlign: TextAlign.center)),
+                  child: Text(
+                '${trip.formattedDate}',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ))),
               DataCell(Center(
-                  child: Text(trip.subconName ?? '_',
-                      textAlign: TextAlign.center))),
-              DataCell(Center(child: Text('${trips.indexOf(trip) + 1}'))),
+                child: Text(
+                  '${trip.cause}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
+              )),
+              DataCell(Center(
+                child: Text(
+                  '${trip.road}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
+              )),
+              DataCell(Center(
+                  child: Text(
+                trip.subconName ?? '_',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ))),
+              DataCell(Center(
+                  child: Text(
+                '${trips.indexOf(trip) + 1}',
+                style: TextStyle(fontSize: 16),
+              ))),
             ],
           );
         }).toList(),
@@ -194,7 +242,10 @@ class TripTable extends StatelessWidget {
       builder: (context, pro, x) {
         if (trip.status == Status.canceled.stringValue ||
             trip.status == Status.finished.stringValue) {
-          return Text('${trip.status}');
+          return Text(
+            '${trip.status}',
+            style: TextStyle(fontSize: 16),
+          );
         } else if (trip.status == Status.created.stringValue) {
           return Container(
             decoration: BoxDecoration(
@@ -206,7 +257,7 @@ class TripTable extends StatelessWidget {
                 },
                 child: const Text(
                   'بدأ الرحلة',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 )),
           );
         } else {
@@ -220,7 +271,7 @@ class TripTable extends StatelessWidget {
                 },
                 child: const Text(
                   'إنهاء الرحلة',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 )),
           );
         }

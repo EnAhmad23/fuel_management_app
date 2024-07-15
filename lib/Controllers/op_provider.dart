@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:fuel_management_app/Model/fuel_available_amount.dart';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/UI/Widgets/my_snackbar.dart';
+import 'package:fuel_management_app/UI/search_result.dart';
 import 'package:fuel_management_app/UI/show_operation.dart';
 import 'package:fuel_management_app/UI/update_operation_estrad.dart';
 import 'package:get/get.dart';
@@ -31,10 +32,10 @@ class OpProvider extends ChangeNotifier {
     getMonthlyWard();
     getTotalAvailable();
     getNumOfAllOp();
-    getTotalSolarSarf();
-    getTotalBazenSarf();
-    getTotalSolarWard();
-    getTotalBazenWard();
+    // getTotalSolarSarf();
+    // getTotalBazenSarf();
+    // getTotalSolarWard();
+    // getTotalBazenWard();
   }
   factory OpProvider() {
     return _opProvider;
@@ -329,10 +330,8 @@ class OpProvider extends ChangeNotifier {
   }
 
   setSubConName(String? name) {
-    if (name != null) {
-      _subconName = name;
-      notifyListeners();
-    }
+    _subconName = name;
+    notifyListeners();
   }
 
   dropItem(String? value) {
@@ -519,13 +518,10 @@ class OpProvider extends ChangeNotifier {
   }
 
   void getDailySarf() async {
-    Map<String, dynamic> re = await _dbModel.getDailySarf();
+    int re = await _dbModel.getDailySarf();
     log('Daily Sarf -> $re');
-    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
-      setDailySarf('${re['total_exchange_amount']}');
-    } else {
-      setDailySarf('0.0');
-    }
+
+    setDailySarf('$re');
   }
 
   void getMonthlySarf() async {
@@ -558,25 +554,25 @@ class OpProvider extends ChangeNotifier {
     }
   }
 
-  void getTotalSolarSarf() async {
-    Map<String, dynamic> re = await _dbModel.getTotalSolarSarf();
-    log('Total Sarf -> ${re['total_exchange_amount']}');
-    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
-      setTotalSolarSarf('${re['total_exchange_amount']}');
-    } else {
-      setTotalSolarSarf('0.0');
-    }
-  }
+  // void getTotalSolarSarf() async {
+  //   Map<String, dynamic> re = await _dbModel.getTotalSolarSarf();
+  //   log('Total Sarf -> ${re['total_exchange_amount']}');
+  //   if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+  //     setTotalSolarSarf('${re['total_exchange_amount']}');
+  //   } else {
+  //     setTotalSolarSarf('0.0');
+  //   }
+  // }
 
-  void getTotalBazenSarf() async {
-    Map<String, dynamic> re = await _dbModel.getTotaBansenSarf();
-    log('Total Sarf -> ${re['total_exchange_amount']}');
-    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
-      setTotalBazenSarf('${re['total_exchange_amount']}');
-    } else {
-      setTotalBazenSarf('0.0');
-    }
-  }
+  // void getTotalBazenSarf() async {
+  //   Map<String, dynamic> re = await _dbModel.getTotaBansenSarf();
+  //   log('Total Sarf -> ${re['total_exchange_amount']}');
+  //   if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+  //     setTotalBazenSarf('${re['total_exchange_amount']}');
+  //   } else {
+  //     setTotalBazenSarf('0.0');
+  //   }
+  // }
 
   void getTotalAvailable() async {
     Map<String, dynamic> re = await _dbModel.getTotalAvailable();
@@ -598,25 +594,25 @@ class OpProvider extends ChangeNotifier {
     }
   }
 
-  void getTotalSolarWard() async {
-    Map<String, dynamic> re = await _dbModel.getTotalSolarWard();
-    log('Total Ward -> ${re['total_exchange_amount']}');
-    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
-      setTotalSolarWard('${re['total_exchange_amount']}');
-    } else {
-      setTotalSolarWard('0.0');
-    }
-  }
+  // void getTotalSolarWard() async {
+  //   Map<String, dynamic> re = await _dbModel.getTotalSolarWard();
+  //   log('Total Ward -> ${re['total_exchange_amount']}');
+  //   if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+  //     setTotalSolarWard('${re['total_exchange_amount']}');
+  //   } else {
+  //     setTotalSolarWard('0.0');
+  //   }
+  // }
 
-  void getTotalBazenWard() async {
-    Map<String, dynamic> re = await _dbModel.getTotalBanzenWard();
-    log('Total Ward -> ${re['total_exchange_amount']}');
-    if (re.isNotEmpty && re['total_exchange_amount'] != null) {
-      setTotalBazenWard('${re['total_exchange_amount']}');
-    } else {
-      setTotalBazenWard('0.0');
-    }
-  }
+  // void getTotalBazenWard() async {
+  //   Map<String, dynamic> re = await _dbModel.getTotalBanzenWard();
+  //   log('Total Ward -> ${re['total_exchange_amount']}');
+  //   if (re.isNotEmpty && re['total_exchange_amount'] != null) {
+  //     setTotalBazenWard('${re['total_exchange_amount']}');
+  //   } else {
+  //     setTotalBazenWard('0.0');
+  //   }
+  // }
 
   void getMonthlyWard() async {
     Map<String, dynamic> re = await _dbModel.getMonthlyWard();
@@ -775,7 +771,7 @@ class OpProvider extends ChangeNotifier {
       ).toList();
     }
     log('-*-*-*-*-*-*-*-**-*${operations?.length}');
-    if (operation.newDate != null) {
+    if (operation.newDate != null && fromdate != null && todate != null) {
       operations = operations?.where(
         (element) {
           log('111111111111${operation.newDate}');
@@ -837,8 +833,8 @@ class OpProvider extends ChangeNotifier {
     getLastTenOpT();
     getTotalAvailable();
     getNumOfAllOp();
-    getTotalSolarWard();
-    getTotalBazenWard();
+    // getTotalSolarWard();
+    // getTotalBazenWard();
     return x;
   }
 
@@ -853,8 +849,8 @@ class OpProvider extends ChangeNotifier {
     getLastTenOpT();
     getTotalAvailable();
     getNumOfAllOp();
-    getTotalSolarSarf();
-    getTotalBazenSarf();
+    // getTotalSolarSarf();
+    // getTotalBazenSarf();
     return x;
   }
 
@@ -870,8 +866,8 @@ class OpProvider extends ChangeNotifier {
     getLastTenOpT();
     getTotalAvailable();
     getNumOfAllOp();
-    getTotalSolarSarf();
-    getTotalBazenSarf();
+    // getTotalSolarSarf();
+    // getTotalBazenSarf();
     return x;
   }
 
@@ -884,8 +880,8 @@ class OpProvider extends ChangeNotifier {
     getAllOpT();
     getLastTenOpT();
     getNumOfAllOp();
-    getTotalSolarWard();
-    getTotalBazenWard();
+    // getTotalSolarWard();
+    // getTotalBazenWard();
     return x;
   }
 
@@ -901,10 +897,10 @@ class OpProvider extends ChangeNotifier {
     getAllOpT();
     getLastTenOpT();
     getNumOfAllOp();
-    getTotalSolarSarf();
-    getTotalBazenSarf();
-    getTotalSolarWard();
-    getTotalBazenWard();
+    // getTotalSolarSarf();
+    // getTotalBazenSarf();
+    // getTotalSolarWard();
+    // getTotalBazenWard();
     return x;
   }
 
@@ -924,9 +920,10 @@ class OpProvider extends ChangeNotifier {
             newDate: date,
             description: description.text),
       );
-      clearWardFeild();
+
       if (x != 0) {
         MySnackbar.doneSnack(massege: 'تم إضافة العملية بنجاح');
+        clearWardFeild();
       }
     }
   }
@@ -953,7 +950,6 @@ class OpProvider extends ChangeNotifier {
       if (x != 0) {
         MySnackbar.doneSnack(massege: 'تم إضافة العملية بنجاح');
         clearSarfFeild();
-        recordCon.text = '';
       }
     }
   }
@@ -986,7 +982,7 @@ class OpProvider extends ChangeNotifier {
             newDate: date,
             description: description.text),
       );
-      Get.to(const ShowOperation());
+      Get.to(const SearchResult());
     }
   }
 
@@ -1006,9 +1002,10 @@ class OpProvider extends ChangeNotifier {
           amount: amount,
           newDate: date,
           description: description.text));
-      clearSarfFeild();
+
       if (x != 0) {
         MySnackbar.doneSnack(massege: 'تم تعديل العملية بنجاح');
+        clearSarfFeild();
       }
     }
   }
@@ -1046,7 +1043,8 @@ class OpProvider extends ChangeNotifier {
       setDate(operation.newDate!);
       log('operation.subConsumerDeails - >${operation.subConsumerDetails}');
       getSubonsumersNames(operation.consumerName);
-      // setSubConName('${operation.subConsumerDetails}');
+      // setSubConName(null);
+      log('subconame - >$subconName');
       setAmount('${int.parse('${operation.amount}')}');
       amountCon.text = '${operation.amount}';
       changeCheck(operation.checked);
@@ -1076,6 +1074,7 @@ class OpProvider extends ChangeNotifier {
     changeCheck(false);
     setDate(null);
     setHintText('yyyy-MM-dd');
+    recordCon.clear();
   }
 
   clearWardFeild() {
@@ -1089,9 +1088,28 @@ class OpProvider extends ChangeNotifier {
 
   Future<void> generatePdf(
       BuildContext context, List<OperationT> operations) async {
-    final pdf = pw.Document();
+    double sarfBanzen = 0.0;
+    double sarfSoler = 0.0;
+    double waredBanzen = 0.0;
+    double waredSoler = 0.0;
 
-    // Load the fonts
+    for (var e in operations) {
+      if (e.type == 'صرف' && e.foulType == 'بنزين') {
+        sarfBanzen += double.parse('${e.amount}');
+      } else if (e.type == 'صرف' && e.foulType == 'سولار') {
+        sarfSoler += double.parse('${e.amount}');
+      } else if (e.type == 'وارد' && e.foulType == 'بنزين') {
+        waredBanzen += double.parse('${e.amount}');
+      } else if (e.type == 'وارد' && e.foulType == 'سولار') {
+        waredSoler += double.parse('${e.amount}');
+      }
+    }
+    setNumOfOp(operations?.length);
+    setTotalBazenSarf('$sarfBanzen');
+    setTotalSolarSarf('$sarfSoler');
+    setTotalBazenWard('$waredBanzen');
+    setTotalSolarWard('$waredSoler');
+    final pdf = pw.Document();
     final beirutiFont = pw.Font.ttf(
         await rootBundle.load('assets/fonts/Beiruti-VariableFont_wght.ttf'));
     final arialFont = pw.Font.ttf(

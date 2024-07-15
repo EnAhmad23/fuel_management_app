@@ -268,7 +268,7 @@ FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
 WHERE DATE(date) = DATE('now')
-  AND o.is_deleted = 0 and type = 'صرف';
+  AND  type = 'صرف';
 
     ''');
     return re;
@@ -405,16 +405,15 @@ WHERE type = ?
 
   getDailySarf() async {
     Database? database = await db;
-    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
-    date,
-    SUM(amount) AS total_exchange_amount
-FROM operations
-WHERE type = 'صرف' AND is_deleted = 0
-GROUP BY date
-ORDER BY date DESC;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''
+    SELECT SUM(amount) AS total_amount
+    FROM operations
+    WHERE type = 'صرف'
+      AND date = DATE('now');
+
 
 ''');
-    return re?.first;
+    return Sqflite.firstIntValue(re) ?? 0;
   }
 
   getMonthlySarf() async {

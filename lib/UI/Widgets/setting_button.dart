@@ -24,11 +24,14 @@ class SettingButton extends StatelessWidget {
           borderRadius: BorderRadius.horizontal(
               right: Radius.circular(topRightRadius),
               left: Radius.circular(topLiftRadius))),
-      child: IconButton(
-        onPressed: onTap,
-        icon: Icon(
-          icon,
-          color: iconColor,
+      child: Center(
+        child: IconButton(
+          onPressed: onTap,
+          icon: Icon(
+            icon,
+            color: iconColor,
+            size: 20,
+          ),
         ),
       ),
     );

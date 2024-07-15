@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/subconsumerT.dart';
+import 'package:fuel_management_app/UI/Widgets/info_box.dart';
 import 'package:fuel_management_app/UI/Widgets/movement_table.dart';
 import 'package:fuel_management_app/UI/Widgets/operationTable.dart';
 import 'package:provider/provider.dart';
@@ -198,38 +199,5 @@ class SubonsumerDetails extends StatelessWidget {
         ),
       );
     });
-  }
-}
-
-class InfoBox extends StatelessWidget {
-  final String title;
-  final String content;
-
-  InfoBox({required this.title, required this.content});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 16.0, color: Colors.grey),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                content,
-                style: const TextStyle(fontSize: 16.0, color: Colors.black),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

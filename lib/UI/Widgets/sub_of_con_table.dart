@@ -35,134 +35,177 @@ class SubOfConTable extends StatelessWidget {
             columns: const [
               DataColumn(
                   label: Center(
-                      child: Text('الإعدادات', textAlign: TextAlign.center))),
+                      child: Text(
+                '    الإعدادات  ',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ))),
               DataColumn(
                   label: Center(
-                      child: Text('عدد عمليات الصرف',
-                          textAlign: TextAlign.center))),
-              DataColumn(label: Center(child: Text('وصف إضافي'))),
-              DataColumn(label: Center(child: Text('المستهلك الفرعي'))),
+                      child: Text(
+                'عدد عمليات الصرف',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ))),
+              DataColumn(
+                  label: Center(
+                      child: Text(
+                'وصف إضافي',
+                style: TextStyle(fontSize: 18),
+              ))),
+              DataColumn(
+                  label: Center(
+                      child: Text(
+                'المستهلك الفرعي',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ))),
               DataColumn(label: Center(child: Text('#'))),
             ],
             rows: subconsumers.map((subconsumer) {
               return DataRow(
                 cells: [
                   DataCell(
-                    Consumer<SubProvider>(builder: (context, subPro, x) {
-                      return ButtonBar(
-                        buttonPadding: const EdgeInsets.all(0),
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SettingButton(
-                            color: Colors.red,
-                            icon: Icons.delete,
-                            topLiftRadius: 5.r,
-                            topRightRadius: 0,
-                            iconColor: Colors.white,
-                            onTap: () {
-                              Get.defaultDialog(
-                                  title: 'حذف',
-                                  backgroundColor: Colors.white,
-                                  content: Padding(
-                                    padding: EdgeInsets.all(10.w),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                            height: 100.h,
-                                            width: 200.h,
-                                            child: Lottie.asset(
-                                                'assets/warning.json')),
-                                        SizedBox(
-                                          height: 5.h,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 7.0, horizontal: 0),
+                      child:
+                          Consumer<SubProvider>(builder: (context, subPro, x) {
+                        return ButtonBar(
+                          buttonPadding: const EdgeInsets.all(0),
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SettingButton(
+                              color: Colors.red,
+                              icon: Icons.delete,
+                              topLiftRadius: 5.r,
+                              topRightRadius: 0,
+                              iconColor: Colors.white,
+                              onTap: () {
+                                Get.defaultDialog(
+                                    title: 'حذف',
+                                    backgroundColor: Colors.white,
+                                    content: Padding(
+                                      padding: EdgeInsets.all(10.w),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                              height: 100.h,
+                                              width: 200.h,
+                                              child: Lottie.asset(
+                                                  'assets/warning.json')),
+                                          SizedBox(
+                                            height: 5.h,
+                                          ),
+                                          const Text('هل متاكد من حذف العنصر؟'),
+                                        ],
+                                      ),
+                                    ),
+                                    confirm: InkWell(
+                                      onTap: () {
+                                        subPro.deleteSubconsumer(
+                                            subconsumer.id ?? 0);
+                                        subPro.getSubConsumerOfCon(
+                                            subconsumer.consumerName);
+                                        Get.back();
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius:
+                                                BorderRadius.circular(5.r)),
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 5.w),
+                                        padding: EdgeInsets.all(10.w),
+                                        child: const Text(
+                                          'نعم',
+                                          style: TextStyle(color: Colors.white),
                                         ),
-                                        const Text('هل متاكد من حذف العنصر؟'),
-                                      ],
-                                    ),
-                                  ),
-                                  confirm: InkWell(
-                                    onTap: () {
-                                      subPro.deleteSubconsumer(
-                                          subconsumer.id ?? 0);
-                                      subPro.getSubConsumerOfCon(
-                                          subconsumer.consumerName);
-                                      Get.back();
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius:
-                                              BorderRadius.circular(5.r)),
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 5.w),
-                                      padding: EdgeInsets.all(10.w),
-                                      child: const Text(
-                                        'نعم',
-                                        style: TextStyle(color: Colors.white),
                                       ),
                                     ),
-                                  ),
-                                  cancel: InkWell(
-                                    onTap: () => Get.back(),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius:
-                                              BorderRadius.circular(5.r)),
-                                      padding: EdgeInsets.all(10.w),
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 5.w),
-                                      child: const Text(
-                                        'لا',
-                                        style: TextStyle(color: Colors.white),
+                                    cancel: InkWell(
+                                      onTap: () => Get.back(),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius:
+                                                BorderRadius.circular(5.r)),
+                                        padding: EdgeInsets.all(10.w),
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 5.w),
+                                        child: const Text(
+                                          'لا',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                       ),
-                                    ),
-                                  ));
-                            },
-                          ),
-                          SettingButton(
-                            onTap: () {
-                              subPro.getConsumersNames();
-                              subPro.setUpdatedSub(subconsumer);
-                              subPro.subName.text = '${subconsumer.details}';
-                              subPro.description.text =
-                                  '${subconsumer.description}';
-                              subPro.changeDropdownValue(
-                                  subconsumer.consumerName);
-                              subPro.changRecord(subconsumer.hasRecord == 1);
-
-                              Get.to(const UpdateSubconsumer());
-                            },
-                            color: Colors.green,
-                            icon: Icons.edit,
-                            topRightRadius: 0,
-                            iconColor: Colors.white,
-                            topLiftRadius: 0,
-                          ),
-                          SettingButton(
-                              onTap: () async {
-                                subPro.id = subconsumer.id;
-                                subPro.getMovementRecord(subconsumer.id ?? 0);
-                                subPro.getAllSubOp(subconsumer.id);
-                                log('Consuer Name -> ${subconsumer.consumerName}');
-                                log('Consuer Name -> ${subconsumer.details}');
-                                await subPro.getDistanceBetweenLastTwoRecords(
-                                    subconsumer.id ?? 0);
-                                Get.to(SubonsumerDetails(
-                                    subConsumer: subconsumer));
+                                    ));
                               },
-                              color: Colors.blue,
-                              icon: Icons.remove_red_eye,
-                              topRightRadius: 5.r,
+                            ),
+                            SettingButton(
+                              onTap: () {
+                                subPro.getConsumersNames();
+                                subPro.setUpdatedSub(subconsumer);
+                                subPro.subName.text = '${subconsumer.details}';
+                                subPro.description.text =
+                                    '${subconsumer.description}';
+                                subPro.changeDropdownValue(
+                                    subconsumer.consumerName);
+                                subPro.changRecord(subconsumer.hasRecord == 1);
+
+                                Get.to(const UpdateSubconsumer());
+                              },
+                              color: Colors.green,
+                              icon: Icons.edit,
+                              topRightRadius: 0,
+                              iconColor: Colors.white,
                               topLiftRadius: 0,
-                              iconColor: Colors.white),
-                        ],
-                      );
-                    }),
+                            ),
+                            SettingButton(
+                                onTap: () async {
+                                  subPro.id = subconsumer.id;
+                                  subPro.getMovementRecord(subconsumer.id ?? 0);
+                                  subPro.getAllSubOp(subconsumer.id);
+                                  log('Consuer Name -> ${subconsumer.consumerName}');
+                                  log('Consuer Name -> ${subconsumer.details}');
+                                  await subPro.getDistanceBetweenLastTwoRecords(
+                                      subconsumer.id ?? 0);
+                                  Get.to(SubonsumerDetails(
+                                      subConsumer: subconsumer));
+                                },
+                                color: Colors.blue,
+                                icon: Icons.remove_red_eye,
+                                topRightRadius: 5.r,
+                                topLiftRadius: 0,
+                                iconColor: Colors.white),
+                          ],
+                        );
+                      }),
+                    ),
                   ),
-                  DataCell(Text('${subconsumer.numOfOP}')),
-                  DataCell(Text('${subconsumer.description}')),
-                  DataCell(Text('${subconsumer.details}')),
-                  DataCell(Text('${subconsumers.indexOf(subconsumer) + 1}')),
+                  DataCell(Center(
+                    child: Text(
+                      '${subconsumer.numOfOP}',
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                  )),
+                  DataCell(Center(
+                    child: Text(
+                      '${subconsumer.description}',
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                  )),
+                  DataCell(Center(
+                    child: Text(
+                      '${subconsumer.details}',
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                  )),
+                  DataCell(Center(
+                    child: Text(
+                      '${subconsumers.indexOf(subconsumer) + 1}',
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                  )),
                 ],
               );
             }).toList(),
