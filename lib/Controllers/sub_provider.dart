@@ -273,16 +273,20 @@ class SubProvider extends ChangeNotifier {
         consumerName: dropdownValue!,
         hasRcord: hasRcord,
       ));
-      description.clear();
-      subName.clear();
-      name.clear();
-      subDescription.clear();
-      changRecord(false);
-      changeDropdownValue(null);
+      clearFields();
 
       if (done != 0) {
         MySnackbar.doneSnack(massege: 'تم تعديل المستهلك بنجاح');
       }
     }
+  }
+
+  void clearFields() {
+    description.clear();
+    subName.clear();
+    name.clear();
+    subDescription.clear();
+    changRecord(false);
+    changeDropdownValue(null);
   }
 }

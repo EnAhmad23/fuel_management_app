@@ -88,6 +88,11 @@ class OpProvider extends ChangeNotifier {
   String? _subconName;
   bool? _checked;
   bool? hasRecord;
+  bool _disable = false;
+
+  bool get disable {
+    return _disable;
+  }
 
   OperationT? get operationT {
     return _operationT;
@@ -247,6 +252,13 @@ class OpProvider extends ChangeNotifier {
 
       notifyListeners();
     }
+  }
+
+  set disable(bool? value) {
+    if (value != null) {
+      _disable = value;
+    }
+    notifyListeners();
   }
 
   setTotalSarf(String? value) {
@@ -1043,6 +1055,10 @@ class OpProvider extends ChangeNotifier {
       setDate(operation.newDate!);
       log('operation.subConsumerDeails - >${operation.subConsumerDetails}');
       getSubonsumersNames(operation.consumerName);
+
+      disable = subconsumerNames != null &&
+          !(subconsumerNames!.contains(operation.subConsumerDetails));
+
       // setSubConName(null);
       log('subconame - >$subconName');
       setAmount('${int.parse('${operation.amount}')}');
@@ -1084,6 +1100,23 @@ class OpProvider extends ChangeNotifier {
     changeCheck(false);
     setDate(null);
     setHintText('yyyy-MM-dd');
+  }
+
+  void showDeleteSuccessSnackbar() {
+    Get.snackbar(
+      'Success',
+      'Deletion has been done successfully',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+      icon: Icon(Icons.check_circle, color: Colors.white),
+      borderRadius: 10,
+      margin: EdgeInsets.all(10),
+      duration: Duration(seconds: 3),
+      isDismissible: true,
+      // dismissDirection: SnackDismissDirection.HORIZONTAL,
+      forwardAnimationCurve: Curves.easeOutBack,
+    );
   }
 
   Future<void> generatePdf(

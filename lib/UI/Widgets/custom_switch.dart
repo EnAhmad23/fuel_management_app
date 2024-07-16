@@ -21,13 +21,9 @@ class CustomSwitch extends StatelessWidget {
         ),
         Consumer<OpProvider>(
           builder: (context, provider, x) {
-            return SizedBox(
-              height: 5.h,
-              child: Switch(
-                  value: provider.checked ?? false,
-                  onChanged: (bool value) {
-                    provider.changeCheck(value);
-                  }),
+            return Checkbox(
+              value: provider.checked ?? false,
+              onChanged: (value) => provider.changeCheck(value),
             );
           },
         )

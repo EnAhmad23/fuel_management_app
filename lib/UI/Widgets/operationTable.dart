@@ -163,7 +163,9 @@ class OperationTable extends StatelessWidget {
                                             opPro.getWeeklySubOP();
                                             // opPro.clearSarfFeild();
                                             // opPro.clearWardFeild();
+
                                             Get.back();
+                                            opPro.showDeleteSuccessSnackbar();
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(

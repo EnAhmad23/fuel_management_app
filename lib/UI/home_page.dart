@@ -145,6 +145,7 @@ class HomePage extends StatelessWidget {
                     Consumer<SubProvider>(builder: (context, provider, x) {
                       return ListTile(
                         onTap: () {
+                          provider.clearFields();
                           provider.getConsumersNames();
                           Navigator.push(
                               context,
@@ -209,6 +210,7 @@ class HomePage extends StatelessWidget {
                           return (int.parse(provider.totalAvailable ?? '0') > 0)
                               ? ListTile(
                                   onTap: () {
+                                    provider.clearWardFeild();
                                     provider.getConsumersNames();
                                     Get.to(const AddSarf());
                                   },
@@ -220,25 +222,28 @@ class HomePage extends StatelessWidget {
                                   leading: const Icon(Icons.arrow_upward,
                                       color: Colors.white),
                                 )
-                              : SizedBox();
+                              : const SizedBox();
                         }),
-                        ListTile(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const AddOperationEstrad(),
-                                ));
-                          },
-                          title: Text('وارد',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: Colors.white)),
-                          leading: const Icon(Icons.arrow_downward,
-                              color: Colors.white),
-                        ),
+                        Consumer<OpProvider>(builder: (context, opPro, x) {
+                          return ListTile(
+                            onTap: () {
+                              opPro.clearWardFeild();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AddOperationEstrad(),
+                                  ));
+                            },
+                            title: Text('وارد',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(color: Colors.white)),
+                            leading: const Icon(Icons.arrow_downward,
+                                color: Colors.white),
+                          );
+                        }),
                       ],
                     ),
                   ],
@@ -275,6 +280,7 @@ class HomePage extends StatelessWidget {
                     Consumer<TripProvider>(builder: (context, pro, x) {
                       return ListTile(
                         onTap: () {
+                          pro.clearFields();
                           pro.getConusmersNames();
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const AddTrip(),

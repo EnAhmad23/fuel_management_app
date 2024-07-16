@@ -90,12 +90,15 @@ class UpdateOperationSarf extends StatelessWidget {
                                           builder: (context, sub, x) {
                                         return MyDropdown(
                                           lable: 'المستهلك الفرعي',
-                                          itemsList:
-                                              provider.subconsumerNames ?? [],
-                                          onchanged: (value) {
-                                            provider.setSubConName(value);
-                                            sub.getHasRecord(value);
-                                          },
+                                          itemsList: (!provider.disable)
+                                              ? provider.subconsumerNames ?? []
+                                              : [],
+                                          onchanged: (!provider.disable)
+                                              ? (value) {
+                                                  provider.setSubConName(value);
+                                                  sub.getHasRecord(value);
+                                                }
+                                              : (newValue) {},
                                           value: provider.subconName,
                                           validator: provider.subNameValidet,
                                         );
@@ -107,23 +110,28 @@ class UpdateOperationSarf extends StatelessWidget {
                                     Expanded(
                                       child: MyDropdown(
                                         lable: 'المستهلك الرئيسي',
-                                        itemsList: provider.consumerNames ?? [],
-                                        onchanged: (value) {
-                                          if (value !=
-                                              'اختر المستهلك الرئيسي') {
-                                            provider.setConName(value);
-                                            provider.getSubonsumersNames(
-                                                provider.conName);
-                                            log('=====================================${provider.subconName}');
-                                            // provider.setSubConName(provider
-                                            //     .operationT
-                                            //     ?.subConsumerDetails);
-                                            log('33333333333333333333333${provider.operationT?.subConsumerDetails}');
-                                            // provider.setSubConName(provider
-                                            //     .operationT!
-                                            //     .subConsumerDetails);
-                                          }
-                                        },
+                                        itemsList: (!provider.disable)
+                                            ? provider.consumerNames ?? []
+                                            : [],
+                                        onchanged: (!provider.disable)
+                                            ? (value) {
+                                                if (value !=
+                                                        'اختر المستهلك الرئيسي' &&
+                                                    !provider.disable) {
+                                                  provider.setConName(value);
+                                                  provider.getSubonsumersNames(
+                                                      provider.conName);
+                                                  log('=====================================${provider.subconName}');
+                                                  // provider.setSubConName(provider
+                                                  //     .operationT
+                                                  //     ?.subConsumerDetails);
+                                                  log('33333333333333333333333${provider.operationT?.subConsumerDetails}');
+                                                  // provider.setSubConName(provider
+                                                  //     .operationT!
+                                                  //     .subConsumerDetails);
+                                                }
+                                              }
+                                            : (String? newValue) {},
                                         value: provider.conName,
                                         validator: provider.conNameValidet,
                                       ),

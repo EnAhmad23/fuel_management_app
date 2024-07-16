@@ -40,7 +40,11 @@ class ConsumersTable extends StatelessWidget {
                     style: TextStyle(fontSize: 18)))),
         DataColumn(
             label: Center(
-                child: Text('المستهلك', style: TextStyle(fontSize: 18)))),
+                child: Text(
+          'المستهلك',
+          style: TextStyle(fontSize: 18),
+          textAlign: TextAlign.center,
+        ))),
         DataColumn(
             label: Center(child: Text('#', style: TextStyle(fontSize: 18)))),
       ],

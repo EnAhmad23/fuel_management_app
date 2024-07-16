@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fuel_management_app/Controllers/op_provider.dart';
+import 'package:fuel_management_app/Controllers/sub_provider.dart';
+import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
+import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
+import 'package:fuel_management_app/UI/Widgets/my_button.dart';
 import 'package:provider/provider.dart';
-
-import '../Controllers/sub_provider.dart';
-import 'Widgets/myTextFormField.dart';
-import 'Widgets/my_button.dart';
 
 class UpdateSubconsumer extends StatelessWidget {
   const UpdateSubconsumer({super.key});
@@ -26,7 +27,7 @@ class UpdateSubconsumer extends StatelessWidget {
       body: Center(
         child: SizedBox(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 100.w),
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 100),
             child: Card(
               elevation: 5,
               shape: RoundedRectangleBorder(
@@ -44,12 +45,23 @@ class UpdateSubconsumer extends StatelessWidget {
                           color: Colors.blue,
                           width: double.infinity,
                           padding: const EdgeInsets.all(16.0),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              'تعديل المتهلك الفرعي (${provider.subName.text})',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
-                        SizedBox(
-                          height: 30.h,
+                        const SizedBox(
+                          height: 30,
                         ),
                         Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.w),
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Column(
                               children: [
                                 Align(
@@ -57,12 +69,12 @@ class UpdateSubconsumer extends StatelessWidget {
                                   child: Text('المستهلك الرئيسي',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyMedium
+                                          .bodySmall
                                           ?.copyWith(
-                                              fontWeight: FontWeight.bold)),
+                                              fontWeight: FontWeight.w800)),
                                 ),
-                                SizedBox(
-                                  height: 10.h,
+                                const SizedBox(
+                                  height: 15,
                                 ),
                                 DropdownButtonFormField<String>(
                                     // alignment: Alignment.centerRight,
@@ -83,48 +95,63 @@ class UpdateSubconsumer extends StatelessWidget {
                                       );
                                     }).toList(),
                                     validator: provider.conNameValidtor),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 MyTextFormField(
                                   validator: provider.subNameValidtor,
                                   labelText: 'اسم المستهلك',
                                   hintText: 'أدخل اسم المستهلك',
                                   controller: provider.subName,
+                                  fontSize: 16,
                                 ),
-                                SizedBox(
-                                  height: 20.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 MyTextFormField(
                                   labelText: 'تفاصيل المستهلك',
                                   hintText: 'أدخل تفاصيل المستهلك',
                                   controller: provider.subDescription,
-                                  validator: provider.descriptionValidtor,
+                                  fontSize: 16,
+                                  // validator: provider.descriptionValidtor,
                                 ),
-                                SizedBox(
-                                  height: 30.h,
+                                const SizedBox(
+                                  height: 20,
                                 ),
                                 Consumer<SubProvider>(
                                     builder: (context, subPro, x) {
                                   return Align(
-                                    alignment: Alignment.topRight,
-                                    child: CheckboxListTile(
-                                      title: Text(
-                                        'له عداد',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
-                                      value: subPro.hasRcord ?? false,
-                                      onChanged: (bool? newValue) {
-                                        subPro.changRecord(newValue ?? false);
-                                      },
-                                      controlAffinity:
-                                          ListTileControlAffinity.leading,
-                                    ),
-                                  );
+                                      alignment: Alignment.topRight,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .end, // Aligning the row to the start
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              'له عداد',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                      fontWeight: FontWeight
+                                                          .bold), // Customize the style as needed
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10.w,
+                                          ),
+                                          Checkbox(
+                                            value: subPro.hasRcord,
+                                            onChanged: (value) => provider
+                                                .changRecord(value ?? false),
+                                          )
+                                        ],
+                                      ));
                                 }),
-                                SizedBox(height: 8.h),
+                                SizedBox(
+                                  height: 15,
+                                ),
                                 Consumer<SubProvider>(
                                     builder: (context, subPr, x) {
                                   return Align(
@@ -135,7 +162,7 @@ class UpdateSubconsumer extends StatelessWidget {
                                     ),
                                   );
                                 }),
-                                SizedBox(height: 20.h),
+                                const SizedBox(height: 20),
                               ],
                             )),
                       ],

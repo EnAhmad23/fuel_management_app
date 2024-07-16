@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
+import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
 import 'package:provider/provider.dart';
@@ -53,16 +55,15 @@ class AddSubconsumer extends StatelessWidget {
                               children: [
                                 Align(
                                   alignment: Alignment.centerRight,
-                                  child: Text(
-                                    'المستهلك الرئيسي',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.copyWith(fontWeight: FontWeight.w800),
-                                  ),
+                                  child: Text('المستهلك الرئيسي',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.w800)),
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 15,
                                 ),
                                 DropdownButtonFormField<String>(
                                     // alignment: Alignment.centerRight,
@@ -104,28 +105,42 @@ class AddSubconsumer extends StatelessWidget {
                                   // validator: provider.descriptionValidtor,
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 20,
                                 ),
                                 Consumer<SubProvider>(
                                     builder: (context, subPro, x) {
                                   return Align(
-                                    alignment: Alignment.topRight,
-                                    child: CheckboxListTile(
-                                      title: Text(
-                                        'له عداد',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
-                                      value: subPro.hasRcord,
-                                      onChanged: (bool? newValue) {
-                                        subPro.changRecord(newValue ?? false);
-                                      },
-                                      controlAffinity:
-                                          ListTileControlAffinity.leading,
-                                    ),
-                                  );
+                                      alignment: Alignment.topRight,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .end, // Aligning the row to the start
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              'له عداد',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                      fontWeight: FontWeight
+                                                          .bold), // Customize the style as needed
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10.w,
+                                          ),
+                                          Checkbox(
+                                            value: subPro.hasRcord,
+                                            onChanged: (value) => provider
+                                                .changRecord(value ?? false),
+                                          )
+                                        ],
+                                      ));
                                 }),
+                                SizedBox(
+                                  height: 15,
+                                ),
                                 provider.hasRcord
                                     ? Row(
                                         children: [

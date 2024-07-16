@@ -126,10 +126,8 @@ class TripProvider extends ChangeNotifier {
   }
 
   setSubConName(String? name) {
-    if (name != null) {
-      _subConName = name;
-      notifyListeners();
-    }
+    _subConName = name;
+    notifyListeners();
   }
 
   setRecordBefor(int? num) {
@@ -175,10 +173,8 @@ class TripProvider extends ChangeNotifier {
   }
 
   setConName(String? name) {
-    if (name != null) {
-      _conName = name;
-      notifyListeners();
-    }
+    _conName = name;
+    notifyListeners();
   }
 
   setHintText(String? name) {
@@ -495,5 +491,12 @@ class TripProvider extends ChangeNotifier {
             ),
           ),
         ));
+  }
+
+  void clearFields() {
+    roadCon.clear();
+    reasonCon.clear();
+    setSubConName(null);
+    setConName(null);
   }
 }
