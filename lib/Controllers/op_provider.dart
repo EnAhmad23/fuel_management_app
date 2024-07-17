@@ -758,7 +758,7 @@ class OpProvider extends ChangeNotifier {
           .toList();
     }
 
-    log('-*-*-*-*-*-*-*-**-*${operations}');
+    log('-*-*-*-*-*-*-*-**-*$operations');
     if (operation.type != null) {
       operations = operations?.where(
         (element) {
@@ -913,10 +913,6 @@ class OpProvider extends ChangeNotifier {
     getAllOpT();
     getLastTenOpT();
     getNumOfAllOp();
-    // getTotalSolarSarf();
-    // getTotalBazenSarf();
-    // getTotalSolarWard();
-    // getTotalBazenWard();
     return x;
   }
 
@@ -1119,6 +1115,25 @@ class OpProvider extends ChangeNotifier {
       },
     ).toList());
     notifyListeners();
+  }
+
+  getOperationOfDate() async {
+    List<Map<String, Object?>> re = await _dbModel.getAllOp();
+    operations = re.map(
+      (e) {
+        return OperationT.fromMap(e);
+      },
+    ).toList();
+    if (month != null) {
+      operations = operations
+          ?.where((element) => (element.newDate?.month) == int.parse('$month'))
+          .toList();
+    }
+    if (year != null) {
+      operations = operations
+          ?.where((element) => (element.newDate?.month) == int.parse('$year'))
+          .toList();
+    }
   }
 
   void showDeleteSuccessSnackbar() {

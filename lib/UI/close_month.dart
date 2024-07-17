@@ -62,7 +62,9 @@ class CloseMonth extends StatelessWidget {
                                   child: MyDropdown(
                                     lable: 'السنة',
                                     itemsList: opPro.years ?? [],
-                                    onchanged: (value) {},
+                                    onchanged: (value) {
+                                      opPro.year = value;
+                                    },
                                     value: opPro.year,
                                     validator: (p0) {
                                       return null;
@@ -82,7 +84,9 @@ class CloseMonth extends StatelessWidget {
                                   child: MyDropdown(
                                     lable: 'الشهر',
                                     itemsList: opPro.months ?? [],
-                                    onchanged: (value) {},
+                                    onchanged: (value) {
+                                      opPro.month = value;
+                                    },
                                     value: opPro.month,
                                     validator: (p0) {
                                       return null;
