@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
-import 'package:fuel_management_app/UI/Widgets/my_button.dart';
+import 'package:fuel_management_app/UI/Widgets/My_dropdown.dart';
 import 'package:fuel_management_app/UI/Widgets/operationTable.dart';
 import 'package:provider/provider.dart';
 
-class SearchResult extends StatelessWidget {
-  const SearchResult({super.key});
+class CloseMonth extends StatelessWidget {
+  const CloseMonth({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class SearchResult extends StatelessWidget {
         elevation: 5,
         centerTitle: true,
         title: Text(
-          'العمليات',
+          'إغلاق شهر',
           style: Theme.of(context)
               .textTheme
               .bodyLarge
@@ -41,7 +41,7 @@ class SearchResult extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(16.0),
                           child: const Text(
-                            'جدول العمليات',
+                            'جدول عمليات الشهر',
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,
@@ -50,6 +50,51 @@ class SearchResult extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 30.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SizedBox(
+                              width: 100,
+                              child: Consumer<OpProvider>(
+                                  builder: (context, opPro, x) {
+                                return Expanded(
+                                  child: MyDropdown(
+                                    lable: 'السنة',
+                                    itemsList: opPro.years ?? [],
+                                    onchanged: (value) {},
+                                    value: opPro.year,
+                                    validator: (p0) {
+                                      return null;
+                                    },
+                                  ),
+                                );
+                              }),
+                            ),
+                            const SizedBox(
+                              width: 30,
+                            ),
+                            SizedBox(
+                              width: 100,
+                              child: Consumer<OpProvider>(
+                                  builder: (context, opPro, x) {
+                                return Expanded(
+                                  child: MyDropdown(
+                                    lable: 'الشهر',
+                                    itemsList: opPro.months ?? [],
+                                    onchanged: (value) {},
+                                    value: opPro.month,
+                                    validator: (p0) {
+                                      return null;
+                                    },
+                                  ),
+                                );
+                              }),
+                            ),
+                            const SizedBox(
+                              width: 40,
+                            ),
+                          ],
                         ),
                         Consumer<OpProvider>(builder: (context, opPro, x) {
                           return Padding(
@@ -62,54 +107,16 @@ class SearchResult extends StatelessWidget {
                               child: SingleChildScrollView(
                                 child: OperationTable(
                                   operations: opPro.operations ?? [],
-                                  edit: true,
+                                  edit: false,
                                 ),
                               ),
                             ),
                           );
                         }),
-                        Consumer<OpProvider>(builder: (context, pro, x) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 55),
-                            child: Align(
-                                alignment: Alignment.centerRight,
-                                child: ElevatedButton(
-                                    onPressed: () {
-                                      pro.generatePdf(
-                                          context, pro.operations ?? []);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.grey,
-                                      backgroundColor: Colors
-                                          .blueGrey[300], // Text and icon color
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            10), // Rounded corners
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                          vertical: 15), // Padding
-                                    ),
-                                    child: Text(
-                                      'pdf تصدير ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(color: Colors.white),
-                                    ))),
-                          );
-                        }),
-                        SizedBox(
-                          height: 30.h,
-                        ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 30.h,
               ),
             ],
           ),

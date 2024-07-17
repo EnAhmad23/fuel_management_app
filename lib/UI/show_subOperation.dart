@@ -60,7 +60,9 @@ class ShowSubOperation extends StatelessWidget {
                               elevation: 5,
                               child: SingleChildScrollView(
                                 child: OperationTable(
-                                    operations: op.subOperations ?? []),
+                                  operations: op.subOperations ?? [],
+                                  edit: true,
+                                ),
                               ),
                             ),
                           ),

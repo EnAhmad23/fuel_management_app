@@ -124,9 +124,10 @@ class SubonsumerDetails extends StatelessWidget {
                                           Consumer<SubProvider>(
                                               builder: (context, provider, x) {
                                             return OperationTable(
-                                                operations:
-                                                    provider.subOperations ??
-                                                        []);
+                                              operations:
+                                                  provider.subOperations ?? [],
+                                              edit: true,
+                                            );
                                           }),
                                         ],
                                       ),

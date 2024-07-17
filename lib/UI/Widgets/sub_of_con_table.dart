@@ -2,11 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Model/subconsumerT.dart';
 import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
-import 'package:fuel_management_app/UI/show_sub_of_con.dart';
 import 'package:fuel_management_app/UI/subconsumer_details.dart';
 import 'package:fuel_management_app/UI/update_subconsumer.dart';
 import 'package:get/get.dart';
@@ -19,7 +17,7 @@ class SubOfConTable extends StatelessWidget {
   final List<SubConsumerT> subconsumers;
   @override
   Widget build(BuildContext context) {
-    return (subconsumers == null || subconsumers.isEmpty)
+    return (subconsumers.isEmpty)
         ? Center(
             child: SizedBox(
                 height: 300.h,

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
@@ -168,6 +169,10 @@ class UpdateOperationSarf extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: MyTextFormField(
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
                                         fontSize: 16,
                                         validator:
                                             provider.dischangeNumberValidet,
@@ -240,6 +245,10 @@ class UpdateOperationSarf extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: MyTextFormField(
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
                                         fontSize: 16,
                                         keyboardType: TextInputType.number,
                                         validator: provider.amontValidet,
@@ -257,6 +266,10 @@ class UpdateOperationSarf extends StatelessWidget {
                                   builder: (context, sub, child) {
                                     return (sub.hasRcord)
                                         ? MyTextFormField(
+                                            inputFormatters: <TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                            ],
                                             fontSize: 16,
                                             validator: (value) {
                                               sub.recordValidtor(value);

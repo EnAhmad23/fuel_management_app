@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Controllers/sub_provider.dart';
 import 'package:fuel_management_app/Controllers/trip_provider.dart';
-import 'package:fuel_management_app/Model/subconsumer.dart';
-import 'package:fuel_management_app/Model/trip.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'Widgets/My_dropdown.dart';

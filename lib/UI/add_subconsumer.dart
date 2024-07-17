@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Controllers/sub_provider.dart';
-import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
 import 'package:provider/provider.dart';
@@ -65,25 +64,28 @@ class AddSubconsumer extends StatelessWidget {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                DropdownButtonFormField<String>(
-                                    // alignment: Alignment.centerRight,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    value: provider.dropdownValue,
-                                    onChanged: (String? newValue) {
-                                      provider.changeDropdownValue(newValue);
-                                    },
-                                    items: provider.consumersNames
-                                        ?.map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        alignment: Alignment.centerRight,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    validator: provider.conNameValidtor),
+                                Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: DropdownButtonFormField<String>(
+                                      // alignment: Alignment.centerRight,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      value: provider.dropdownValue,
+                                      onChanged: (String? newValue) {
+                                        provider.changeDropdownValue(newValue);
+                                      },
+                                      items: provider.consumersNames
+                                          ?.map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          alignment: Alignment.centerRight,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      validator: provider.conNameValidtor),
+                                ),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -207,6 +209,10 @@ class AddSubconsumer extends StatelessWidget {
                                           ),
                                           Expanded(
                                               child: MyTextFormField(
+                                                  inputFormatters: <TextInputFormatter>[
+                                                FilteringTextInputFormatter
+                                                    .digitsOnly,
+                                              ],
                                                   fontSize: 16,
                                                   labelText: 'القراءة الاولية',
                                                   hintText:

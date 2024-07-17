@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/Model/operationT.dart';
@@ -127,6 +128,9 @@ class UpdateOperationEstrad extends StatelessWidget {
                                   SizedBox(width: 10.w),
                                   Expanded(
                                     child: MyTextFormField(
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
                                       validator: provider.amontValidet,
                                       labelText: 'الكمية',
                                       hintText: 'أدخل كمية الوقود',

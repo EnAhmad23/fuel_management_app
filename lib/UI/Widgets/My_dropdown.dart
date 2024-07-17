@@ -31,18 +31,21 @@ class MyDropdown extends StatelessWidget {
         SizedBox(
           height: 10.h,
         ),
-        DropdownButtonFormField<String>(
-          validator: validator,
-          value: value,
-          decoration: const InputDecoration(border: OutlineInputBorder()),
-          items: itemsList
-              .map((type) => DropdownMenuItem(
-                    alignment: Alignment.centerRight,
-                    value: type,
-                    child: Text(type),
-                  ))
-              .toList(),
-          onChanged: onchanged,
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: DropdownButtonFormField<String>(
+            validator: validator,
+            value: value,
+            decoration: const InputDecoration(border: OutlineInputBorder()),
+            items: itemsList
+                .map((type) => DropdownMenuItem(
+                      alignment: Alignment.centerRight,
+                      value: type,
+                      child: Text(type),
+                    ))
+                .toList(),
+            onChanged: onchanged,
+          ),
         ),
       ],
     );

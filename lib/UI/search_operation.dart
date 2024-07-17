@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/UI/Widgets/My_dropdown.dart';
 import 'package:provider/provider.dart';
@@ -134,6 +135,10 @@ class SearchOperation extends StatelessWidget {
                                             child: Column(
                                               children: [
                                                 MyTextFormField(
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                  ],
                                                   fontSize: 16,
                                                   validator: (String) {},
                                                   labelText: 'رقم سند الصرف',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
@@ -150,6 +151,10 @@ class AddSarf extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: MyTextFormField(
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
                                         fontSize: 16,
                                         validator:
                                             provider.dischangeNumberValidet,
@@ -238,6 +243,10 @@ class AddSarf extends StatelessWidget {
                                         labelText: 'الكمية',
                                         hintText: 'أدخل كمية الوقود',
                                         controller: provider.amountCon,
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -249,6 +258,10 @@ class AddSarf extends StatelessWidget {
                                   builder: (context, sub, child) {
                                     return (sub.hasRcord)
                                         ? MyTextFormField(
+                                            inputFormatters: <TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                            ],
                                             fontSize: 16,
                                             validator: (value) {
                                               sub.recordValidtor(value);

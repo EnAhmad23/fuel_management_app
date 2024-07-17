@@ -61,7 +61,9 @@ class ShowOperation extends StatelessWidget {
                               elevation: 5,
                               child: SingleChildScrollView(
                                 child: OperationTable(
-                                    operations: opPro.operations ?? []),
+                                  operations: opPro.operations ?? [],
+                                  edit: true,
+                                ),
                               ),
                             ),
                           );
@@ -69,13 +71,13 @@ class ShowOperation extends StatelessWidget {
                         SizedBox(
                           height: 30.h,
                         ),
-                        Consumer<OpProvider>(builder: (context, pro, x) {
-                          return MyButton(
-                              text: 'export',
-                              onTap: () {
-                                pro.generatePdf(context, pro.operations ?? []);
-                              });
-                        })
+                        // Consumer<OpProvider>(builder: (context, pro, x) {
+                        //   return MyButton(
+                        //       text: 'export',
+                        //       onTap: () {
+                        //         pro.generatePdf(context, pro.operations ?? []);
+                        //       });
+                        // })
                       ],
                     ),
                   ),

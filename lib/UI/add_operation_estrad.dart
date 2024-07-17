@@ -87,6 +87,7 @@ class AddOperationEstrad extends StatelessWidget {
                                         height: 10,
                                       ),
                                       TextFormField(
+                                        validator: provider.dateValidet,
                                         onTap: () async {
                                           var x = await showDatePicker(
                                             currentDate: provider.date,

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Model/DBModel.dart';
 import 'package:fuel_management_app/Model/trip.dart';
@@ -349,6 +350,9 @@ class TripProvider extends ChangeNotifier {
                 Form(
                   key: formKey,
                   child: TextFormField(
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'أدخل قيمة العداد';

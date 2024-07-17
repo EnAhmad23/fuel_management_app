@@ -21,6 +21,7 @@ void main() async {
   databaseFactory = databaseFactoryFfi;
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   // Initialize the database
+
   await DBModel().intiDataBase();
 
   runApp(MultiProvider(

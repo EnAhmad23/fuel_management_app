@@ -62,11 +62,15 @@ class OpProvider extends ChangeNotifier {
   List<OperationT>? lastTenOp;
   List<String>? consumerNames;
   List<String>? subconsumerNames;
+  List<String>? months;
+  List<String>? years;
   String? doneMassege;
   String? _hintText;
   String? _formHintText;
   String? _toHintText;
   String? _subTitle;
+  String? month;
+  String? year;
   int? _amount;
   int? _subRecord;
   int? _numOfOp;
@@ -1102,6 +1106,21 @@ class OpProvider extends ChangeNotifier {
     setHintText('yyyy-MM-dd');
   }
 
+  getMonthsAndYears() async {
+    List<Map<String, Object?>> re = await _dbModel.getMonthes();
+    months = (re.map(
+      (element) {
+        return '${element['month']}';
+      },
+    ).toList());
+    years = (re.map(
+      (element) {
+        return '${element['year']}';
+      },
+    ).toList());
+    notifyListeners();
+  }
+
   void showDeleteSuccessSnackbar() {
     Get.snackbar(
       'Success',
@@ -1109,10 +1128,10 @@ class OpProvider extends ChangeNotifier {
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.green,
       colorText: Colors.white,
-      icon: Icon(Icons.check_circle, color: Colors.white),
+      icon: const Icon(Icons.check_circle, color: Colors.white),
       borderRadius: 10,
-      margin: EdgeInsets.all(10),
-      duration: Duration(seconds: 3),
+      margin: const EdgeInsets.all(10),
+      duration: const Duration(seconds: 3),
       isDismissible: true,
       // dismissDirection: SnackDismissDirection.HORIZONTAL,
       forwardAnimationCurve: Curves.easeOutBack,

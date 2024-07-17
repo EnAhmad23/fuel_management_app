@@ -112,13 +112,13 @@ CREATE TABLE operations (
     sub_consumer_id INTEGER ,
     amount DECIMAL(8, 2),
     description TEXT,
-    is_deleted INTEGER DEFAULT 0,
     type TEXT CHECK(type IN ('صرف', 'وارد')),
     foulType TEXT CHECK(foulType IN ('بنزين', 'سولار')),
     receiverName TEXT,
     dischangeNumber TEXT,
     date DATE,
     checked INTEGER DEFAULT 0,
+    is_close INTEGER DEFAULT 0,
     deleted_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -140,6 +140,7 @@ CREATE TABLE trips (
     road TEXT NOT NULL,
     cause TEXT NOT NULL,
     date DATE,
+    is_close INTEGER DEFAULT 0,
     status TEXT CHECK(status IN ('منشأة', 'منتهية', 'ملغاه','قيد التنفيذ')),
     recordBefore TEXT,
     recordAfter TEXT,
@@ -186,7 +187,7 @@ CREATE TABLE trips (
 FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
-WHERE o.is_deleted = 0
+WHERE o.is_close=0
 ORDER BY o.date DESC
 LIMIT 10;
 ''',
@@ -212,6 +213,7 @@ LIMIT 10;
 FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
+Where is_close = 0
 
 ''');
     return re;
@@ -235,7 +237,7 @@ LEFT JOIN consumers c ON s.consumer_id = c.id
 FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
-where s.id = ?
+where s.id = ? and o.is_close
 
 ''', [id]);
     return re;
@@ -244,7 +246,7 @@ where s.id = ?
   Future<List<Map<String, Object?>>> getOp(int opId) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery('''
-      select * from operations where id = ? and is_deleted=0
+      select * from operations where id = ? 
     ''', [opId]);
     return re;
   }
@@ -268,7 +270,7 @@ FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
 WHERE DATE(date) = DATE('now')
-  AND  type = 'صرف';
+  AND  type = 'صرف' and o.is_close = 0;
 
     ''');
     return re;
@@ -290,6 +292,7 @@ FROM
     trips t
 JOIN 
     sub_consumers sc ON t.sub_consumer_id = sc.id
+Where t.is_close=0    
 ORDER BY 
     t.created_at DESC;
 ''');
@@ -315,7 +318,7 @@ ORDER BY
 FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
-WHERE o.is_deleted = 0 
+WHERE o.is_close = 0 
     AND type = ?
     AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now')  -- Current month
    
@@ -344,7 +347,7 @@ ORDER BY date DESC;
 FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
-WHERE o.is_deleted = 0 
+WHERE o.is_close = 0 
     AND type = 'صرف'
     AND date >= date('now', 'weekday 6', '-7 days')  -- Start of current week (Saturday)
     AND date <= date('now', 'weekday 6')              -- End of current week (Saturday)
@@ -374,7 +377,7 @@ FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
 WHERE type = ?
-    AND o.is_deleted = 0;
+    AND o.is_close = 0;
 
 
 
@@ -388,7 +391,7 @@ WHERE type = ?
         await database!.rawQuery('''SELECT COUNT(*) AS operation_count
     FROM operations
     WHERE sub_consumer_id = ?
-      AND type = 'صرف' and is_deleted=0;
+      AND type = 'صرف' and is_close=0;
 ''', [subconsumerId]);
     return Sqflite.firstIntValue(re) ?? 0;
   }
@@ -398,7 +401,7 @@ WHERE type = ?
     List<Map<String, dynamic>> re =
         await database!.rawQuery('''SELECT COUNT(*) AS operation_count
     FROM operations
-    WHERE is_deleted=0;
+    WHERE is_close=0;
 ''');
     return Sqflite.firstIntValue(re) ?? 0;
   }
@@ -409,7 +412,7 @@ WHERE type = ?
     SELECT SUM(amount) AS total_amount
     FROM operations
     WHERE type = 'صرف'
-      AND date = DATE('now');
+      AND date = DATE('now') and is_close = 0;
 
 
 ''');
@@ -422,7 +425,7 @@ WHERE type = ?
     strftime('%Y-%m', date) AS month,
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'صرف' AND is_deleted = 0
+WHERE type = 'صرف' AND is_close = 0
 GROUP BY strftime('%Y-%m', date)
 ORDER BY month DESC;
 
@@ -437,7 +440,7 @@ ORDER BY month DESC;
     strftime('%Y-%W', date) AS week, 
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'صرف' AND is_deleted = 0
+WHERE type = 'صرف' AND is_close = 0
 GROUP BY week
 ORDER BY week DESC;
 
@@ -452,7 +455,7 @@ ORDER BY week DESC;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'صرف' AND is_deleted = 0;
+WHERE type = 'صرف' AND is_close = 0;
 
 
 
@@ -466,7 +469,7 @@ WHERE type = 'صرف' AND is_deleted = 0;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'صرف' and foulType='سولار' AND is_deleted = 0;
+WHERE type = 'صرف' and foulType='سولار' AND is_close = 0;
 ''');
     return re.first;
   }
@@ -506,7 +509,7 @@ WHERE type = 'صرف' and foulType='سولار' AND is_deleted = 0;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'صرف' and foulType='بنزين' AND is_deleted = 0;
+WHERE type = 'صرف' and foulType='بنزين' AND is_close = 0;
 ''');
     return re.first;
   }
@@ -516,7 +519,7 @@ WHERE type = 'صرف' and foulType='بنزين' AND is_deleted = 0;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
     COALESCE(SUM(amount), 0) AS total_amount
 FROM operations
-WHERE is_deleted = 0
+WHERE is_close = 0
     AND type = 'وارد'
     AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now');
 
@@ -531,7 +534,7 @@ WHERE is_deleted = 0
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'وارد' AND is_deleted = 0;
+WHERE type = 'وارد' AND is_close = 0;
 ''');
     return re.first;
   }
@@ -541,7 +544,7 @@ WHERE type = 'وارد' AND is_deleted = 0;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'وارد' and foulType='سولار' AND is_deleted = 0;
+WHERE type = 'وارد' and foulType='سولار' AND is_close = 0;
 ''');
     return re.first;
   }
@@ -551,7 +554,7 @@ WHERE type = 'وارد' and foulType='سولار' AND is_deleted = 0;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'وارد' and foulType='بنزين' AND is_deleted = 0;
+WHERE type = 'وارد' and foulType='بنزين' AND is_close = 0;
 ''');
     return re.first;
   }
@@ -559,8 +562,8 @@ WHERE type = 'وارد' and foulType='بنزين' AND is_deleted = 0;
   getTotalAvailable() async {
     Database? database = await db;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
-    (SELECT COALESCE(SUM(amount), 0) FROM operations WHERE type = 'وارد' AND is_deleted = 0) -
-    (SELECT COALESCE(SUM(amount), 0) FROM operations WHERE type = 'صرف' AND is_deleted = 0) AS net_amount;
+    (SELECT COALESCE(SUM(amount), 0) FROM operations WHERE type = 'وارد' AND is_close = 0) -
+    (SELECT COALESCE(SUM(amount), 0) FROM operations WHERE type = 'صرف' AND is_close = 0) AS net_amount;
 ''');
     return re.first;
   }
@@ -583,7 +586,7 @@ LEFT JOIN
   operations o ON sc.id = o.sub_consumer_id
 WHERE 
   c.is_deleted = 0 AND
-  sc.is_deleted = 0
+  sc.is_deleted = 0 and o.is_close = 0
 GROUP BY 
   sc.id, c.name, sc.details, sc.description, sc.hasRecord
 ORDER BY 
@@ -613,7 +616,7 @@ ORDER BY
     LEFT JOIN 
       operations o ON sc.id = o.sub_consumer_id
     WHERE 
-      c.name = ? AND c.is_deleted = 0 AND sc.is_deleted = 0
+      c.name = ? AND c.is_deleted = 0 AND sc.is_deleted = 0 and o.is_close = 0
     GROUP BY 
       sc.id, sc.details, sc.description
     ORDER BY 
@@ -631,7 +634,7 @@ ORDER BY
         c.id AS consumer_id,
         c.name AS consumer_name,
         COUNT(DISTINCT CASE WHEN sc.is_deleted = 0 THEN sc.id ELSE NULL END) AS number_of_subconsumers,
-        COUNT(DISTINCT CASE WHEN o.is_deleted = 0 THEN o.id ELSE NULL END) AS number_of_operations
+        COUNT(DISTINCT CASE WHEN o.is_close = 0 THEN o.id ELSE NULL END) AS number_of_operations
     FROM 
         consumers c
     LEFT JOIN 
@@ -678,7 +681,7 @@ ORDER BY
 FROM
     operations
 WHERE
-    is_deleted = 0
+    is_close = 0
 GROUP BY
     foulType;
 
@@ -850,6 +853,28 @@ WHERE
       trip.status,
     ]);
   }
+
+  altTrip() async {
+    Database? database = await db;
+    await database?.execute(
+      '''
+    ALTER TABLE trips
+ADD COLUMN is_close INTEGER DEFAULT 0;
+
+  ''',
+    );
+  }
+
+//   altOper() async {
+//     Database? database = await db;
+//     await database?.execute(
+//       '''
+//     ALTER TABLE operations
+// ADD COLUMN is_close INTEGER DEFAULT 0;
+
+//   ''',
+//     );
+//   }
 
   // Future<int> addOper(OperationT operationT) async {
   //   Database? database = await db;
@@ -1056,7 +1081,7 @@ LIMIT 1;
 FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
-WHERE o.is_deleted = 0
+WHERE o.is_close= 0
 AND (
     s.details =? OR
     c.name =? OR
@@ -1114,6 +1139,17 @@ WHERE id = ?;
 ''', [id]);
   }
 
+  Future<int> trheilLOperation(int month, int year) async {
+    Database? database = await db;
+    return await database!.rawUpdate('''
+      UPDATE operations
+      SET is_close = 1
+      WHERE strftime('%m', date) = ?  
+        AND strftime('%Y', date) = ?;
+
+    ''', [month, year]);
+  }
+
   Future<int> deleteOperation(int id) async {
     Database? database = await db;
     return database!.delete(
@@ -1121,5 +1157,28 @@ WHERE id = ?;
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<bool> isMonthclose(int month, int year) async {
+    Database? databae = await db;
+    List<Map<String, dynamic>> re = await databae!.rawQuery('''
+        SELECT is_close = 1
+        FROM operations
+        WHERE strftime('%m', date) = ?
+          AND strftime('%Y', date) = ?;
+    ''', [month, year]);
+    return (Sqflite.firstIntValue(re) ?? 0) == 1;
+  }
+
+  getMonthes() async {
+    Database? databae = await db;
+    List<Map<String, dynamic>> re = await databae!.rawQuery('''
+       SELECT DISTINCT
+      strftime('%m', date) AS month,
+      strftime('%Y', date) AS year
+      FROM operations
+      ORDER BY year, month;
+    ''');
+    return re;
   }
 }
