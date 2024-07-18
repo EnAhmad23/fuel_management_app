@@ -337,7 +337,10 @@ class HomePage extends StatelessWidget {
                     textDirection: TextDirection.rtl,
                     child: ListTile(
                       onTap: () {
+                        provider.month = null;
+                        provider.year = null;
                         provider.getMonthsAndYears();
+                        provider.getOperationOfDate();
                         Get.to(const CloseMonth());
                       },
                       title: Text('إغلاق ملف',
@@ -558,7 +561,6 @@ class HomePage extends StatelessWidget {
                                     builder: (context, provider, x) {
                                   return OperationTable(
                                     operations: provider.lastTenOp ?? [],
-                                    edit: true,
                                   );
                                 }),
                               ],

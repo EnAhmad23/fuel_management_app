@@ -43,19 +43,22 @@ class MyTextFormField extends StatelessWidget {
         SizedBox(
           height: 10.h,
         ),
-        TextFormField(
-          inputFormatters: inputFormatters,
-          keyboardType: keyboardType ?? TextInputType.text,
-          validator: validator,
-          controller: controller,
-          obscureText: obscureText ?? false,
-          style: TextStyle(fontSize: fontSize ?? 18.sp),
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: hintText,
-          ),
+        Directionality(
           textDirection: TextDirection.rtl,
-          textAlign: TextAlign.right,
+          child: TextFormField(
+            inputFormatters: inputFormatters,
+            keyboardType: keyboardType ?? TextInputType.text,
+            validator: validator,
+            controller: controller,
+            obscureText: obscureText ?? false,
+            style: TextStyle(fontSize: fontSize ?? 18.sp),
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText: hintText,
+            ),
+            textDirection: TextDirection.rtl,
+            textAlign: TextAlign.right,
+          ),
         ),
       ],
     );

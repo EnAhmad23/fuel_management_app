@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Model/fuel_available_amount.dart';
 import 'package:fuel_management_app/Model/operation.dart';
 import 'package:fuel_management_app/UI/Widgets/my_snackbar.dart';
@@ -13,6 +14,7 @@ import 'package:fuel_management_app/UI/show_operation.dart';
 import 'package:fuel_management_app/UI/update_operation_estrad.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 import '../Model/DBModel.dart';
 import '../Model/operationT.dart';
@@ -63,14 +65,14 @@ class OpProvider extends ChangeNotifier {
   List<String>? consumerNames;
   List<String>? subconsumerNames;
   List<String>? months;
-  List<String>? years;
+  Set<String>? years;
   String? doneMassege;
   String? _hintText;
   String? _formHintText;
   String? _toHintText;
   String? _subTitle;
-  String? month;
-  String? year;
+  String? _month;
+  String? _year;
   int? _amount;
   int? _subRecord;
   int? _numOfOp;
@@ -93,6 +95,24 @@ class OpProvider extends ChangeNotifier {
   bool? _checked;
   bool? hasRecord;
   bool _disable = false;
+  double? _excessSolar;
+  double? _excessGasoline;
+
+  double? get excessSolar {
+    return _excessSolar;
+  }
+
+  double? get excessGasoline {
+    return _excessGasoline;
+  }
+
+  String? get month {
+    return _month;
+  }
+
+  String? get year {
+    return _year;
+  }
 
   bool get disable {
     return _disable;
@@ -206,6 +226,16 @@ class OpProvider extends ChangeNotifier {
 
   int? get numOfOp {
     return _numOfOp;
+  }
+
+  set month(String? value) {
+    _month = value;
+    notifyListeners();
+  }
+
+  set year(String? value) {
+    _year = value;
+    notifyListeners();
   }
 
   setUpdatedOperation(OperationT op) {
@@ -400,6 +430,14 @@ class OpProvider extends ChangeNotifier {
     }
   }
 
+  set excessGasoline(double? value) {
+    _excessGasoline = value;
+  }
+
+  set excessSolar(double? value) {
+    _excessSolar = value;
+  }
+
   setFuelType(String? value) {
     _fuelType = value;
     notifyListeners();
@@ -440,6 +478,22 @@ class OpProvider extends ChangeNotifier {
     //-----------------------------------------------checked
     if (value == null || value.isEmpty) {
       return 'الرجاء ادخال أسم المستلم ';
+    }
+    return null;
+  }
+
+  String? monthValidet(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty) {
+      return 'يجب إختيار الشهر';
+    }
+    return null;
+  }
+
+  String? yearValidet(String? value) {
+    //-----------------------------------------------checked
+    if (value == null || value.isEmpty) {
+      return 'يجب إختيار السنة';
     }
     return null;
   }
@@ -594,7 +648,10 @@ class OpProvider extends ChangeNotifier {
     Map<String, dynamic> re = await _dbModel.getTotalAvailable();
     log('Total Available -> ${re['net_amount']}');
     if (re.isNotEmpty && re['net_amount'] != null) {
-      setTotalAvailable('${re['net_amount']}');
+      double total = double.parse('${re['net_amount']}') +
+          (excessGasoline ?? 0.0) +
+          (excessSolar ?? 0.0);
+      setTotalAvailable('$total');
     } else {
       setTotalAvailable('0.0');
     }
@@ -726,7 +783,7 @@ class OpProvider extends ChangeNotifier {
   }
 
   void searchOperation(OperationT operation) async {
-    List<Map<String, Object?>> re = await _dbModel.getAllOp();
+    List<Map<String, Object?>> re = await _dbModel.getAllOpSearch();
     operations = re.map(
       (e) {
         log('operations $e');
@@ -810,6 +867,22 @@ class OpProvider extends ChangeNotifier {
         return FuelAvailableAmount.fromMap(e);
       },
     ).toList();
+    if (fuelavailable != null && fuelavailable!.isEmpty) {
+      fuelavailable!.map(
+        (e) {
+          if (e.fuelType == 'سولار' &&
+              excessSolar != null &&
+              excessSolar! > 0) {
+            e.amount = ((e.amount ?? 0) + excessSolar!);
+          }
+          if (e.fuelType == 'بنرين' &&
+              excessGasoline != null &&
+              excessGasoline! > 0) {
+            e.amount = ((e.amount ?? 0) + excessGasoline!);
+          }
+        },
+      );
+    }
     log('$operations');
     notifyListeners();
 
@@ -1045,6 +1118,89 @@ class OpProvider extends ChangeNotifier {
     }
   }
 
+  Future<int> trheilOperation(int month, int year) async {
+    int re = await _dbModel.trheilLOperation(month, year);
+    log('ttttttttttttttttttttttttttttttt $re');
+    log('ttttttttttttttttttttttttttttttt $month');
+    log('ttttttttttttttttttttttttttttttt $year');
+    return re;
+  }
+
+  getExcessFuel() async {
+    List<Map<String, Object?>> re = await _dbModel.getExcessFuel(
+        int.parse(month ?? '0'), int.parse(year ?? '0'));
+    re.map(
+      (e) {
+        excessGasoline = double.parse('${e['بنزين']}');
+        excessSolar = double.parse('${e['سولار']}');
+      },
+    );
+  }
+
+  void onTapClose() async {
+    if (formKey.currentState!.validate()) {
+      if (month != null && year != null) {
+        Get.defaultDialog(
+            title: 'حذف',
+            backgroundColor: Colors.white,
+            content: Padding(
+              padding: EdgeInsets.all(10.w),
+              child: Column(
+                children: [
+                  SizedBox(
+                      height: 100.h,
+                      width: 200.h,
+                      child: Lottie.asset('assets/close.json')),
+                  SizedBox(
+                    height: 5.h,
+                  ),
+                  const Text('هل متاكد من إغلاق الملف ؟'),
+                ],
+              ),
+            ),
+            confirm: InkWell(
+              onTap: () async {
+                var x =
+                    await trheilOperation(int.parse(month!), int.parse(year!));
+                if (x != 0) {
+                  MySnackbar.doneSnack(massege: ' تم إغلاق ملف شهر $month');
+                  month = null;
+                  year = null;
+                  getAllOpT();
+                  getOperationOfDate();
+                  getExcessFuel();
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(5.r)),
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                padding: EdgeInsets.all(10.w),
+                child: const Text(
+                  'نعم',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            cancel: InkWell(
+              onTap: () => Get.back(),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(5.r)),
+                padding: EdgeInsets.all(10.w),
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                child: const Text(
+                  'لا',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ));
+      }
+    }
+  }
+
   checkOperationType(OperationT operation) {
     if (operation.type == 'صرف') {
       setFuelType('${operation.foulType}');
@@ -1104,16 +1260,19 @@ class OpProvider extends ChangeNotifier {
 
   getMonthsAndYears() async {
     List<Map<String, Object?>> re = await _dbModel.getMonthes();
-    months = (re.map(
-      (element) {
-        return '${element['month']}';
-      },
-    ).toList());
-    years = (re.map(
-      (element) {
-        return '${element['year']}';
-      },
-    ).toList());
+    if (month != null && year != null) {}
+    {
+      months = (re.map(
+        (element) {
+          return '${element['month']}';
+        },
+      ).toList());
+      years = (re.map(
+        (element) {
+          return '${element['year']}';
+        },
+      ).toSet());
+    }
     notifyListeners();
   }
 
@@ -1124,16 +1283,21 @@ class OpProvider extends ChangeNotifier {
         return OperationT.fromMap(e);
       },
     ).toList();
-    if (month != null) {
-      operations = operations
-          ?.where((element) => (element.newDate?.month) == int.parse('$month'))
-          .toList();
+
+    if (operations != null) {
+      if (month != null) {
+        operations = operations
+            ?.where((element) => element.newDate?.month == int.parse('$month'))
+            .toList();
+      }
+      if (year != null) {
+        operations = operations
+            ?.where((element) => element.newDate?.year == int.parse('$year'))
+            .toList();
+      }
     }
-    if (year != null) {
-      operations = operations
-          ?.where((element) => (element.newDate?.month) == int.parse('$year'))
-          .toList();
-    }
+
+    notifyListeners();
   }
 
   void showDeleteSuccessSnackbar() {
@@ -1359,5 +1523,10 @@ class OpProvider extends ChangeNotifier {
     final file = File(outputFilePath);
 
     await file.writeAsBytes(await pdf.save());
+    if (Platform.isWindows) {
+      Process.run('cmd', ['/c', 'start', '', file.path]);
+    } else {
+      throw UnsupportedError('Opening files is not supported on this platform');
+    }
   }
 }

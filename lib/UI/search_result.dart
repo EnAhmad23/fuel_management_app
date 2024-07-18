@@ -62,7 +62,6 @@ class SearchResult extends StatelessWidget {
                               child: SingleChildScrollView(
                                 child: OperationTable(
                                   operations: opPro.operations ?? [],
-                                  edit: true,
                                 ),
                               ),
                             ),

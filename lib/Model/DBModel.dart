@@ -219,6 +219,29 @@ Where is_close = 0
     return re;
   }
 
+  Future<List<Map<String, Object?>>> getAllOpSearch() async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+     SELECT 
+    s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+
+''');
+    return re;
+  }
+
   Future<List<Map<String, Object?>>> getAllSubOp(int? id) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery('''
@@ -422,32 +445,45 @@ WHERE type = ?
   getMonthlySarf() async {
     Database? database = await db;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
-    strftime('%Y-%m', date) AS month,
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'صرف' AND is_close = 0
-GROUP BY strftime('%Y-%m', date)
-ORDER BY month DESC;
+WHERE 
+    type = 'صرف' 
+    AND is_close = 0
+    AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now')
+GROUP BY strftime('%Y-%m', date);
+
 
 
 ''');
-    return re.first;
+
+    if (re.isNotEmpty) {
+      return re.first;
+    } else {
+      // Return a default value if no records are found
+      return {'total_exchange_amount': 0.0};
+    }
   }
 
   getWeeklySarf() async {
     Database? database = await db;
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
-    strftime('%Y-%W', date) AS week, 
     SUM(amount) AS total_exchange_amount
 FROM operations
-WHERE type = 'صرف' AND is_close = 0
-GROUP BY week
-ORDER BY week DESC;
-
-
-
+WHERE type = 'صرف' 
+    AND is_close = 0 
+    AND strftime('%W', date, 'weekday 6') = strftime('%W', 'now', 'weekday 6')
+    -- 'weekday 6' sets the week to start from Saturday
+    -- 'now' gets the current date
+GROUP BY strftime('%Y-%m-%d', date, 'weekday 6')
+ORDER BY date DESC;
 ''');
-    return re.first;
+    if (re.isNotEmpty) {
+      return re.first;
+    } else {
+      // Return a default value if no records are found
+      return {'total_exchange_amount': 0.0};
+    }
   }
 
   getTotalSarf() async {
@@ -527,6 +563,26 @@ WHERE is_close = 0
 ''');
     log('${re.first}');
     return re.first;
+  }
+
+  getExcessFuel(int month, int year) async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''
+      SELECT 
+          foulType,
+          SUM(CASE WHEN type = 'وارد' THEN amount ELSE 0 END) -
+          SUM(CASE WHEN type = 'صرف' THEN amount ELSE 0 END) AS excess_amount
+      FROM 
+          operations
+      WHERE 
+          strftime('%m', date) = ?
+          strftime('%Y', date) = ?
+      GROUP BY 
+          foulType;
+
+''', [month, year]);
+
+    return re;
   }
 
   getTotalWard() async {
@@ -1141,13 +1197,14 @@ WHERE id = ?;
 
   Future<int> trheilLOperation(int month, int year) async {
     Database? database = await db;
+
     return await database!.rawUpdate('''
       UPDATE operations
       SET is_close = 1
       WHERE strftime('%m', date) = ?  
         AND strftime('%Y', date) = ?;
 
-    ''', [month, year]);
+    ''', [month.toString().padLeft(2, '0'), year.toString().padLeft(2, '0')]);
   }
 
   Future<int> deleteOperation(int id) async {
@@ -1174,10 +1231,12 @@ WHERE id = ?;
     Database? databae = await db;
     List<Map<String, dynamic>> re = await databae!.rawQuery('''
        SELECT DISTINCT
-      strftime('%m', date) AS month,
-      strftime('%Y', date) AS year
-      FROM operations
-      ORDER BY year, month;
+    strftime('%m', date) AS month,
+    strftime('%Y', date) AS year
+FROM operations
+WHERE strftime('%Y-%m', date) <= strftime('%Y-%m', 'now')
+ORDER BY year DESC, month DESC;
+
     ''');
     return re;
   }

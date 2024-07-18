@@ -126,7 +126,6 @@ class SubonsumerDetails extends StatelessWidget {
                                             return OperationTable(
                                               operations:
                                                   provider.subOperations ?? [],
-                                              edit: true,
                                             );
                                           }),
                                         ],
