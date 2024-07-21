@@ -90,17 +90,16 @@ class UpdateOperationSarf extends StatelessWidget {
                                       child: Consumer<SubProvider>(
                                           builder: (context, sub, x) {
                                         return MyDropdown(
+                                          hint: provider.subconName,
                                           lable: 'المستهلك الفرعي',
-                                          itemsList: (!provider.disable)
-                                              ? provider.subconsumerNames ?? []
-                                              : [],
+                                          itemsList: [],
                                           onchanged: (!provider.disable)
                                               ? (value) {
                                                   provider.setSubConName(value);
                                                   sub.getHasRecord(value);
                                                 }
                                               : (newValue) {},
-                                          value: provider.subconName,
+                                          value: null,
                                           validator: provider.subNameValidet,
                                         );
                                       }),
@@ -110,10 +109,9 @@ class UpdateOperationSarf extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: MyDropdown(
+                                        hint: provider.conName,
                                         lable: 'المستهلك الرئيسي',
-                                        itemsList: (!provider.disable)
-                                            ? provider.consumerNames ?? []
-                                            : [],
+                                        itemsList: [],
                                         onchanged: (!provider.disable)
                                             ? (value) {
                                                 if (value !=
@@ -122,11 +120,10 @@ class UpdateOperationSarf extends StatelessWidget {
                                                   provider.setConName(value);
                                                   provider.getSubonsumersNames(
                                                       provider.conName);
-                                                  log('=====================================${provider.subconName}');
+
                                                   // provider.setSubConName(provider
                                                   //     .operationT
                                                   //     ?.subConsumerDetails);
-                                                  log('33333333333333333333333${provider.operationT?.subConsumerDetails}');
                                                   // provider.setSubConName(provider
                                                   //     .operationT!
                                                   //     .subConsumerDetails);

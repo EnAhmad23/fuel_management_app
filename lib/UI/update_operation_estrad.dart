@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
-import 'package:fuel_management_app/Model/operationT.dart';
+import 'package:fuel_management_app/UI/Widgets/My_dropdown.dart';
 import 'package:fuel_management_app/UI/Widgets/custom_switch.dart';
 import 'package:fuel_management_app/UI/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/UI/Widgets/my_button.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class UpdateOperationEstrad extends StatelessWidget {
@@ -19,7 +18,7 @@ class UpdateOperationEstrad extends StatelessWidget {
         elevation: 5,
         centerTitle: true,
         title: Text(
-          'تعديل عملية استيراد ',
+          'تعديل عملية وارد',
           style: Theme.of(context)
               .textTheme
               .bodyLarge
@@ -49,7 +48,7 @@ class UpdateOperationEstrad extends StatelessWidget {
                           padding: const EdgeInsets.all(16.0),
                           child: Align(
                             alignment: Alignment.centerRight,
-                            child: Text('تعديل عملية استيراد ',
+                            child: Text('تعديل عملية وارد',
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
@@ -71,66 +70,70 @@ class UpdateOperationEstrad extends StatelessWidget {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            'التاريخ  ',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                          ),
+                                      child: Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          ' التاريخ ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.w800),
                                         ),
-                                        SizedBox(
-                                          height: 10.h,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w, vertical: 10.h),
-                                          child: TextFormField(
-                                            validator: provider.dateValidet,
-                                            style: TextStyle(fontSize: 18.sp),
-                                            controller: provider.dateCon,
-                                            decoration: InputDecoration(
-                                                // alignLabelWithHint: true,
-                                                hintText: provider.hintText,
-                                                border:
-                                                    const OutlineInputBorder(),
-                                                suffixIcon: InkWell(
-                                                  child: const Icon(
-                                                    Icons.calendar_today,
-                                                    color: Colors.black,
-                                                  ),
-                                                  onTap: () async {
-                                                    var x =
-                                                        await showDatePicker(
-                                                      currentDate:
-                                                          provider.date,
-                                                      context: context,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      firstDate: DateTime(2000),
-                                                      lastDate: DateTime(2101),
-                                                    );
-                                                    provider.setDate(x);
-                                                  },
-                                                )),
-                                            readOnly: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextFormField(
+                                        validator: provider.dateValidet,
+                                        onTap: () async {
+                                          var x = await showDatePicker(
+                                            currentDate: provider.date,
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime(2101),
+                                          );
+                                          provider.setDate(x);
+                                        },
+                                        style: const TextStyle(fontSize: 16),
+                                        // textAlign: TextAlign.right,
+
+                                        controller: provider.dateCon,
+                                        // textDirection: TextDirection.rtl,
+                                        decoration: InputDecoration(
+                                            // alignLabelWithHint: true,
+                                            hintText: provider.hintText,
+                                            border: const OutlineInputBorder(),
+                                            suffixIcon: InkWell(
+                                              child: const Icon(
+                                                Icons.calendar_today,
+                                                color: Colors.black,
+                                              ),
+                                              onTap: () async {
+                                                var x = await showDatePicker(
+                                                  currentDate: provider.date,
+                                                  context: context,
+                                                  initialDate: DateTime.now(),
+                                                  firstDate: DateTime(2000),
+                                                  lastDate: DateTime(2101),
+                                                );
+                                                provider.setDate(x);
+                                              },
+                                            )),
+                                        readOnly: true,
+                                      ),
+                                    ],
+                                  )),
                                   SizedBox(width: 10.w),
                                   Expanded(
                                     child: MyTextFormField(
                                       inputFormatters: <TextInputFormatter>[
                                         FilteringTextInputFormatter.digitsOnly,
                                       ],
+                                      fontSize: 16,
                                       validator: provider.amontValidet,
                                       labelText: 'الكمية',
                                       hintText: 'أدخل كمية الوقود',
@@ -139,48 +142,24 @@ class UpdateOperationEstrad extends StatelessWidget {
                                   ),
                                   SizedBox(width: 15.w),
                                   Expanded(
-                                    child: Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            'نوع الوقود',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10.h,
-                                        ),
-                                        DropdownButtonFormField<String?>(
-                                          validator: provider.fuelTypeValidator,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          hint: const Text('اختر نوع الوقود'),
-                                          value: provider
-                                              .fuelType, // Ensure this matches one of the items in items list
-                                          onChanged: (String? value) {
-                                            provider.setFuelType(
-                                                value); // Update fuelType in provider
-                                          },
-                                          items: <String>['بنزين', 'سولار']
-                                              .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            },
-                                          ).toList(),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                      child: MyDropdown(
+                                    lable: 'نوع الوقود',
+                                    itemsList: const [
+                                      'اختر نوع الوقود',
+                                      'بنزين',
+                                      'سولار'
+                                    ],
+                                    onchanged: (value) {
+                                      if (value != 'اختر نوع الوقود') {
+                                        provider.setFuelType(value);
+                                      } else {
+                                        provider.setFuelType(null);
+                                      }
+                                    },
+                                    value:
+                                        provider.fuelType ?? 'اختر نوع الوقود',
+                                    validator: provider.fuelTypeValidator,
+                                  ))
                                 ],
                               ),
                               SizedBox(

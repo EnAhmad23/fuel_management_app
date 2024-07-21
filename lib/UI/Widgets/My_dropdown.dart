@@ -8,12 +8,16 @@ class MyDropdown extends StatelessWidget {
       required this.itemsList,
       required this.onchanged,
       required this.value,
-      required this.validator});
+      required this.validator,
+      this.fontSize,
+      this.hint});
   final String lable;
   final String? value;
+  final String? hint;
   final List<String> itemsList;
   final void Function(String?) onchanged;
   final String? Function(String?)? validator;
+  final double? fontSize;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,6 +38,8 @@ class MyDropdown extends StatelessWidget {
         Directionality(
           textDirection: TextDirection.rtl,
           child: DropdownButtonFormField<String>(
+            hint: Text(hint ?? ''),
+            style: (fontSize != null) ? TextStyle(fontSize: fontSize) : null,
             validator: validator,
             value: value,
             decoration: const InputDecoration(border: OutlineInputBorder()),

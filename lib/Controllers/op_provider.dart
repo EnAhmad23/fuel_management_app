@@ -843,6 +843,15 @@ class OpProvider extends ChangeNotifier {
         },
       ).toList();
     }
+    if (operation.checked != null) {
+      operations = operations?.where(
+        (element) {
+          log('8888888888 ${operation.dischangeNumber}//');
+          log('8888888888${element.dischangeNumber}');
+          return element.checked == operation.checked;
+        },
+      ).toList();
+    }
     log('-*-*-*-*-*-*-*-**-*${operations?.length}');
     if (operation.newDate != null && fromdate != null && todate != null) {
       operations = operations?.where(
@@ -867,26 +876,40 @@ class OpProvider extends ChangeNotifier {
         return FuelAvailableAmount.fromMap(e);
       },
     ).toList();
-    if (fuelavailable != null && fuelavailable!.isEmpty) {
-      fuelavailable!.map(
-        (e) {
-          if (e.fuelType == 'سولار' &&
-              excessSolar != null &&
-              excessSolar! > 0) {
-            e.amount = ((e.amount ?? 0) + excessSolar!);
-          }
-          if (e.fuelType == 'بنرين' &&
-              excessGasoline != null &&
-              excessGasoline! > 0) {
-            e.amount = ((e.amount ?? 0) + excessGasoline!);
-          }
-        },
-      );
-    }
-    log('$operations');
-    notifyListeners();
 
-    log('the length of operation = ${operations?.length}');
+    // Adding excess fuel to the available fuel
+    if (fuelavailable != null) {
+      // Process excess solar fuel
+      if (excessSolar != null && excessSolar! > 0) {
+        bool solarFound = false;
+        for (var e in fuelavailable!) {
+          if (e.fuelType == 'سولار') {
+            e.amount = ((e.amount ?? 0) + excessSolar!);
+            solarFound = true;
+            break;
+          }
+        }
+        if (!solarFound) {
+          fuelavailable!
+              .add(FuelAvailableAmount(fuelType: 'سولار', amount: excessSolar));
+        }
+      }
+      if (excessGasoline != null && excessGasoline! > 0) {
+        bool gasolineFound = false;
+        for (var e in fuelavailable!) {
+          if (e.fuelType == 'بنرين') {
+            e.amount = ((e.amount ?? 0) + excessGasoline!);
+            gasolineFound = true;
+            break;
+          }
+        }
+        if (!gasolineFound) {
+          fuelavailable!.add(
+              FuelAvailableAmount(fuelType: 'بنرين', amount: excessGasoline));
+        }
+      }
+    }
+    notifyListeners();
   }
 
   void getDailyOpT() async {
@@ -1127,14 +1150,28 @@ class OpProvider extends ChangeNotifier {
   }
 
   getExcessFuel() async {
-    List<Map<String, Object?>> re = await _dbModel.getExcessFuel(
-        int.parse(month ?? '0'), int.parse(year ?? '0'));
-    re.map(
-      (e) {
-        excessGasoline = double.parse('${e['بنزين']}');
-        excessSolar = double.parse('${e['سولار']}');
-      },
-    );
+    // Ensure month and year are parsed correctly
+    int parsedMonth = int.parse(month ?? '0');
+    int parsedYear = int.parse(year ?? '0');
+    List<Map<String, Object?>> re =
+        await _dbModel.getExcessFuel(parsedMonth, parsedYear);
+    excessGasoline = 0.0;
+    excessSolar = 0.0;
+
+    if (re.isNotEmpty) {
+      for (var e in re) {
+        var foulType = e['foulType'] as String?;
+        var excessAmount = e['excess_amount'] as num?;
+
+        if (foulType != null && excessAmount != null) {
+          if (foulType == 'بنزين') {
+            excessGasoline = excessAmount.toDouble();
+          } else if (foulType == 'سولار') {
+            excessSolar = excessAmount.toDouble();
+          }
+        }
+      }
+    }
   }
 
   void onTapClose() async {
@@ -1162,13 +1199,12 @@ class OpProvider extends ChangeNotifier {
               onTap: () async {
                 var x =
                     await trheilOperation(int.parse(month!), int.parse(year!));
+                Get.back();
+                refreshCloseOperation();
                 if (x != 0) {
                   MySnackbar.doneSnack(massege: ' تم إغلاق ملف شهر $month');
                   month = null;
                   year = null;
-                  getAllOpT();
-                  getOperationOfDate();
-                  getExcessFuel();
                 }
               },
               child: Container(
@@ -1217,6 +1253,7 @@ class OpProvider extends ChangeNotifier {
 
       // setSubConName(null);
       log('subconame - >$subconName');
+      setSubConName(operation.subConsumerDetails);
       setAmount('${int.parse('${operation.amount}')}');
       amountCon.text = '${operation.amount}';
       changeCheck(operation.checked);
@@ -1242,6 +1279,8 @@ class OpProvider extends ChangeNotifier {
     receiverName.clear();
     dischangeNumberCon.clear();
     subConsumerDetails.clear();
+    setSubConName(null);
+    setConName(null);
     consumerName.clear();
     changeCheck(false);
     setDate(null);
@@ -1317,6 +1356,21 @@ class OpProvider extends ChangeNotifier {
     );
   }
 
+  refreshCloseOperation() {
+    getAllOpT();
+    getLastTenOpT();
+    getOperationOfDate();
+    getExcessFuel();
+    getMonthlySarf();
+    getDailySarf();
+    getWeeklySarf();
+    getMonthlyWard();
+    getTotalAvailable();
+    getTotalSarf();
+    getTotalWard();
+    getMonthsAndYears();
+  }
+
   Future<void> generatePdf(
       BuildContext context, List<OperationT> operations) async {
     double sarfBanzen = 0.0;
@@ -1367,8 +1421,8 @@ class OpProvider extends ChangeNotifier {
       pw.MultiPage(
         textDirection: pw.TextDirection.rtl,
         theme: pw.ThemeData.withFont(
-          base: beirutiFont,
-          bold: arialFont,
+          base: arialFont,
+          bold: beirutiFont,
         ),
         header: (pw.Context context) {
           // Custom header for the table on each page
@@ -1454,8 +1508,11 @@ class OpProvider extends ChangeNotifier {
                 'المستهلك',
                 '#'
               ],
-              headerStyle: pw.TextStyle(font: beirutiFont, fontSize: 12),
-              cellStyle: pw.TextStyle(font: beirutiFont, fontSize: 10),
+              headerStyle: pw.TextStyle(font: arialFont, fontSize: 12),
+              cellStyle: pw.TextStyle(
+                  font: arialFont,
+                  fontSize: 10,
+                  fontWeight: pw.FontWeight.normal),
               cellAlignment: pw.Alignment.center,
               data: operations.map((operation) {
                 return [
@@ -1479,7 +1536,7 @@ class OpProvider extends ChangeNotifier {
               children: [
                 pw.TableHelper.fromTextArray(
                   headers: ['القيمة', 'التفاصيل'],
-                  headerStyle: pw.TextStyle(font: beirutiFont, fontSize: 12),
+                  headerStyle: pw.TextStyle(font: arialFont, fontSize: 12),
                   cellStyle: pw.TextStyle(font: beirutiFont, fontSize: 10),
                   cellAlignment: pw.Alignment.center,
                   data: [

@@ -568,19 +568,18 @@ WHERE is_close = 0
   getExcessFuel(int month, int year) async {
     Database? database = await db;
     List<Map<String, dynamic>> re = await database!.rawQuery('''
-      SELECT 
-          foulType,
-          SUM(CASE WHEN type = 'وارد' THEN amount ELSE 0 END) -
-          SUM(CASE WHEN type = 'صرف' THEN amount ELSE 0 END) AS excess_amount
-      FROM 
-          operations
-      WHERE 
-          strftime('%m', date) = ?
-          strftime('%Y', date) = ?
-      GROUP BY 
-          foulType;
-
-''', [month, year]);
+    SELECT 
+        foulType,
+        SUM(CASE WHEN type = 'وارد' THEN amount ELSE 0 END) -
+        SUM(CASE WHEN type = 'صرف' THEN amount ELSE 0 END) AS excess_amount
+    FROM 
+        operations
+    WHERE 
+        strftime('%m', date) = ? AND
+        strftime('%Y', date) = ?
+    GROUP BY 
+        foulType;
+  ''', [month.toString().padLeft(2, '0'), year.toString()]);
 
     return re;
   }
@@ -1207,6 +1206,16 @@ WHERE id = ?;
     ''', [month.toString().padLeft(2, '0'), year.toString().padLeft(2, '0')]);
   }
 
+  Future<int> canselCloseMonth() async {
+    Database? database = await db;
+
+    return await database!.rawUpdate('''
+      UPDATE operations
+      SET is_close = 0;
+
+    ''');
+  }
+
   Future<int> deleteOperation(int id) async {
     Database? database = await db;
     return database!.delete(
@@ -1234,7 +1243,7 @@ WHERE id = ?;
     strftime('%m', date) AS month,
     strftime('%Y', date) AS year
 FROM operations
-WHERE strftime('%Y-%m', date) <= strftime('%Y-%m', 'now')
+WHERE strftime('%Y-%m', date) < strftime('%Y-%m', 'now') and is_close=0
 ORDER BY year DESC, month DESC;
 
     ''');

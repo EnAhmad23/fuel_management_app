@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/login_provider.dart';
-import 'package:fuel_management_app/Model/user.dart';
-import 'package:fuel_management_app/UI/home_page.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'Widgets/myTextFormField.dart';
@@ -55,20 +52,24 @@ class LoginPage extends StatelessWidget {
                           SizedBox(height: 30.h),
                           Align(
                             alignment: Alignment.centerRight,
-                            child: InkWell(
-                              onTap: () {
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        5), // Rounded corners
+                                  ),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 2, 12, 73),
+                                  foregroundColor: Colors.white),
+                              onPressed: () {
                                 provider.login(context);
                               },
-                              borderRadius: BorderRadius.circular(5.r),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5).r,
-                                  color: const Color.fromARGB(255, 23, 23, 59),
-                                ),
-                                padding: const EdgeInsets.all(10),
-                                child: const Text(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10.h),
+                                child: Text(
                                   'تسجيل الدخول',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18.sp),
                                 ),
                               ),
                             ),

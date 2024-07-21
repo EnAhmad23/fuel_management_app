@@ -320,6 +320,8 @@ class HomePage extends StatelessWidget {
                     child: ListTile(
                       onTap: () {
                         provider.getConsumersNames();
+                        provider.clearSarfFeild();
+                        provider.clearWardFeild();
                         Get.to(const SearchOperation());
                       },
                       title: Text('بحث',
@@ -528,7 +530,7 @@ class HomePage extends StatelessWidget {
                 height: 20.h,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                padding: EdgeInsets.symmetric(horizontal: 35.w),
                 child: Card(
                   child: Column(
                     children: [

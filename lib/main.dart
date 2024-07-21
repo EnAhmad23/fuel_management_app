@@ -11,7 +11,6 @@ import 'package:fuel_management_app/UI/login_page.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'UI/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +22,7 @@ void main() async {
   // Initialize the database
 
   await DBModel().intiDataBase();
+  await DBModel().canselCloseMonth();
 
   runApp(MultiProvider(
     providers: [

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
-import 'package:fuel_management_app/UI/Widgets/setting_button.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +12,7 @@ class FuelAmountTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (fuelTypes == null || fuelTypes.isEmpty)
+    return (fuelTypes.isEmpty)
         ? Center(
             child: SizedBox(
                 height: 300.h,

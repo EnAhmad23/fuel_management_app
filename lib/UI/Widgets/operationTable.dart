@@ -29,6 +29,9 @@ class OperationTable extends StatelessWidget {
         : SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
+              headingRowColor: WidgetStateProperty.resolveWith(
+                (states) => Colors.grey.shade200,
+              ),
               decoration: const BoxDecoration(color: Colors.white),
               border: const TableBorder.symmetric(
                 inside: BorderSide(color: Colors.grey),
