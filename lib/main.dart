@@ -18,7 +18,7 @@ void main() async {
   // Initialize sqflite for desktop support
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   // Initialize the database
 
   await DBModel().intiDataBase();

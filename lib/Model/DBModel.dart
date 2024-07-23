@@ -1243,7 +1243,7 @@ WHERE id = ?;
     strftime('%m', date) AS month,
     strftime('%Y', date) AS year
 FROM operations
-WHERE strftime('%Y-%m', date) < strftime('%Y-%m', 'now') and is_close=0
+WHERE strftime('%Y-%m', date) <= strftime('%Y-%m', 'now') and is_close=0
 ORDER BY year DESC, month DESC;
 
     ''');

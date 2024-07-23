@@ -149,7 +149,7 @@ class CloseMonth extends StatelessWidget {
                                       child: Align(
                                         alignment: Alignment.topRight,
                                         child: Text(
-                                          ': إختار الشهر المارد ترحيله',
+                                          ': اختر الشهر المارد ترحيله',
                                           style: TextStyle(
                                               fontSize: 16.sp,
                                               fontWeight: FontWeight.bold),

@@ -1187,7 +1187,7 @@ class OpProvider extends ChangeNotifier {
                   SizedBox(
                       height: 100.h,
                       width: 200.h,
-                      child: Lottie.asset('assets/close.json')),
+                      child: Lottie.asset('assets/warning.json')),
                   SizedBox(
                     height: 5.h,
                   ),
@@ -1341,8 +1341,8 @@ class OpProvider extends ChangeNotifier {
 
   void showDeleteSuccessSnackbar() {
     Get.snackbar(
-      'Success',
-      'Deletion has been done successfully',
+      'تم',
+      'تم حذف العنصر بنجاح',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.green,
       colorText: Colors.white,
