@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/Controllers/op_provider.dart';
 import 'package:fuel_management_app/UI/Widgets/close_table.dart';
-import 'package:fuel_management_app/UI/Widgets/my_button.dart';
 import 'package:provider/provider.dart';
 
 class CloseMonth extends StatelessWidget {
@@ -56,9 +55,25 @@ class CloseMonth extends StatelessWidget {
                                               child: Align(
                                                 alignment:
                                                     Alignment.centerRight,
-                                                child: MyButton(
-                                                    text: 'إغلاق ملف',
-                                                    onTap: opPro.onTapClose),
+                                                child: ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5)),
+                                                        backgroundColor:
+                                                            Colors.grey,
+                                                        foregroundColor:
+                                                            Colors.white),
+                                                    onPressed: opPro.onTapClose,
+                                                    child: const Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 10),
+                                                      child: Text('إغلاق ملف'),
+                                                    )),
                                               ),
                                             )
                                           : const SizedBox();
