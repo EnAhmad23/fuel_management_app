@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/Controllers/db_provider.dart';
-import 'package:fuel_management_app/Controllers/login_provider.dart';
-import 'package:fuel_management_app/Controllers/op_provider.dart';
-import 'package:fuel_management_app/Controllers/sub_provider.dart';
-import 'package:fuel_management_app/Controllers/trip_provider.dart';
-import 'package:fuel_management_app/Model/DBModel.dart';
-import 'package:fuel_management_app/UI/login_page.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:fuel_management_app/controllers/db_controller.dart';
+import 'package:fuel_management_app/controllers/login_controller.dart';
+import 'package:fuel_management_app/controllers/op_controller.dart';
+import 'package:fuel_management_app/controllers/sub_controller.dart';
+import 'package:fuel_management_app/controllers/trip_controller.dart';
+import 'package:fuel_management_app/models/DBModel.dart';
+import 'package:fuel_management_app/views/screens/home_page.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:window_manager/window_manager.dart';
+import 'core/constant/app_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,27 +23,18 @@ void main() async {
 
   await DBModel().intiDataBase();
   await DBModel().canselCloseMonth();
-
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-        create: (context) => TripProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (context) => DbProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (context) => SubProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (context) => OpProvider(),
-      ),
-      ChangeNotifierProvider(
-        create: (context) => LoginProvider(),
-      ),
-    ],
-    child: const MyApp(),
-  ));
+  await windowManager.ensureInitialized();
+  windowManager.waitUntilReadyToShow().then((_) async {
+    await windowManager.maximize();
+    windowManager.show();
+  });
+  // Initialize GetX controllers
+  Get.put(TripController());
+  Get.put(DbController());
+  Get.put(SubController());
+  Get.put(OpController());
+  Get.put(LoginController());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -60,12 +51,11 @@ class MyApp extends StatelessWidget {
       builder: (_, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'First Method',
           // You can use the library anywhere in the app even in theme
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-            primaryIconTheme: const IconThemeData(color: Colors.white),
-            iconTheme: const IconThemeData(color: Colors.white),
+            colorScheme: ColorScheme.fromSeed(seedColor: AppColors.background),
+            primaryIconTheme: const IconThemeData(color: AppColors.icon),
+            iconTheme: const IconThemeData(color: AppColors.icon),
             fontFamily: 'Calibri',
             // iconTheme: const IconThemeData(color: Colors.white),
             textTheme: TextTheme(
@@ -80,7 +70,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: const LoginPage(),
+      child: const HomePage(),
     );
   }
 }
