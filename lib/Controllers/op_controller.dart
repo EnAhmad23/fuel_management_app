@@ -1054,11 +1054,12 @@ class OpController extends GetxController {
             description: description.text),
       );
       log('////////////////////////// -> ${recordCon.text}');
-
-      if (x != 0) {
-        Get.showSnackbar(
-            mySnackBar.showSnackBar(message: 'تم إضافة العملية بنجاح'));
-        clearSarfFeild();
+      if (getExcessFuel() > 0) {
+        if (x != 0) {
+          Get.showSnackbar(
+              mySnackBar.showSnackBar(message: 'تم إضافة العملية بنجاح'));
+          clearSarfFeild();
+        }
       }
     }
   }

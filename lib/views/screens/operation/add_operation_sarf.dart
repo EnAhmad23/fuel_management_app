@@ -199,14 +199,6 @@ class AddSarf extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'اسم المستلم',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textOnBackground,
-          ),
-        ),
         SizedBox(height: 8.h),
         MyTextFormField(
           fontSize: 16.sp,
