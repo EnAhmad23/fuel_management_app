@@ -92,6 +92,8 @@ class HomePage extends StatelessWidget {
                         fontSize: 13.sp,
                         letterSpacing: 0.2,
                       ),
+                      arrowCollapse: Colors.grey,
+                      arrowOpen: Colors.white,
                       selectedIconColor: AppColors.accent,
                       unselectedIconColor:
                           AppColors.textOnPrimary.withOpacity(0.7),
@@ -118,72 +120,6 @@ class HomePage extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Modern Logo Container
-                          // Container(
-                          //   width: 30.w,
-                          //   height: 30.h,
-                          //   decoration: BoxDecoration(
-                          //     gradient: LinearGradient(
-                          //       begin: Alignment.topLeft,
-                          //       end: Alignment.bottomRight,
-                          //       colors: [
-                          //         AppColors.accent,
-                          //         AppColors.accent.withOpacity(0.8),
-                          //       ],
-                          //     ),
-                          //     borderRadius: BorderRadius.circular(20.r),
-                          //     boxShadow: [
-                          //       BoxShadow(
-                          //         color: AppColors.accent.withOpacity(0.3),
-                          //         blurRadius: 16,
-                          //         offset: const Offset(0, 8),
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   child: Icon(
-                          //     Icons.local_gas_station_rounded,
-                          //     color: Colors.white,
-                          //     size: 30.sp,
-                          //   ),
-                          // ),
-
-                          SizedBox(height: 100.h),
-                          // App Title
-                          Text(
-                            'نظام إدارة المحروقات',
-                            style: TextStyle(
-                              color: AppColors.textOnPrimary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.sp,
-                              letterSpacing: 0.5,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 4.h),
-                        ],
-                      ),
-                    ),
-                    footer: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 16.h,
-                        horizontal: 16.w,
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 1,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.transparent,
-                                  AppColors.textOnPrimary.withOpacity(0.3),
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          // User Profile Section
                           Container(
                             padding: EdgeInsets.all(16.w),
                             decoration: BoxDecoration(
@@ -240,6 +176,73 @@ class HomePage extends StatelessWidget {
                               ],
                             ),
                           ),
+
+                          // Modern Logo Container
+                          // Container(
+                          //   width: 30.w,
+                          //   height: 30.h,
+                          //   decoration: BoxDecoration(
+                          //     gradient: LinearGradient(
+                          //       begin: Alignment.topLeft,
+                          //       end: Alignment.bottomRight,
+                          //       colors: [
+                          //         AppColors.accent,
+                          //         AppColors.accent.withOpacity(0.8),
+                          //       ],
+                          //     ),
+                          //     borderRadius: BorderRadius.circular(20.r),
+                          //     boxShadow: [
+                          //       BoxShadow(
+                          //         color: AppColors.accent.withOpacity(0.3),
+                          //         blurRadius: 16,
+                          //         offset: const Offset(0, 8),
+                          //       ),
+                          //     ],
+                          //   ),
+                          //   child: Icon(
+                          //     Icons.local_gas_station_rounded,
+                          //     color: Colors.white,
+                          //     size: 30.sp,
+                          //   ),
+                          // ),
+
+                          SizedBox(height: 20.h),
+                          // App Title
+                          Text(
+                            'نظام إدارة المحروقات',
+                            style: TextStyle(
+                              color: AppColors.textOnPrimary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.sp,
+                              letterSpacing: 0.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          // SizedBox(height: 4.h),
+                        ],
+                      ),
+                    ),
+                    footer: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16.h,
+                        horizontal: 16.w,
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 1,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.transparent,
+                                  AppColors.textOnPrimary.withOpacity(0.3),
+                                  Colors.transparent,
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                          // User Profile Section
                         ],
                       ),
                     ),
@@ -313,8 +316,8 @@ class HomePage extends StatelessWidget {
                             },
                           ),
                           SideMenuItem(
-                            title: 'إضافة عملية',
-                            icon: const Icon(Icons.add_circle_rounded),
+                            title: ' إضافة عملية صرف',
+                            icon: const Icon(Icons.arrow_upward),
                             onTap: (index, _) {
                               final controller = Get.find<OpController>();
                               controller.clearWardFeild();
@@ -323,8 +326,8 @@ class HomePage extends StatelessWidget {
                             },
                           ),
                           SideMenuItem(
-                            title: 'صرف محروقات',
-                            icon: const Icon(Icons.arrow_upward_rounded),
+                            title: 'إضافة عملية استرداد',
+                            icon: const Icon(Icons.arrow_downward),
                             onTap: (index, _) {
                               final opPro = Get.find<OpController>();
                               opPro.clearWardFeild();
