@@ -221,8 +221,8 @@ class TripController extends GetxController {
     setSubConName(null);
     setConName(null);
     if (x != 0) {
-      Get.showSnackbar(
-          mySnackBar.showSnackBar(message: 'تم إضافة الرحلة بنجاح'));
+      Get.showSnackbar(mySnackBar.showSnackBar(
+          title: 'تم', message: 'تم إضافة الرحلة بنجاح'));
     }
   }
 
@@ -249,8 +249,8 @@ class TripController extends GetxController {
           cause: reasonCon.text));
 
       if (x != 0) {
-        Get.showSnackbar(
-            mySnackBar.showSnackBar(message: 'تم تعديل الرحلة بنجاح'));
+        Get.showSnackbar(mySnackBar.showSnackBar(
+            title: 'تم', message: 'تم تعديل الرحلة بنجاح'));
         roadCon.clear();
         reasonCon.clear();
         setSubConName(null);

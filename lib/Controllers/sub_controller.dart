@@ -259,8 +259,8 @@ class SubController extends GetxController {
       changeDropdownValue(null);
 
       if (done != 0) {
-        Get.showSnackbar(
-            mySnackBar.showSnackBar(message: 'تم إضافة المستهلك بنجاح'));
+        Get.showSnackbar(mySnackBar.showSnackBar(
+            title: 'تم', message: 'تم إضافة المستهلك بنجاح'));
       }
     }
   }
@@ -277,8 +277,8 @@ class SubController extends GetxController {
       clearFields();
 
       if (done != 0) {
-        Get.showSnackbar(
-            mySnackBar.showSnackBar(message: 'تم تعديل المستهلك بنجاح'));
+        Get.showSnackbar(mySnackBar.showSnackBar(
+            title: 'تم', message: 'تم تعديل المستهلك بنجاح'));
       }
     }
   }

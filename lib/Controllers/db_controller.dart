@@ -154,8 +154,8 @@ class DbController extends GetxController {
       log('update Consumer -> $x');
       consumerNameController.clear();
       if (x != 0) {
-        Get.showSnackbar(
-            mySnackBar.showSnackBar(message: 'تم تعديل المستهلك بنجاح'));
+        Get.showSnackbar(mySnackBar.showSnackBar(
+            title: 'تم', message: 'تم تعديل المستهلك بنجاح'));
       }
     }
   }
@@ -165,7 +165,8 @@ class DbController extends GetxController {
       var x = await addConsumer(consumerNameController.text);
       consumerNameController.clear();
       if (x != 0) {
-        Get.showSnackbar(mySnackBar.showSnackBar(message: 'تم انشاء الملف'));
+        Get.showSnackbar(
+            mySnackBar.showSnackBar(title: 'تم', message: 'تم انشاء الملف'));
       }
     }
   }
@@ -173,8 +174,8 @@ class DbController extends GetxController {
   void deleteConsumerTap() async {
     var x = await deleteConsumer(consumer?.id ?? 0);
     if (x != 0) {
-      Get.showSnackbar(
-          mySnackBar.showSnackBar(message: 'تم حذف المستهلك بنجاح'));
+      Get.showSnackbar(mySnackBar.showSnackBar(
+          title: 'تم', message: 'تم حذف المستهلك بنجاح'));
     }
   }
 
@@ -186,8 +187,8 @@ class DbController extends GetxController {
           operationsCount: consumer?.operationsCount,
           id: consumer?.id));
       if (x != 0) {
-        Get.showSnackbar(
-            mySnackBar.showSnackBar(message: 'تم تعديل المستهلك بنجاح'));
+        Get.showSnackbar(mySnackBar.showSnackBar(
+            title: 'تم', message: 'تم تعديل المستهلك بنجاح'));
       }
     }
   }

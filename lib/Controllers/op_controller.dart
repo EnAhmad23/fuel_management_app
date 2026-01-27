@@ -1029,37 +1029,50 @@ class OpController extends GetxController {
       );
 
       if (x != 0) {
-        Get.showSnackbar(
-            mySnackBar.showSnackBar(message: 'تم إضافة العملية بنجاح'));
+        Get.showSnackbar(mySnackBar.showSnackBar(
+            title: 'تم', message: 'تم إضافة العملية بنجاح'));
         clearWardFeild();
       }
     }
   }
 
   void onTopSarf() async {
+    // Check if there is any available fuel before proceeding
+    final availableFuel = double.tryParse(totalAvailable ?? '0') ?? 0;
+    if (availableFuel <= 0) {
+      Get.showSnackbar(mySnackBar.showSnackBar(
+          backgroundColor: Colors.red,
+          title: 'خطأ',
+          lottieAssetPath: 'assets/json/warning.json',
+          titleColor: Colors.white,
+          messageColor: Colors.white,
+          message: 'لا توجد كمية وقود متاحة لإتمام هذه العملية'));
+      return;
+    }
+
     if (formKey.currentState!.validate()) {
       setAmount(amountCon.text);
-      // setDate(fromdate!.difference(todate!).inDays as DateTime?);
       var x = await addOperationSarf(
         OperationT(
-            subConsumerDetails: subconName,
-            consumerName: conName,
-            receiverName: receiverName.text,
-            type: 'صرف',
-            checked: checked,
-            dischangeNumber: dischangeNumberCon.text,
-            foulType: fuelType,
-            amount: amount,
-            newDate: date,
-            description: description.text),
+          subConsumerDetails: subconName,
+          consumerName: conName,
+          receiverName: receiverName.text,
+          type: 'صرف',
+          checked: checked,
+          dischangeNumber: dischangeNumberCon.text,
+          foulType: fuelType,
+          amount: amount,
+          newDate: date,
+          description: description.text,
+        ),
       );
+
       log('////////////////////////// -> ${recordCon.text}');
-      if (getExcessFuel() > 0) {
-        if (x != 0) {
-          Get.showSnackbar(
-              mySnackBar.showSnackBar(message: 'تم إضافة العملية بنجاح'));
-          clearSarfFeild();
-        }
+
+      if (x != 0) {
+        Get.showSnackbar(mySnackBar.showSnackBar(
+            title: 'تم', message: 'تم إضافة العملية بنجاح'));
+        clearSarfFeild();
       }
     }
   }
@@ -1114,8 +1127,8 @@ class OpController extends GetxController {
           description: description.text));
 
       if (x != 0) {
-        Get.showSnackbar(
-            mySnackBar.showSnackBar(message: 'تم تعديل العملية بنجاح'));
+        Get.showSnackbar(mySnackBar.showSnackBar(
+            title: 'تم', message: 'تم تعديل العملية بنجاح'));
         clearSarfFeild();
       }
     }
@@ -1139,8 +1152,8 @@ class OpController extends GetxController {
       ));
       clearWardFeild();
       if (x != 0) {
-        Get.showSnackbar(
-            mySnackBar.showSnackBar(message: 'تم تعديل العملية بنجاح'));
+        Get.showSnackbar(mySnackBar.showSnackBar(
+            title: 'تم', message: 'تم تعديل العملية بنجاح'));
       }
     }
   }
@@ -1207,7 +1220,7 @@ class OpController extends GetxController {
                 refreshCloseOperation();
                 if (x != 0) {
                   Get.showSnackbar(mySnackBar.showSnackBar(
-                      message: ' تم إغلاق ملف شهر $month'));
+                      title: 'تم', message: ' تم إغلاق ملف شهر $month'));
                   month = null;
                   year = null;
                 }

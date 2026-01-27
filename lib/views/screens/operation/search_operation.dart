@@ -6,22 +6,29 @@ import 'package:fuel_management_app/views/Widgets/myTextFormField.dart';
 import 'package:fuel_management_app/views/Widgets/my_button.dart';
 import 'package:fuel_management_app/views/Widgets/custom_switch.dart';
 import 'package:get/get.dart';
+import 'package:fuel_management_app/core/constant/app_colors.dart';
 
 class SearchOperation extends StatelessWidget {
   const SearchOperation({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = Get.theme;
     return Scaffold(
+      backgroundColor: AppColors.surface,
       appBar: AppBar(
-        elevation: 5,
-        title: Text(
-          'بحث',
-          style: theme.textTheme.titleLarge
-              ?.copyWith(color: theme.colorScheme.primary, fontSize: 24.sp),
-        ),
+        elevation: 4,
         centerTitle: true,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.textOnBackground,
+        title: Text(
+          'بحث العمليات',
+          style: theme.textTheme.titleLarge?.copyWith(
+            color: AppColors.primary,
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: GetBuilder<OpController>(
         init: Get.find<OpController>(),
@@ -35,7 +42,7 @@ class SearchOperation extends StatelessWidget {
                 Container(
                   height: 60.h,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
+                    color: AppColors.primary,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(16.r),
                       topRight: Radius.circular(16.r),
@@ -45,9 +52,13 @@ class SearchOperation extends StatelessWidget {
                   padding: EdgeInsets.all(16.w),
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text('بحث العمليات',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.white)),
+                    child: Text(
+                      'بحث العمليات',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textOnPrimary,
+                      ),
+                    ),
                   ),
                 ),
                 Column(

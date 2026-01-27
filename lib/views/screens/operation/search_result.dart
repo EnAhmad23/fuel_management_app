@@ -3,21 +3,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:fuel_management_app/controllers/op_controller.dart';
 import 'package:fuel_management_app/views/Widgets/operationTable.dart';
+import 'package:fuel_management_app/core/constant/app_colors.dart';
 
 class SearchResult extends StatelessWidget {
   const SearchResult({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = Get.theme;
     return Scaffold(
+      backgroundColor: AppColors.surface,
       appBar: AppBar(
-        elevation: 5,
+        elevation: 4,
         centerTitle: true,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.textOnBackground,
         title: Text(
-          'العمليات',
-          style: theme.textTheme.titleLarge
-              ?.copyWith(color: theme.colorScheme.primary),
+          'نتائج البحث',
+          style: theme.textTheme.titleLarge?.copyWith(
+            color: AppColors.primary,
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -26,9 +33,10 @@ class SearchResult extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(30.w),
+                padding: EdgeInsets.all(24.w),
                 child: Card(
                   elevation: 8,
+                  color: AppColors.background,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.r),
                   ),
@@ -41,7 +49,9 @@ class SearchResult extends StatelessWidget {
                           builder: (pro) {
                             return Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 20.h, horizontal: 55.w),
+                                vertical: 16.h,
+                                horizontal: 24.w,
+                              ),
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: ElevatedButton(
@@ -51,23 +61,32 @@ class SearchResult extends StatelessWidget {
                                   },
                                   style: ElevatedButton.styleFrom(
                                     alignment: Alignment.centerRight,
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: theme.colorScheme.primary,
+                                    foregroundColor: AppColors.textOnPrimary,
+                                    backgroundColor: AppColors.primary,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 20.w, vertical: 15.h),
+                                      horizontal: 20.w,
+                                      vertical: 12.h,
+                                    ),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Text('طباعة ',
-                                          style: theme.textTheme.bodyMedium
-                                              ?.copyWith(color: Colors.white)),
-                                      const Icon(Icons.print,
-                                          color: Colors.white)
+                                      Text(
+                                        'طباعة ',
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                          color: AppColors.textOnPrimary,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      const Icon(
+                                        Icons.print,
+                                        color: AppColors.textOnPrimary,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -79,13 +98,16 @@ class SearchResult extends StatelessWidget {
                           init: Get.find<OpController>(),
                           builder: (opPro) {
                             return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.w),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.r),
-                                  side: BorderSide(color: Colors.grey.shade300),
+                                  side: BorderSide(
+                                    color:
+                                        AppColors.primary.withOpacity(0.12),
+                                  ),
                                 ),
-                                elevation: 5,
+                                elevation: 4,
                                 child: SingleChildScrollView(
                                   child: OperationTable(
                                     operations: opPro.operations ?? [],
@@ -95,13 +117,13 @@ class SearchResult extends StatelessWidget {
                             );
                           },
                         ),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 24.h),
                       ],
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 30.h),
+              SizedBox(height: 24.h),
             ],
           ),
         ),

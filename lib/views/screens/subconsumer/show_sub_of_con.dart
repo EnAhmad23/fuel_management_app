@@ -6,6 +6,7 @@ import 'package:fuel_management_app/views/Widgets/my_button.dart';
 import 'package:fuel_management_app/views/Widgets/sub_of_con_table.dart';
 import 'package:fuel_management_app/views/screens/subconsumer/add_subconsumer.dart';
 import 'package:get/get.dart';
+import 'package:fuel_management_app/core/constant/app_colors.dart';
 
 class ShowSubOfCon extends StatelessWidget {
   const ShowSubOfCon({super.key});
@@ -17,13 +18,19 @@ class ShowSubOfCon extends StatelessWidget {
       init: Get.find<DbController>(),
       builder: (pro) {
         return Scaffold(
+          backgroundColor: AppColors.surface,
           appBar: AppBar(
-            elevation: 5,
+            elevation: 4,
             centerTitle: true,
+            backgroundColor: AppColors.background,
+            foregroundColor: AppColors.textOnBackground,
             title: Text(
               pro.consumer?.name ?? '',
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(color: theme.colorScheme.primary),
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: AppColors.primary,
+                fontSize: 22.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           body: SingleChildScrollView(
@@ -32,9 +39,10 @@ class ShowSubOfCon extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(30.w),
+                    padding: EdgeInsets.all(24.w),
                     child: Card(
                       elevation: 8,
+                      color: AppColors.background,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16.r),
                       ),
@@ -44,8 +52,9 @@ class ShowSubOfCon extends StatelessWidget {
                           children: [
                             Container(
                               padding: EdgeInsets.all(16.w),
+                              width: double.infinity,
                               decoration: BoxDecoration(
-                                color: theme.colorScheme.primary,
+                                color: AppColors.primary,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(16.r),
                                   topRight: Radius.circular(16.r),
@@ -54,13 +63,14 @@ class ShowSubOfCon extends StatelessWidget {
                               child: Text(
                                 'جدول ${pro.consumer?.name}',
                                 style: theme.textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
+                                  color: AppColors.textOnPrimary,
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                            SizedBox(height: 30.h),
+                            SizedBox(height: 24.h),
                             Column(
                               children: [
                                 GetBuilder<DbController>(
@@ -68,15 +78,17 @@ class ShowSubOfCon extends StatelessWidget {
                                     builder: (dbProvider) {
                                       return Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 30.w),
+                                            horizontal: 16.w),
                                         child: Card(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12.r),
                                             side: BorderSide(
-                                                color: theme.dividerColor),
+                                              color: AppColors.primary
+                                                  .withOpacity(0.12),
+                                            ),
                                           ),
-                                          elevation: 5,
+                                          elevation: 4,
                                           child: SingleChildScrollView(
                                             child: GetBuilder<SubController>(
                                                 init: Get.find<SubController>(),
@@ -90,7 +102,7 @@ class ShowSubOfCon extends StatelessWidget {
                                         ),
                                       );
                                     }),
-                                SizedBox(height: 30.h),
+                                SizedBox(height: 24.h),
                                 GetBuilder<SubController>(
                                     init: Get.find<SubController>(),
                                     builder: (sub) {

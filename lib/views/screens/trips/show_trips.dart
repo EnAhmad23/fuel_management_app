@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:fuel_management_app/controllers/trip_controller.dart';
 import 'package:fuel_management_app/views/Widgets/trip_table.dart';
+import 'package:fuel_management_app/core/constant/app_colors.dart';
 
 class ShowTrips extends StatelessWidget {
   const ShowTrips({super.key});
@@ -11,13 +12,19 @@ class ShowTrips extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Get.theme;
     return Scaffold(
+      backgroundColor: AppColors.surface,
       appBar: AppBar(
-        elevation: 5,
+        elevation: 4,
         centerTitle: true,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.textOnBackground,
         title: Text(
           'الرحلات',
-          style: theme.textTheme.titleLarge
-              ?.copyWith(color: theme.colorScheme.primary, fontSize: 24.sp),
+          style: theme.textTheme.titleLarge?.copyWith(
+            color: AppColors.primary,
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -26,7 +33,19 @@ class ShowTrips extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
-            child: TripTable(trips: Get.find<TripController>().trips ?? []),
+            child: Card(
+              color: AppColors.background,
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: TripTable(
+                  trips: Get.find<TripController>().trips ?? [],
+                ),
+              ),
+            ),
           ),
         ),
       ),

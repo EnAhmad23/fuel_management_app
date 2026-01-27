@@ -4,21 +4,28 @@ import 'package:fuel_management_app/views/Widgets/consumers_table.dart';
 import 'package:get/get.dart';
 import 'package:fuel_management_app/controllers/db_controller.dart';
 import 'package:fuel_management_app/models/consumer.dart';
+import 'package:fuel_management_app/core/constant/app_colors.dart';
 
 class ShowConsumers extends StatelessWidget {
   const ShowConsumers({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = Get.theme;
     return Scaffold(
+      backgroundColor: AppColors.surface,
       appBar: AppBar(
-        elevation: 5,
+        elevation: 4,
         centerTitle: true,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.textOnBackground,
         title: Text(
           'المستهلكين الرئيسيين',
-          style: theme.textTheme.titleLarge
-              ?.copyWith(color: theme.colorScheme.primary),
+          style: theme.textTheme.titleLarge?.copyWith(
+            color: AppColors.primary,
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -27,9 +34,10 @@ class ShowConsumers extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(30.w),
+                padding: EdgeInsets.all(24.w),
                 child: Card(
                   elevation: 8,
+                  color: AppColors.background,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.r),
                   ),
@@ -38,9 +46,10 @@ class ShowConsumers extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
+                          width: double.infinity,
                           padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary,
+                            color: AppColors.primary,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(16.r),
                               topRight: Radius.circular(16.r),
@@ -49,24 +58,28 @@ class ShowConsumers extends StatelessWidget {
                           child: Text(
                             'جدول المستهلكين الرئيسيين',
                             style: theme.textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
+                              color: AppColors.textOnPrimary,
                               fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 24.h),
                         GetBuilder<DbController>(
                           init: Get.find<DbController>(),
                           builder: (dbProvider) {
                             return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.w),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.r),
-                                  side: BorderSide(color: Colors.grey.shade300),
+                                  side: BorderSide(
+                                    color:
+                                        AppColors.primary.withOpacity(0.12),
+                                  ),
                                 ),
-                                elevation: 5,
+                                elevation: 4,
                                 child: SingleChildScrollView(
                                   child: ConsumersTable(
                                     consumers: dbProvider.consumers ??
@@ -84,7 +97,7 @@ class ShowConsumers extends StatelessWidget {
                             );
                           },
                         ),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 24.h),
                       ],
                     ),
                   ),

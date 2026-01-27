@@ -10,7 +10,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = Get.theme;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
@@ -49,7 +49,7 @@ class LoginPage extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24.r),
                   ),
-                  color: theme.colorScheme.surface,
+                  color: AppColors.surface,
                   child: Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
@@ -64,7 +64,7 @@ class LoginPage extends StatelessWidget {
                               Text(
                                 'تسجيل الدخول',
                                 style: theme.textTheme.titleLarge?.copyWith(
-                                  color: theme.colorScheme.primary,
+                                  color: AppColors.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 24.sp,
                                 ),
