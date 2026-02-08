@@ -333,7 +333,7 @@ ORDER BY
     return re;
   }
 
-  Future<List<Map<String, Object?>>> getMontlySubOp(String? type) async {
+  Future<List<Map<String, Object?>>> getMontlySubOp() async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery('''
      SELECT 
@@ -352,13 +352,12 @@ FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
 WHERE o.is_close = 0 
-    AND type = ?
-    AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now')  -- Current month
-   
+    AND type = 'وارد'
+    AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now')
 ORDER BY date DESC;
 
 
-    ''', [type]);
+    ''');
     return re;
   }
 
@@ -381,9 +380,8 @@ FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
 WHERE o.is_close = 0 
-    AND type = 'صرف'
-    AND date >= date('now', 'weekday 6', '-7 days')  -- Start of current week (Saturday)
-    AND date <= date('now', 'weekday 6')              -- End of current week (Saturday)
+    AND type = 'وارد'
+    AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now')
 ORDER BY date DESC;
 
 
@@ -409,12 +407,12 @@ ORDER BY date DESC;
 FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
-WHERE type = ?
+WHERE type = 'وارد'
     AND o.is_close = 0;
 
 
 
-    ''', [type]);
+    ''');
     return re;
   }
 

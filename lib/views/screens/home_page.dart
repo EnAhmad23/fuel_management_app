@@ -495,7 +495,7 @@ class HomePage extends StatelessWidget {
                                           .setSubTitle('عمليات الوارد ');
                                       Get.find<OpController>()
                                           .getTotalSubOP('وارد');
-                                      Get.to(const ShowOperation());
+                                      Get.to(const ShowSuboperation());
                                     },
                                     backgroundColor: AppColors.accent,
                                     icon: Icons.arrow_downward_outlined,
@@ -513,8 +513,8 @@ class HomePage extends StatelessWidget {
                                         onPress: () {
                                           opController.setSubTitle(
                                               'عمليات الوارد الشهري');
-                                          opController.getMonthlySubOP('وارد');
-                                          Get.to(const ShowOperation());
+                                          opController.getMonthlySubOP();
+                                          Get.to(const ShowSuboperation());
                                         },
                                         backgroundColor: AppColors.success,
                                         icon: Icons.arrow_downward_outlined,

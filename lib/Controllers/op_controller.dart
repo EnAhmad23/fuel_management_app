@@ -760,8 +760,8 @@ class OpController extends GetxController {
     log('the length of DailySubOP = ${lastTenOp?.length}');
   }
 
-  void getMonthlySubOP(String? type) async {
-    List<Map<String, Object?>> re = await _dbModel.getMontlySubOp(type);
+  Future<void> getMonthlySubOP() async {
+    List<Map<String, Object?>> re = await _dbModel.getMontlySubOp();
     subOperations = re.map(
       (e) {
         OperationT operationT = OperationT.fromMap(e);
@@ -771,7 +771,7 @@ class OpController extends GetxController {
 
     update();
 
-    log('the length of DailySubOP = ${lastTenOp?.length}');
+    log('the length of Monthly SubOP = ${subOperations?.length}');
   }
 
   void getTotalSubOP(String? type) async {
