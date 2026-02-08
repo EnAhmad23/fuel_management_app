@@ -1616,7 +1616,7 @@ class OpController extends GetxController {
               ),
             );
           }
-          return pw.Container(); // Return an empty container for non-last pages
+          return pw.Container();
         },
         build: (pw.Context context) {
           // Custom table build function
