@@ -61,31 +61,42 @@ class Add extends StatelessWidget {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: const [
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryDark],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
           BoxShadow(
-            color: AppColors.cardShadow,
-            blurRadius: 8,
-            offset: Offset(0, 4),
+            color: AppColors.primary.withValues(alpha: 0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Column(
         children: [
-          Icon(
-            Icons.person_add_rounded,
-            size: 48.sp,
-            color: AppColors.textOnPrimary,
+          Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.person_add_rounded,
+              size: 48.sp,
+              color: AppColors.textOnPrimary,
+            ),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 16.h),
           Text(
             'إضافة مستهلك جديد',
             style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w700,
               color: AppColors.textOnPrimary,
             ),
           ),
@@ -94,11 +105,9 @@ class Add extends StatelessWidget {
             'قم بإدخال بيانات المستهلك الجديد',
             style: TextStyle(
               fontSize: 14.sp,
-              color: AppColors.textOnPrimary.withOpacity(0.8),
+              color: AppColors.textOnPrimary.withValues(alpha: 0.85),
             ),
             textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -108,15 +117,15 @@ class Add extends StatelessWidget {
   Widget _buildFormCard() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(24.w),
+      padding: EdgeInsets.all(28.w),
       decoration: BoxDecoration(
         color: AppColors.background,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: const [
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
           BoxShadow(
-            color: AppColors.cardShadow,
-            blurRadius: 12,
-            offset: Offset(0, 6),
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -129,7 +138,7 @@ class Add extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _buildFormField(db),
-                SizedBox(height: 32.h),
+                SizedBox(height: 36.h),
                 _buildSubmitButton(db),
                 SizedBox(height: 16.h),
                 _buildCancelButton(),
@@ -145,15 +154,7 @@ class Add extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'اسم المستهلك',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textOnBackground,
-          ),
-        ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 12.h),
         MyTextFormField(
           validator: db.nameValidtor,
           controller: db.consumerNameController,
@@ -174,44 +175,41 @@ class Add extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+            color: AppColors.primary.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(16.r),
           onTap: () {
-            // Add haptic feedback
             HapticFeedback.lightImpact();
             db.opTap();
           },
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.save_rounded,
-                  size: 20.sp,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.save_rounded,
+                size: 22.sp,
+                color: AppColors.textOnPrimary,
+              ),
+              SizedBox(width: 12.w),
+              Text(
+                'إنشاء المستهلك',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
                   color: AppColors.textOnPrimary,
                 ),
-                SizedBox(width: 8.w),
-                Text(
-                  'إنشاء المستهلك',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textOnPrimary,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -224,16 +222,16 @@ class Add extends StatelessWidget {
       height: 48.h,
       decoration: BoxDecoration(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.3),
+          color: AppColors.primary.withValues(alpha: 0.25),
           width: 1.5,
         ),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(16.r),
           onTap: () {
             HapticFeedback.lightImpact();
             Get.back();

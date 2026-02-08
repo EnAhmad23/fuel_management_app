@@ -356,7 +356,7 @@ class HomePage extends StatelessWidget {
                               final pro = Get.find<TripController>();
                               pro.clearFields();
                               pro.getConusmersNames();
-                              Get.off(const AddTrip());
+                              Get.to(const AddTrip());
                             },
                           ),
                         ],
@@ -495,7 +495,7 @@ class HomePage extends StatelessWidget {
                                           .setSubTitle('عمليات الوارد ');
                                       Get.find<OpController>()
                                           .getTotalSubOP('وارد');
-                                      Get.to(const ShowSubOperation());
+                                      Get.to(const UpdateOperationEstrad());
                                     },
                                     backgroundColor: AppColors.accent,
                                     icon: Icons.arrow_downward_outlined,
@@ -514,7 +514,7 @@ class HomePage extends StatelessWidget {
                                           opController.setSubTitle(
                                               'عمليات الوارد الشهري');
                                           opController.getMonthlySubOP('وارد');
-                                          Get.to(const ShowSubOperation());
+                                          Get.to(const UpdateOperationEstrad());
                                         },
                                         backgroundColor: AppColors.success,
                                         icon: Icons.arrow_downward_outlined,

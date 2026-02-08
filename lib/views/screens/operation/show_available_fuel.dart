@@ -74,8 +74,7 @@ class ShowAvailableFuel extends StatelessWidget {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.r),
                                   side: BorderSide(
-                                    color:
-                                        AppColors.primary.withOpacity(0.12),
+                                    color: AppColors.primary.withOpacity(0.12),
                                   ),
                                 ),
                                 elevation: 4,

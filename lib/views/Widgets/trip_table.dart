@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/controllers/trip_controller.dart';
 import 'package:fuel_management_app/models/trip.dart';
+import 'package:fuel_management_app/views/Widgets/custom_snackbar.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../core/constant/app_colors.dart';
@@ -11,7 +12,7 @@ import '../../core/constant/app_colors.dart';
 class TripTable extends StatelessWidget {
   final List<Trip> trips;
   const TripTable({super.key, required this.trips});
-
+  final CustomSnackBar mySnackBar = const CustomSnackBar();
   @override
   Widget build(BuildContext context) {
     log('operations $trips');
@@ -764,8 +765,20 @@ class TripTable extends StatelessWidget {
                   child: _buildDialogButton(
                     text: 'حذف',
                     color: AppColors.error,
-                    onTap: () {
-                      pro.deleteTrip(trip.id!);
+                    onTap: () async {
+                      // Close dialog first
+
+                      // Delete the trip
+                      var x = await pro.deleteTrip(trip.id!);
+
+                      // Show success message
+                      if (x != 0) {
+                        Get.showSnackbar(mySnackBar.showSnackBar(
+                            title: 'تم', message: 'تم حذف الرحلة بنجاح'));
+                      }
+
+                      // Refresh the trips list
+                      pro.getTrips();
                       Get.back();
                     },
                     isMobile: isMobile,

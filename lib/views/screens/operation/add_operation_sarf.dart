@@ -49,11 +49,11 @@ class AddSarf extends StatelessWidget {
   Widget _buildBody() {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         child: Column(
           children: [
             _buildHeader(),
-            SizedBox(height: 30.h),
+            SizedBox(height: 20.h),
             _buildFormCard(),
           ],
         ),
@@ -64,15 +64,15 @@ class AddSarf extends StatelessWidget {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.primary,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(12.r),
         boxShadow: const [
           BoxShadow(
             color: AppColors.cardShadow,
-            blurRadius: 8,
-            offset: Offset(0, 4),
+            blurRadius: 6,
+            offset: Offset(0, 3),
           ),
         ],
       ),
@@ -80,23 +80,23 @@ class AddSarf extends StatelessWidget {
         children: [
           Icon(
             Icons.local_gas_station_rounded,
-            size: 48.sp,
+            size: 40.sp,
             color: AppColors.textOnPrimary,
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 10.h),
           Text(
             'إنشاء عملية صرف جديدة',
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: 17.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.textOnPrimary,
             ),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 6.h),
           Text(
             'قم بإدخال بيانات عملية الصرف الجديدة',
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 13.sp,
               color: AppColors.textOnPrimary.withOpacity(0.8),
             ),
             textAlign: TextAlign.center,
@@ -111,15 +111,15 @@ class AddSarf extends StatelessWidget {
   Widget _buildFormCard() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(24.w),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: AppColors.background,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(12.r),
         boxShadow: const [
           BoxShadow(
             color: AppColors.cardShadow,
-            blurRadius: 12,
-            offset: Offset(0, 6),
+            blurRadius: 8,
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -131,19 +131,19 @@ class AddSarf extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _buildDropdownsSection(op),
-                SizedBox(height: 24.h),
+                SizedBox(height: 20.h),
                 _buildFuelAndDischargeSection(op),
-                SizedBox(height: 24.h),
+                SizedBox(height: 20.h),
                 _buildDateAndAmountSection(op),
-                SizedBox(height: 24.h),
+                SizedBox(height: 20.h),
                 _buildRecordField(op),
-                SizedBox(height: 24.h),
+                SizedBox(height: 20.h),
                 const CustomSwitch(),
-                SizedBox(height: 24.h),
+                SizedBox(height: 20.h),
                 _buildDescriptionSection(op),
-                SizedBox(height: 32.h),
+                SizedBox(height: 24.h),
                 _buildSubmitButton(op),
-                SizedBox(height: 16.h),
+                SizedBox(height: 12.h),
                 _buildCancelButton(),
               ],
             ),
@@ -154,60 +154,56 @@ class AddSarf extends StatelessWidget {
   }
 
   Widget _buildDropdownsSection(OpController op) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _buildReceiverField(op),
-        ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: GetBuilder<SubController>(
-            builder: (sub) {
-              return MyDropdown(
-                lable: 'المستهلك الفرعي',
-                itemsList: op.subconsumerNames ?? [],
+        Row(
+          children: [
+            Expanded(
+              child: MyDropdown(
+                lable: 'المستهلك الرئيسي',
+                itemsList: op.consumerNames ?? [],
                 onchanged: (value) {
-                  op.setSubConName(value);
-                  sub.getHasRecord(value);
+                  if (value != 'اختر المستهلك الرئيسي') {
+                    op.setConName(value);
+                    op.getSubonsumersNames(op.conName);
+                  }
                 },
-                value: op.subconName,
-                validator: op.subNameValidet,
-              );
-            },
-          ),
+                value: op.conName,
+                validator: op.conNameValidet,
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: GetBuilder<SubController>(
+                builder: (sub) {
+                  return MyDropdown(
+                    lable: 'المستهلك الفرعي',
+                    itemsList: op.subconsumerNames ?? [],
+                    onchanged: (value) {
+                      op.setSubConName(value);
+                      sub.getHasRecord(value);
+                    },
+                    value: op.subconName,
+                    validator: op.subNameValidet,
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: MyDropdown(
-            lable: 'المستهلك الرئيسي',
-            itemsList: op.consumerNames ?? [],
-            onchanged: (value) {
-              if (value != 'اختر المستهلك الرئيسي') {
-                op.setConName(value);
-                op.getSubonsumersNames(op.conName);
-              }
-            },
-            value: op.conName,
-            validator: op.conNameValidet,
-          ),
-        ),
+        SizedBox(height: 16.h),
+        _buildReceiverField(op),
       ],
     );
   }
 
   Widget _buildReceiverField(OpController op) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 8.h),
-        MyTextFormField(
-          fontSize: 16.sp,
-          validator: op.receiverValidet,
-          labelText: 'اسم المستلم',
-          hintText: 'ادخل اسم المستلم',
-          controller: op.receiverName,
-        ),
-      ],
+    return MyTextFormField(
+      fontSize: 15.sp,
+      validator: op.receiverValidet,
+      labelText: 'اسم المستلم',
+      hintText: 'ادخل اسم المستلم',
+      controller: op.receiverName,
     );
   }
 
@@ -229,10 +225,10 @@ class AddSarf extends StatelessWidget {
             validator: op.fuelTypeValidator,
           ),
         ),
-        SizedBox(width: 12.w),
+        SizedBox(width: 10.w),
         Expanded(
           child: MyTextFormField(
-            fontSize: 16.sp,
+            fontSize: 15.sp,
             validator: op.dischangeNumberValidet,
             labelText: 'رقم سند الصرف',
             hintText: 'ادخل رقم الصرف',
@@ -249,10 +245,10 @@ class AddSarf extends StatelessWidget {
         Expanded(
           child: _buildDateField(op),
         ),
-        SizedBox(width: 12.w),
+        SizedBox(width: 10.w),
         Expanded(
           child: MyTextFormField(
-            fontSize: 16.sp,
+            fontSize: 15.sp,
             keyboardType: TextInputType.number,
             validator: op.amontValidet,
             labelText: 'الكمية',
@@ -269,15 +265,18 @@ class AddSarf extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'التاريخ',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textOnBackground,
+        Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            'التاريخ',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textOnBackground,
+            ),
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 6.h),
         TextFormField(
           onTap: () async {
             var x = await showDatePicker(
@@ -290,18 +289,18 @@ class AddSarf extends StatelessWidget {
             op.setDate(x);
           },
           validator: op.dateValidet,
-          style: TextStyle(fontSize: 16.sp),
+          style: TextStyle(fontSize: 15.sp),
           controller: op.dateCon,
           decoration: InputDecoration(
             hintText: op.hintText,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(10.r),
             ),
             suffixIcon: InkWell(
               child: Icon(
                 Icons.calendar_today,
                 color: AppColors.primary,
-                size: 20.sp,
+                size: 19.sp,
               ),
               onTap: () async {
                 var x = await showDatePicker(
@@ -332,14 +331,14 @@ class AddSarf extends StatelessWidget {
             Text(
               'قراءة العداد',
               style: TextStyle(
-                fontSize: 16.sp,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textOnBackground,
               ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: 6.h),
             MyTextFormField(
-              fontSize: 16.sp,
+              fontSize: 15.sp,
               validator: (value) {
                 sub.recordValidtor(value);
                 sub.getSubRecordName(op.subconName);
@@ -359,61 +358,64 @@ class AddSarf extends StatelessWidget {
   }
 
   Widget _buildDescriptionSection(OpController op) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'وصف',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textOnBackground,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'وصف',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textOnBackground,
+            ),
           ),
-        ),
-        SizedBox(height: 8.h),
-        GetBuilder<OpController>(
-          builder: (op) {
-            return TextField(
-              style: TextStyle(fontSize: 18.sp),
-              textAlign: TextAlign.right,
-              controller: op.description,
-              maxLines: 3,
-              decoration: InputDecoration(
-                hintText: '... أدخل ',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+          SizedBox(height: 6.h),
+          GetBuilder<OpController>(
+            builder: (op) {
+              return TextField(
+                style: TextStyle(fontSize: 16.sp),
+                textAlign: TextAlign.right,
+                controller: op.description,
+                maxLines: 2,
+                decoration: InputDecoration(
+                  hintText: '... أدخل ',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-      ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildSubmitButton(OpController op) {
     return Container(
       width: double.infinity,
-      height: 56.h,
+      height: 48.h,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [AppColors.primary, AppColors.primaryDark],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(10.r),
           onTap: () {
             HapticFeedback.lightImpact();
             op.onTopSarf();
@@ -424,14 +426,14 @@ class AddSarf extends StatelessWidget {
               children: [
                 Icon(
                   Icons.save_rounded,
-                  size: 20.sp,
+                  size: 19.sp,
                   color: AppColors.textOnPrimary,
                 ),
-                SizedBox(width: 8.w),
+                SizedBox(width: 7.w),
                 Text(
                   'إنشاء العملية',
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textOnPrimary,
                   ),
@@ -447,10 +449,10 @@ class AddSarf extends StatelessWidget {
   Widget _buildCancelButton() {
     return Container(
       width: double.infinity,
-      height: 48.h,
+      height: 42.h,
       decoration: BoxDecoration(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(10.r),
         border: Border.all(
           color: AppColors.primary.withOpacity(0.3),
           width: 1.5,
@@ -459,7 +461,7 @@ class AddSarf extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(10.r),
           onTap: () {
             HapticFeedback.lightImpact();
             Get.back();
@@ -468,7 +470,7 @@ class AddSarf extends StatelessWidget {
             child: Text(
               'إلغاء',
               style: TextStyle(
-                fontSize: 16.sp,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.primary,
               ),

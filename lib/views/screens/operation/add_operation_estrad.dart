@@ -48,11 +48,11 @@ class AddOperationEstrad extends StatelessWidget {
   Widget _buildBody() {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         child: Column(
           children: [
             _buildHeader(),
-            SizedBox(height: 30.h),
+            SizedBox(height: 20.h),
             _buildFormCard(),
           ],
         ),
@@ -63,15 +63,15 @@ class AddOperationEstrad extends StatelessWidget {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.primary,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(12.r),
         boxShadow: const [
           BoxShadow(
             color: AppColors.cardShadow,
-            blurRadius: 8,
-            offset: Offset(0, 4),
+            blurRadius: 6,
+            offset: Offset(0, 3),
           ),
         ],
       ),
@@ -79,23 +79,23 @@ class AddOperationEstrad extends StatelessWidget {
         children: [
           Icon(
             Icons.inventory_2_rounded,
-            size: 48.sp,
+            size: 40.sp,
             color: AppColors.textOnPrimary,
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 10.h),
           Text(
             'إنشاء عملية وارد جديدة',
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.textOnPrimary,
             ),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 6.h),
           Text(
             'قم بإدخال بيانات عملية الوارد الجديدة',
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 13.sp,
               color: AppColors.textOnPrimary.withOpacity(0.8),
             ),
             textAlign: TextAlign.center,
@@ -110,15 +110,15 @@ class AddOperationEstrad extends StatelessWidget {
   Widget _buildFormCard() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(24.w),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: AppColors.background,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(12.r),
         boxShadow: const [
           BoxShadow(
             color: AppColors.cardShadow,
-            blurRadius: 12,
-            offset: Offset(0, 6),
+            blurRadius: 8,
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -131,13 +131,13 @@ class AddOperationEstrad extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _buildDateAmountFuelSection(provider),
-                SizedBox(height: 24.h),
+                SizedBox(height: 20.h),
                 const CustomSwitch(),
-                SizedBox(height: 24.h),
+                SizedBox(height: 20.h),
                 _buildDescriptionSection(provider),
-                SizedBox(height: 32.h),
+                SizedBox(height: 24.h),
                 _buildSubmitButton(provider),
-                SizedBox(height: 16.h),
+                SizedBox(height: 12.h),
                 _buildCancelButton(),
               ],
             ),
@@ -153,18 +153,18 @@ class AddOperationEstrad extends StatelessWidget {
         Expanded(
           child: _buildDateField(provider),
         ),
-        SizedBox(width: 12.w),
+        SizedBox(width: 10.w),
         Expanded(
           child: MyTextFormField(
             inputFormatters: const [],
-            fontSize: 16.sp,
+            fontSize: 15.sp,
             validator: provider.amontValidet,
             labelText: 'الكمية',
             hintText: 'ادخل كمية الوقود',
             controller: provider.amountCon,
           ),
         ),
-        SizedBox(width: 12.w),
+        SizedBox(width: 10.w),
         Expanded(
           child: MyDropdown(
             lable: 'نوع الوقود',
@@ -185,117 +185,119 @@ class AddOperationEstrad extends StatelessWidget {
   }
 
   Widget _buildDateField(OpController provider) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'التاريخ',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textOnBackground,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        TextFormField(
-          validator: provider.dateValidet,
-          onTap: () async {
-            var x = await showDatePicker(
-              currentDate: provider.date,
-              context: Get.context!,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2101),
-            );
-            provider.setDate(x);
-          },
-          style: TextStyle(fontSize: 16.sp),
-          controller: provider.dateCon,
-          decoration: InputDecoration(
-            hintText: provider.hintText,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'التاريخ',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textOnBackground,
             ),
-            suffixIcon: InkWell(
-              child: Icon(
-                Icons.calendar_today,
-                color: AppColors.primary,
-                size: 20.sp,
+          ),
+          SizedBox(height: 6.h),
+          TextFormField(
+            validator: provider.dateValidet,
+            onTap: () async {
+              var x = await showDatePicker(
+                currentDate: provider.date,
+                context: Get.context!,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2101),
+              );
+              provider.setDate(x);
+            },
+            style: TextStyle(fontSize: 15.sp),
+            controller: provider.dateCon,
+            decoration: InputDecoration(
+              hintText: provider.hintText,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
               ),
-              onTap: () async {
-                var x = await showDatePicker(
-                  currentDate: provider.date,
-                  context: Get.context!,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                );
-                provider.setDate(x);
-              },
+              suffixIcon: InkWell(
+                child: Icon(
+                  Icons.calendar_today,
+                  color: AppColors.primary,
+                  size: 19.sp,
+                ),
+                onTap: () async {
+                  var x = await showDatePicker(
+                    currentDate: provider.date,
+                    context: Get.context!,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  provider.setDate(x);
+                },
+              ),
             ),
+            readOnly: true,
           ),
-          readOnly: true,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildDescriptionSection(OpController provider) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'وصف',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textOnBackground,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'وصف',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textOnBackground,
+            ),
           ),
-        ),
-        SizedBox(height: 8.h),
-        GetBuilder<OpController>(
-          builder: (provider) {
-            return TextField(
-              style: TextStyle(fontSize: 18.sp),
-              textAlign: TextAlign.right,
-              controller: provider.description,
-              maxLines: 3,
-              decoration: InputDecoration(
-                hintText: '... أدخل ',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
+          SizedBox(height: 6.h),
+          TextField(
+            style: TextStyle(fontSize: 16.sp),
+            textAlign: TextAlign.right,
+            controller: provider.description,
+            maxLines: 2,
+            decoration: InputDecoration(
+              hintText: '... أدخل ',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
               ),
-            );
-          },
-        ),
-      ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildSubmitButton(OpController provider) {
     return Container(
       width: double.infinity,
-      height: 56.h,
+      height: 48.h,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [AppColors.primary, AppColors.primaryDark],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(10.r),
           onTap: () {
             HapticFeedback.lightImpact();
             provider.onTopWared();
@@ -306,14 +308,14 @@ class AddOperationEstrad extends StatelessWidget {
               children: [
                 Icon(
                   Icons.save_rounded,
-                  size: 20.sp,
+                  size: 19.sp,
                   color: AppColors.textOnPrimary,
                 ),
-                SizedBox(width: 8.w),
+                SizedBox(width: 7.w),
                 Text(
                   'إنشاء العملية',
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textOnPrimary,
                   ),
@@ -329,10 +331,10 @@ class AddOperationEstrad extends StatelessWidget {
   Widget _buildCancelButton() {
     return Container(
       width: double.infinity,
-      height: 48.h,
+      height: 42.h,
       decoration: BoxDecoration(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(10.r),
         border: Border.all(
           color: AppColors.primary.withOpacity(0.3),
           width: 1.5,
@@ -341,7 +343,7 @@ class AddOperationEstrad extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(10.r),
           onTap: () {
             HapticFeedback.lightImpact();
             Get.back();
@@ -350,7 +352,7 @@ class AddOperationEstrad extends StatelessWidget {
             child: Text(
               'إلغاء',
               style: TextStyle(
-                fontSize: 16.sp,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.primary,
               ),
