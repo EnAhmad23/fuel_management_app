@@ -309,6 +309,34 @@ WHERE DATE(date) = DATE('now')
     return re;
   }
 
+  Future<List<Map<String, Object?>>> getMonthlySarfSubOp() async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+     SELECT 
+    s.details AS subConsumerDetails,
+    c.name AS consumerName,
+    o.id,
+    o.amount,
+    o.description,
+    o.type,
+    o.foulType,
+    o.receiverName,
+    o.dischangeNumber,
+    o.date,
+    o.checked
+FROM operations AS o
+LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
+LEFT JOIN consumers c ON s.consumer_id = c.id
+WHERE o.is_close = 0 
+    AND type = 'صرف'
+    AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now')
+ORDER BY date DESC;
+
+
+    ''');
+    return re;
+  }
+
   getTrips() async {
     Database? database = await db;
     List<Map<String, dynamic>> re = await database!.rawQuery('''
@@ -571,6 +599,22 @@ WHERE is_close = 0
 ''');
     log('${re.first}');
     return re.first;
+  }
+
+  getMonthlyAllOperationsSum() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    COALESCE(SUM(amount), 0) AS total_amount
+FROM operations
+WHERE is_close = 0
+    AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now');
+
+
+''');
+    if (re.isNotEmpty) {
+      return re.first;
+    }
+    return {'total_amount': 0.0};
   }
 
   getExcessFuel(int month, int year) async {

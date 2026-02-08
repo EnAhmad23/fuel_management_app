@@ -542,15 +542,27 @@ class HomePage extends StatelessWidget {
                                         );
                                       }),
                                   // Fifth card example
-                                  HomePageCard(
-                                    onPress: () {},
-                                    backgroundColor: AppColors.primary,
-                                    icon: Icons.info_outline,
-                                    mainText: '123',
-                                    unitText: '',
-                                    subText: 'بطاقة إضافية',
-                                    textColor: AppColors.textOnPrimary,
-                                    iconColor: AppColors.primaryDark,
+                                  GetBuilder<OpController>(
+                                    init: Get.find<OpController>(),
+                                    builder: (opController) {
+                                      return HomePageCard(
+                                        onPress: () {
+                                          opController.setSubTitle(
+                                              'عمليات الصرف الشهري');
+                                          opController.getMonthlySarfSubOP();
+                                          Get.to(const ShowSuboperation());
+                                        },
+                                        backgroundColor: AppColors.primary,
+                                        icon: Icons.info_outline,
+                                        mainText:
+                                            opController.monthlyAllOperations ??
+                                                '0.0',
+                                        unitText: ' (لتر)  ',
+                                        subText: 'إجمالي صرف الشهر',
+                                        textColor: AppColors.textOnPrimary,
+                                        iconColor: AppColors.primaryDark,
+                                      );
+                                    },
                                   ),
                                 ],
                               ),

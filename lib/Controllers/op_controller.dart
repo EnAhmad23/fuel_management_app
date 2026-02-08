@@ -31,6 +31,7 @@ class OpController extends GetxController {
     getTotalSarf();
     getTotalWard();
     getMonthlyWard();
+    getMonthlyAllOperations();
     getTotalAvailable();
     getNumOfAllOp();
     // getTotalSolarSarf();
@@ -82,6 +83,7 @@ class OpController extends GetxController {
   String? _totalAvailable;
   String? _monthlySarf;
   String? _monthlyWard;
+  String? _monthlyAllOperations;
   String? _totalSarf;
   String? _totalBazenSarf;
   String? _totalSolarSarf;
@@ -180,6 +182,10 @@ class OpController extends GetxController {
 
   String? get monthlyWard {
     return _monthlyWard;
+  }
+
+  String? get monthlyAllOperations {
+    return _monthlyAllOperations;
   }
 
   String? get conName {
@@ -383,6 +389,13 @@ class OpController extends GetxController {
     if (value != null) {
       _monthlyWard = value;
 
+      update();
+    }
+  }
+
+  setMonthlyAllOperations(String? value) {
+    if (value != null) {
+      _monthlyAllOperations = value;
       update();
     }
   }
@@ -717,6 +730,16 @@ class OpController extends GetxController {
     }
   }
 
+  void getMonthlyAllOperations() async {
+    Map<String, dynamic> re = await _dbModel.getMonthlyAllOperationsSum();
+    log('Monthly All Operations -> ${re['total_amount']}');
+    if (re.isNotEmpty && re['total_amount'] != null) {
+      setMonthlyAllOperations('${re['total_amount']}');
+    } else {
+      setMonthlyAllOperations('0.0');
+    }
+  }
+
   void getLastTenOpT() async {
     List<Map<String, Object?>> re = await _dbModel.getLastTenOp();
     lastTenOp = re.map(
@@ -772,6 +795,20 @@ class OpController extends GetxController {
     update();
 
     log('the length of Monthly SubOP = ${subOperations?.length}');
+  }
+
+  Future<void> getMonthlySarfSubOP() async {
+    List<Map<String, Object?>> re = await _dbModel.getMonthlySarfSubOp();
+    subOperations = re.map(
+      (e) {
+        OperationT operationT = OperationT.fromMap(e);
+        return operationT;
+      },
+    ).toList();
+
+    update();
+
+    log('the length of Monthly Sarf SubOP = ${subOperations?.length}');
   }
 
   void getTotalSubOP(String? type) async {
@@ -974,6 +1011,7 @@ class OpController extends GetxController {
     log('{$x}');
     getTotalWard();
     getMonthlyWard();
+    getMonthlyAllOperations();
     getAllOpT();
     getLastTenOpT();
     getTotalAvailable();
@@ -990,6 +1028,7 @@ class OpController extends GetxController {
     getMonthlySarf();
     getWeeklySarf();
     getDailySarf();
+    getMonthlyAllOperations();
     getAllOpT();
     getLastTenOpT();
     getTotalAvailable();
@@ -1007,6 +1046,7 @@ class OpController extends GetxController {
     getMonthlySarf();
     getWeeklySarf();
     getDailySarf();
+    getMonthlyAllOperations();
     getAllOpT();
     getLastTenOpT();
     getTotalAvailable();
@@ -1022,6 +1062,7 @@ class OpController extends GetxController {
     getTotalAvailable();
     getTotalWard();
     getMonthlyWard();
+    getMonthlyAllOperations();
     getAllOpT();
     getLastTenOpT();
     getNumOfAllOp();
@@ -1037,6 +1078,7 @@ class OpController extends GetxController {
     getTotalSarf();
     getMonthlyWard();
     getMonthlySarf();
+    getMonthlyAllOperations();
     getWeeklySarf();
     getDailySarf();
     getAllOpT();
@@ -1492,6 +1534,7 @@ class OpController extends GetxController {
     getDailySarf();
     getWeeklySarf();
     getMonthlyWard();
+    getMonthlyAllOperations();
     getTotalAvailable();
     getTotalSarf();
     getTotalWard();
