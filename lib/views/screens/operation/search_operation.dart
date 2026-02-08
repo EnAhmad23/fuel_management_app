@@ -33,37 +33,39 @@ class SearchOperation extends StatelessWidget {
       body: GetBuilder<OpController>(
         init: Get.find<OpController>(),
         builder: (opPro) {
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  height: 60.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.r),
-                      topRight: Radius.circular(16.r),
+          return Form(
+            key: opPro.formKey,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 60.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16.r),
+                        topRight: Radius.circular(16.r),
+                      ),
                     ),
-                  ),
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16.w),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      'بحث العمليات',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textOnPrimary,
+                    width: double.infinity,
+                    padding: EdgeInsets.all(16.w),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        'بحث العمليات',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textOnPrimary,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       SizedBox(height: 20.h),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -395,7 +397,8 @@ class SearchOperation extends StatelessWidget {
                       SizedBox(height: 10.h),
                     ],
                   ),
-              ],
+                ],
+              ),
             ),
           );
         },

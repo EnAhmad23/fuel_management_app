@@ -55,10 +55,12 @@ class SearchResult extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    pro.generatePdf(
-                                        context, pro.operations ?? []);
-                                  },
+                                  onPressed: (pro.operations ?? []).isEmpty
+                                      ? null
+                                      : () {
+                                          pro.generatePdf(
+                                              context, pro.operations ?? []);
+                                        },
                                   style: ElevatedButton.styleFrom(
                                     alignment: Alignment.centerRight,
                                     foregroundColor: AppColors.textOnPrimary,
@@ -97,22 +99,40 @@ class SearchResult extends StatelessWidget {
                         GetBuilder<OpController>(
                           init: Get.find<OpController>(),
                           builder: (opPro) {
+                            final ops = opPro.operations ?? [];
                             return Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.r),
                                   side: BorderSide(
-                                    color:
-                                        AppColors.primary.withOpacity(0.12),
+                                    color: AppColors.primary.withOpacity(0.12),
                                   ),
                                 ),
                                 elevation: 4,
-                                child: SingleChildScrollView(
-                                  child: OperationTable(
-                                    operations: opPro.operations ?? [],
-                                  ),
-                                ),
+                                child: ops.isEmpty
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 48.h,
+                                          horizontal: 16.w,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'لا توجد عمليات في التاريخ المحدد',
+                                            textAlign: TextAlign.center,
+                                            style: theme.textTheme.titleMedium
+                                                ?.copyWith(
+                                              color: AppColors.textOnBackground,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : SingleChildScrollView(
+                                        child: OperationTable(
+                                          operations: ops,
+                                        ),
+                                      ),
                               ),
                             );
                           },

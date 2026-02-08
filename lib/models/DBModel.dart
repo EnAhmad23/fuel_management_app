@@ -19,6 +19,18 @@ class DBModel {
     return _db;
   }
 
+  Future<int> getOpenOperationsCountForMonth(int month, int year) async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''
+      SELECT COUNT(*) AS open_count
+      FROM operations
+      WHERE is_close = 0
+        AND strftime('%m', date) = ?
+        AND strftime('%Y', date) = ?;
+    ''', [month.toString().padLeft(2, '0'), year.toString()]);
+    return Sqflite.firstIntValue(re) ?? 0;
+  }
+
   intiDataBase() async {
     String dataBasePath = await getDatabasesPath();
     String path = join(dataBasePath, 'fuel_managment.db');

@@ -66,52 +66,58 @@ class CloseTable extends StatelessWidget {
       return _buildMobileLayout();
     }
 
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 12.h),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.r),
-        color: AppColors.surface,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          ),
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.04),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.r),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingRowColor: WidgetStateProperty.resolveWith(
-              (states) => AppColors.primary.withOpacity(0.06),
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 12.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.r),
+          color: AppColors.surface,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
             ),
-            decoration: const BoxDecoration(
-              color: AppColors.surface,
+            BoxShadow(
+              color: AppColors.primary.withOpacity(0.04),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
-            border: TableBorder.symmetric(
-              inside: BorderSide(
-                color: AppColors.primary.withOpacity(0.08),
-                width: 0.5,
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20.r),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Align(
+              alignment: Alignment.center,
+              child: DataTable(
+                headingRowColor: WidgetStateProperty.resolveWith(
+                  (states) => AppColors.primary.withOpacity(0.06),
+                ),
+                decoration: const BoxDecoration(
+                  color: AppColors.surface,
+                ),
+                border: TableBorder.symmetric(
+                  inside: BorderSide(
+                    color: AppColors.primary.withOpacity(0.08),
+                    width: 0.5,
+                  ),
+                  outside: BorderSide(
+                    color: AppColors.primary.withOpacity(0.12),
+                    width: 1,
+                  ),
+                ),
+                headingRowHeight: isTablet ? 64.h : (isDesktop ? 60.h : 56.h),
+                dataRowHeight: isTablet ? 72.h : (isDesktop ? 68.h : 64.h),
+                columnSpacing:
+                    isLargeDesktop ? 24.w : (isDesktop ? 20.w : 16.w),
+                columns: _buildTableColumns(
+                    isMobile, isTablet, isDesktop, isLargeDesktop),
+                rows: _buildTableRows(
+                    operations, isMobile, isTablet, isDesktop, isLargeDesktop),
               ),
-              outside: BorderSide(
-                color: AppColors.primary.withOpacity(0.12),
-                width: 1,
-              ),
             ),
-            headingRowHeight: isTablet ? 64.h : (isDesktop ? 60.h : 56.h),
-            dataRowHeight: isTablet ? 72.h : (isDesktop ? 68.h : 64.h),
-            columnSpacing: isLargeDesktop ? 24.w : (isDesktop ? 20.w : 16.w),
-            columns: _buildTableColumns(
-                isMobile, isTablet, isDesktop, isLargeDesktop),
-            rows: _buildTableRows(
-                operations, isMobile, isTablet, isDesktop, isLargeDesktop),
           ),
         ),
       ),

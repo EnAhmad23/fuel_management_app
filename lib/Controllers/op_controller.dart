@@ -65,6 +65,7 @@ class OpController extends GetxController {
   List<String>? subconsumerNames;
   List<String>? months;
   Set<String>? years;
+  List<Map<String, Object?>>? _monthYearOptions;
   String? doneMassege;
   String? _hintText;
   String? _formHintText;
@@ -234,7 +235,27 @@ class OpController extends GetxController {
 
   set year(String? value) {
     _year = value;
+    _refreshAvailableMonths();
     update();
+  }
+
+  void _refreshAvailableMonths() {
+    final options = _monthYearOptions;
+    if (options == null) {
+      return;
+    }
+
+    final filtered = (_year == null)
+        ? options
+        : options.where((e) => '${e['year']}' == _year).toList();
+
+    final m = filtered.map((e) => '${e['month']}').toSet().toList();
+    m.sort();
+    months = m;
+
+    if (_month != null && !(months?.contains(_month) ?? false)) {
+      _month = null;
+    }
   }
 
   setUpdatedOperation(OperationT op) {
@@ -852,13 +873,26 @@ class OpController extends GetxController {
       ).toList();
     }
     log('-*-*-*-*-*-*-*-**-*${operations?.length}');
-    if (operation.newDate != null && fromdate != null && todate != null) {
+
+    if (operation.newDate != null) {
+      final target = operation.newDate!;
       operations = operations?.where(
         (element) {
-          log('111111111111${operation.newDate}');
-          log('111111111111${element.newDate}');
-          return element.newDate!.isAfter(fromdate!) &&
-              element.newDate!.isBefore(todate!);
+          final d = element.newDate;
+          if (d == null) return false;
+          return d.year == target.year &&
+              d.month == target.month &&
+              d.day == target.day;
+        },
+      ).toList();
+    } else if (fromdate != null && todate != null) {
+      final from = DateTime(fromdate!.year, fromdate!.month, fromdate!.day);
+      final to = DateTime(todate!.year, todate!.month, todate!.day, 23, 59, 59);
+      operations = operations?.where(
+        (element) {
+          final d = element.newDate;
+          if (d == null) return false;
+          return !d.isBefore(from) && !d.isAfter(to);
         },
       ).toList();
     }
@@ -1084,13 +1118,58 @@ class OpController extends GetxController {
   }
 
   void onTopSearch() async {
-    if (formKey.currentState!.validate()) {
-      var x = todate?.difference(fromdate!);
+    final formState = formKey.currentState;
+    if (formState == null) {
+      return;
+    }
+    if (formState.validate()) {
+      if (reportType == 'تقرير يومي' && date == null) {
+        Get.showSnackbar(
+          mySnackBar.showSnackBar(
+            backgroundColor: Colors.red,
+            title: 'خطأ',
+            lottieAssetPath: 'assets/json/warning.json',
+            titleColor: Colors.white,
+            messageColor: Colors.white,
+            message: 'الرجاء تحديد التاريخ',
+          ),
+        );
+        return;
+      }
+
+      final hasFrom = fromdate != null;
+      final hasTo = todate != null;
+      if (hasFrom != hasTo) {
+        Get.showSnackbar(
+          mySnackBar.showSnackBar(
+            backgroundColor: Colors.red,
+            title: 'خطأ',
+            lottieAssetPath: 'assets/json/warning.json',
+            titleColor: Colors.white,
+            messageColor: Colors.white,
+            message: 'الرجاء تحديد تاريخ البداية وتاريخ النهاية معاً',
+          ),
+        );
+        return;
+      }
+
+      if (hasFrom && hasTo && todate!.isBefore(fromdate!)) {
+        Get.showSnackbar(
+          mySnackBar.showSnackBar(
+            backgroundColor: Colors.red,
+            title: 'خطأ',
+            lottieAssetPath: 'assets/json/warning.json',
+            titleColor: Colors.white,
+            messageColor: Colors.white,
+            message: 'تاريخ النهاية يجب أن يكون بعد تاريخ البداية',
+          ),
+        );
+        return;
+      }
+
       log('$todate');
       log('$fromdate');
-      log('$x');
 
-      setDate(fromdate?.add(x!));
       searchOperation(
         OperationT(
             subConsumerDetails: subconName,
@@ -1102,7 +1181,7 @@ class OpController extends GetxController {
                 dischangeNumberCon.text == '' ? null : dischangeNumberCon.text,
             foulType: fuelType,
             amount: amount,
-            newDate: date,
+            newDate: reportType == 'تقرير يومي' ? date : null,
             description: description.text),
       );
       Get.to(const SearchResult());
@@ -1166,6 +1245,23 @@ class OpController extends GetxController {
     return re;
   }
 
+  ({int month, int year}) _getPreviousMonthYear(int month, int year) {
+    if (month <= 1) {
+      return (month: 12, year: year - 1);
+    }
+    return (month: month - 1, year: year);
+  }
+
+  Future<bool> _canCloseMonthSequentially(int month, int year) async {
+    final prev = _getPreviousMonthYear(month, year);
+    if (prev.year <= 0) {
+      return true;
+    }
+    final prevOpenCount =
+        await _dbModel.getOpenOperationsCountForMonth(prev.month, prev.year);
+    return prevOpenCount == 0;
+  }
+
   getExcessFuel() async {
     // Ensure month and year are parsed correctly
     int parsedMonth = int.parse(month ?? '0');
@@ -1194,6 +1290,26 @@ class OpController extends GetxController {
   void onTapClose() async {
     if (formKey.currentState!.validate()) {
       if (month != null && year != null) {
+        final selectedMonth = int.parse(month!);
+        final selectedYear = int.parse(year!);
+        final canClose =
+            await _canCloseMonthSequentially(selectedMonth, selectedYear);
+        if (!canClose) {
+          final prev = _getPreviousMonthYear(selectedMonth, selectedYear);
+          Get.showSnackbar(
+            mySnackBar.showSnackBar(
+              backgroundColor: Colors.red,
+              title: 'خطأ',
+              lottieAssetPath: 'assets/json/warning.json',
+              titleColor: Colors.white,
+              messageColor: Colors.white,
+              message:
+                  'لا يمكن إغلاق الشهر الحالي قبل إغلاق الشهر السابق (${prev.month}/${prev.year})',
+            ),
+          );
+          return;
+        }
+
         Get.defaultDialog(
             title: 'حذف',
             backgroundColor: Colors.white,
@@ -1204,7 +1320,7 @@ class OpController extends GetxController {
                   SizedBox(
                       height: 100.h,
                       width: 200.h,
-                      child: Lottie.asset('assets/warning.json')),
+                      child: Lottie.asset('assets/json/warning.json')),
                   SizedBox(
                     height: 5.h,
                   ),
@@ -1214,8 +1330,7 @@ class OpController extends GetxController {
             ),
             confirm: InkWell(
               onTap: () async {
-                var x =
-                    await trheilOperation(int.parse(month!), int.parse(year!));
+                var x = await trheilOperation(selectedMonth, selectedYear);
                 Get.back();
                 refreshCloseOperation();
                 if (x != 0) {
@@ -1317,19 +1432,13 @@ class OpController extends GetxController {
 
   getMonthsAndYears() async {
     List<Map<String, Object?>> re = await _dbModel.getMonthes();
-    if (month != null && year != null) {}
-    {
-      months = (re.map(
-        (element) {
-          return '${element['month']}';
-        },
-      ).toList());
-      years = (re.map(
-        (element) {
-          return '${element['year']}';
-        },
-      ).toSet());
-    }
+    _monthYearOptions = re;
+    years = (re.map(
+      (element) {
+        return '${element['year']}';
+      },
+    ).toSet());
+    _refreshAvailableMonths();
     update();
   }
 
