@@ -443,7 +443,7 @@ ORDER BY o.date DESC;
 
 
 
-    ''');
+    ''', [type]);
     return re;
   }
 
