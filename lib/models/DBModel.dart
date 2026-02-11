@@ -437,8 +437,9 @@ ORDER BY date DESC;
 FROM operations AS o
 LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
-WHERE type = 'وارد'
-    AND o.is_close = 0;
+WHERE o.type = ?
+    AND COALESCE(o.is_close, 0) = 0
+ORDER BY o.date DESC;
 
 
 

@@ -534,21 +534,27 @@ class HomePage extends StatelessWidget {
                                       );
                                     },
                                   ),
-                                  GetBuilder<DbController>(
-                                      init: Get.find<DbController>(),
-                                      builder: (dbController) {
-                                        return HomePageCard(
-                                          onPress: () =>
-                                              Get.to(const ShowSubconsumer()),
-                                          backgroundColor: AppColors.error,
-                                          icon: Icons.people_rounded,
-                                          mainText: '${dbController.numOfSub}',
-                                          unitText: ' (مستهلك)  ',
-                                          subText: 'عدد المستهلكين',
-                                          textColor: AppColors.textOnPrimary,
-                                          iconColor: AppColors.errorDark,
-                                        );
-                                      }),
+                                  GetBuilder<OpController>(
+                                    init: Get.find<OpController>(),
+                                    builder: (opController) {
+                                      return HomePageCard(
+                                        onPress: () {
+                                          opController
+                                              .setSubTitle('عمليات الصرف');
+                                          opController.getTotalSubOP('صرف');
+                                          Get.to(const ShowSuboperation());
+                                        },
+                                        backgroundColor: AppColors.error,
+                                        icon: Icons.trending_down,
+                                        mainText:
+                                            opController.totalSarf ?? '0.0',
+                                        unitText: ' (لتر)  ',
+                                        subText: 'إجمالي الصرف',
+                                        textColor: AppColors.textOnPrimary,
+                                        iconColor: AppColors.errorDark,
+                                      );
+                                    },
+                                  ),
                                   // Fifth card example
                                   GetBuilder<OpController>(
                                     init: Get.find<OpController>(),
@@ -560,8 +566,8 @@ class HomePage extends StatelessWidget {
                                           opController.getMonthlySarfSubOP();
                                           Get.to(const ShowSuboperation());
                                         },
-                                        backgroundColor: AppColors.primary,
-                                        icon: Icons.info_outline,
+                                        backgroundColor: AppColors.primaryDark,
+                                        icon: Icons.trending_down,
                                         mainText: opController.monthlySarfSum ??
                                             '0.0',
                                         unitText: ' (لتر)  ',
