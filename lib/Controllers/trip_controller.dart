@@ -223,6 +223,7 @@ class TripController extends GetxController {
     if (x != 0) {
       Get.showSnackbar(mySnackBar.showSnackBar(
           title: 'تم', message: 'تم إضافة الرحلة بنجاح'));
+      getTrips();
     }
   }
 
@@ -287,7 +288,7 @@ class TripController extends GetxController {
     update();
   }
 
-  void getTrips() async {
+  Future<void> getTrips() async {
     List<Map<String, Object?>> re = await _dbModel.getTrips();
     log('$re');
     trips = re.map(
@@ -380,13 +381,13 @@ class TripController extends GetxController {
         confirm: GetBuilder<TripController>(
           builder: (pro) {
             return InkWell(
-              onTap: () {
+              onTap: () async {
                 if (formKey.currentState!.validate()) {
                   setStatus(Status.activated.stringValue);
                   setRecordBefor(int.parse(recordBeforCon.text));
-                  pro.updateStartTrip(status, trip.id);
-                  pro.updateTripRecord(recordBefor, trip.id);
-                  pro.getTrips();
+                  await pro.updateStartTrip(status, trip.id);
+                  await pro.updateTripRecord(recordBefor, trip.id);
+                  await pro.getTrips();
                   setStatus(Status.created.stringValue);
                   Get.back();
                 }
@@ -463,17 +464,17 @@ class TripController extends GetxController {
         confirm: GetBuilder<TripController>(
           builder: (pro) {
             return InkWell(
-              onTap: () {
+              onTap: () async {
                 if (formKey.currentState!.validate()) {
                   setStatus(Status.finished.stringValue);
                   if (int.parse(recordCon.text) > (recordAfter ?? 0)) {
                     setRecordAfter(int.parse(recordCon.text));
                   }
-                  pro.updateStartTrip(status, trip.id);
-                  pro.updateRecordAfter(recordAfter, trip.id);
+                  await pro.updateStartTrip(status, trip.id);
+                  await pro.updateRecordAfter(recordAfter, trip.id);
                   setDistation((recordAfter ?? 0) - (recordBefor ?? 0));
                   setStatus(Status.created.stringValue);
-                  pro.getTrips();
+                  await pro.getTrips();
                   recordCon.clear();
                   Get.back();
                 }

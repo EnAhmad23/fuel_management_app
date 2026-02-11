@@ -28,6 +28,7 @@ class OpController extends GetxController {
     getDailySarf();
     getWeeklySarf();
     getMonthlySarf();
+    getMonthlySarfSum();
     getTotalSarf();
     getTotalWard();
     getMonthlyWard();
@@ -84,6 +85,7 @@ class OpController extends GetxController {
   String? _monthlySarf;
   String? _monthlyWard;
   String? _monthlyAllOperations;
+  String? _monthlySarfSum;
   String? _totalSarf;
   String? _totalBazenSarf;
   String? _totalSolarSarf;
@@ -186,6 +188,10 @@ class OpController extends GetxController {
 
   String? get monthlyAllOperations {
     return _monthlyAllOperations;
+  }
+
+  String? get monthlySarfSum {
+    return _monthlySarfSum;
   }
 
   String? get conName {
@@ -396,6 +402,13 @@ class OpController extends GetxController {
   setMonthlyAllOperations(String? value) {
     if (value != null) {
       _monthlyAllOperations = value;
+      update();
+    }
+  }
+
+  setMonthlySarfSum(String? value) {
+    if (value != null) {
+      _monthlySarfSum = value;
       update();
     }
   }
@@ -695,6 +708,7 @@ class OpController extends GetxController {
     log('Total Ward -> ${re['total_exchange_amount']}');
     if (re.isNotEmpty && re['total_exchange_amount'] != null) {
       setTotalWard('${re['total_exchange_amount']}');
+      log('$totalWard');
     } else {
       setTotalWard('0.0');
     }
@@ -737,6 +751,16 @@ class OpController extends GetxController {
       setMonthlyAllOperations('${re['total_amount']}');
     } else {
       setMonthlyAllOperations('0.0');
+    }
+  }
+
+  void getMonthlySarfSum() async {
+    Map<String, dynamic> re = await _dbModel.getMonthlySarfSum();
+    log('Monthly Sarf Sum -> ${re['total_amount']}');
+    if (re.isNotEmpty && re['total_amount'] != null) {
+      setMonthlySarfSum('${re['total_amount']}');
+    } else {
+      setMonthlySarfSum('0.0');
     }
   }
 
@@ -1012,6 +1036,7 @@ class OpController extends GetxController {
     getTotalWard();
     getMonthlyWard();
     getMonthlyAllOperations();
+    getMonthlySarfSum();
     getAllOpT();
     getLastTenOpT();
     getTotalAvailable();
@@ -1029,6 +1054,7 @@ class OpController extends GetxController {
     getWeeklySarf();
     getDailySarf();
     getMonthlyAllOperations();
+    getMonthlySarfSum();
     getAllOpT();
     getLastTenOpT();
     getTotalAvailable();
@@ -1047,6 +1073,7 @@ class OpController extends GetxController {
     getWeeklySarf();
     getDailySarf();
     getMonthlyAllOperations();
+    getMonthlySarfSum();
     getAllOpT();
     getLastTenOpT();
     getTotalAvailable();
@@ -1063,6 +1090,7 @@ class OpController extends GetxController {
     getTotalWard();
     getMonthlyWard();
     getMonthlyAllOperations();
+    getMonthlySarfSum();
     getAllOpT();
     getLastTenOpT();
     getNumOfAllOp();
@@ -1079,6 +1107,7 @@ class OpController extends GetxController {
     getMonthlyWard();
     getMonthlySarf();
     getMonthlyAllOperations();
+    getMonthlySarfSum();
     getWeeklySarf();
     getDailySarf();
     getAllOpT();

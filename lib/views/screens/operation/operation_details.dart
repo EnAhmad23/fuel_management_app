@@ -198,7 +198,7 @@ class OperationDetails extends StatelessWidget {
                             children: [
                               _chip(
                                 icon: Icons.local_gas_station_rounded,
-                                text: '${operationT.foulType ?? ''}',
+                                text: operationT.foulType ?? '',
                                 color: AppColors.accent,
                               ),
                               if (operationT.dischangeNumber != null &&

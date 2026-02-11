@@ -41,8 +41,13 @@ class ShowOperation extends StatelessWidget {
               ),
               child: Padding(
                 padding: EdgeInsets.all(16.w),
-                child: OperationTable(
-                  operations: Get.find<OpController>().operations ?? [],
+                child: GetBuilder<OpController>(
+                  init: Get.find<OpController>(),
+                  builder: (opController) {
+                    return OperationTable(
+                      operations: opController.operations ?? [],
+                    );
+                  },
                 ),
               ),
             ),

@@ -41,8 +41,13 @@ class ShowTrips extends StatelessWidget {
               ),
               child: Padding(
                 padding: EdgeInsets.all(16.w),
-                child: TripTable(
-                  trips: Get.find<TripController>().trips ?? [],
+                child: GetBuilder<TripController>(
+                  init: Get.find<TripController>(),
+                  builder: (tripController) {
+                    return TripTable(
+                      trips: tripController.trips ?? [],
+                    );
+                  },
                 ),
               ),
             ),

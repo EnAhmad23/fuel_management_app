@@ -225,6 +225,8 @@ LEFT JOIN sub_consumers s ON o.sub_consumer_id = s.id
 LEFT JOIN consumers c ON s.consumer_id = c.id
 Where is_close = 0
 
+ORDER BY o.date DESC
+
 ''');
     return re;
   }
@@ -606,8 +608,25 @@ WHERE is_close = 0
     List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
     COALESCE(SUM(amount), 0) AS total_amount
 FROM operations
-WHERE is_close = 0
-    AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now');
+WHERE COALESCE(is_close, 0) = 0
+    AND strftime('%Y-%m', date(date)) = strftime('%Y-%m', 'now');
+
+
+''');
+    if (re.isNotEmpty) {
+      return re.first;
+    }
+    return {'total_amount': 0.0};
+  }
+
+  getMonthlySarfSum() async {
+    Database? database = await db;
+    List<Map<String, dynamic>> re = await database!.rawQuery('''SELECT 
+    COALESCE(SUM(amount), 0) AS total_amount
+FROM operations
+WHERE COALESCE(is_close, 0) = 0
+    AND type = 'صرف'
+    AND strftime('%Y-%m', date(date)) = strftime('%Y-%m', 'now');
 
 
 ''');

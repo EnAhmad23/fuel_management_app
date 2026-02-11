@@ -474,37 +474,45 @@ class HomePage extends StatelessWidget {
                                 crossAxisSpacing: 20.w,
                                 childAspectRatio: 0.95,
                                 children: [
-                                  HomePageCard(
-                                    onPress: () {
-                                      Get.find<OpController>()
-                                          .getFuelAvailable();
-                                      Get.to(const ShowAvailableFuel());
+                                  GetBuilder<OpController>(
+                                    init: Get.find<OpController>(),
+                                    builder: (opController) {
+                                      return HomePageCard(
+                                        onPress: () {
+                                          opController.getFuelAvailable();
+                                          Get.to(const ShowAvailableFuel());
+                                        },
+                                        backgroundColor: AppColors.warning,
+                                        icon: Icons.window,
+                                        mainText: opController.totalAvailable ??
+                                            '0.0',
+                                        unitText: ' (لتر)  ',
+                                        subText: 'إجمالي المتوفر',
+                                        textColor: AppColors.textOnBackground,
+                                        iconColor: AppColors.warningDark,
+                                      );
                                     },
-                                    backgroundColor: AppColors.warning,
-                                    icon: Icons.window,
-                                    mainText:
-                                        '${Get.find<OpController>().totalAvailable}',
-                                    unitText: ' (لتر)  ',
-                                    subText: 'إجمالي المتوفر',
-                                    textColor: AppColors.textOnBackground,
-                                    iconColor: AppColors.warningDark,
                                   ),
-                                  HomePageCard(
-                                    onPress: () {
-                                      Get.find<OpController>()
-                                          .setSubTitle('عمليات الوارد ');
-                                      Get.find<OpController>()
-                                          .getTotalSubOP('وارد');
-                                      Get.to(const ShowSuboperation());
+                                  GetBuilder<OpController>(
+                                    init: Get.find<OpController>(),
+                                    builder: (opController) {
+                                      return HomePageCard(
+                                        onPress: () {
+                                          opController
+                                              .setSubTitle('عمليات الوارد ');
+                                          opController.getTotalSubOP('وارد');
+                                          Get.to(const ShowSuboperation());
+                                        },
+                                        backgroundColor: AppColors.accent,
+                                        icon: Icons.arrow_downward_outlined,
+                                        mainText:
+                                            opController.totalWard ?? '0.0',
+                                        unitText: ' (لتر)  ',
+                                        subText: 'إجمالي الوارد',
+                                        textColor: AppColors.textOnPrimary,
+                                        iconColor: AppColors.accentDark,
+                                      );
                                     },
-                                    backgroundColor: AppColors.accent,
-                                    icon: Icons.arrow_downward_outlined,
-                                    mainText:
-                                        '${Get.find<OpController>().totalWard}',
-                                    unitText: ' (لتر)  ',
-                                    subText: 'إجمالي الوارد',
-                                    textColor: AppColors.textOnPrimary,
-                                    iconColor: AppColors.accentDark,
                                   ),
                                   GetBuilder<OpController>(
                                     init: Get.find<OpController>(),
@@ -554,9 +562,8 @@ class HomePage extends StatelessWidget {
                                         },
                                         backgroundColor: AppColors.primary,
                                         icon: Icons.info_outline,
-                                        mainText:
-                                            opController.monthlyAllOperations ??
-                                                '0.0',
+                                        mainText: opController.monthlySarfSum ??
+                                            '0.0',
                                         unitText: ' (لتر)  ',
                                         subText: 'إجمالي صرف الشهر',
                                         textColor: AppColors.textOnPrimary,
