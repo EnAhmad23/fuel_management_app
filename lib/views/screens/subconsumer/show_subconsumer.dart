@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:fuel_management_app/controllers/sub_controller.dart';
+import 'package:fuel_management_app/Controllers/sub_controller.dart';
 import 'package:fuel_management_app/views/Widgets/subconsumer_table.dart';
 import 'package:fuel_management_app/core/constant/app_colors.dart';
 

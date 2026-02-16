@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +7,7 @@ import 'package:fuel_management_app/views/screens/subconsumer/subconsumer_detail
 import 'package:fuel_management_app/views/screens/subconsumer/update_subconsumer.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:fuel_management_app/controllers/sub_controller.dart';
+import 'package:fuel_management_app/Controllers/sub_controller.dart';
 import '../../core/constant/app_colors.dart';
 
 class SubOfConTable extends StatelessWidget {

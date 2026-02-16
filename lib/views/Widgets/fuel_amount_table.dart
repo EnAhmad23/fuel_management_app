@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:get/get.dart';
 
 import '../../models/fuel_available_amount.dart';
-import 'package:fuel_management_app/controllers/op_controller.dart';
+import 'package:fuel_management_app/Controllers/op_controller.dart';
 import '../../core/constant/app_colors.dart';
 
 class FuelAmountTable extends StatelessWidget {

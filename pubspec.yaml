@@ -54,6 +54,8 @@ dependencies:
   file_picker: ^8.0.6
   window_manager: ^0.3.9
   easy_sidemenu: ^0.7.1
+  shared_preferences: ^2.2.3
+  bitsdojo_window: ^0.1.6
 
 dev_dependencies:
   flutter_test:

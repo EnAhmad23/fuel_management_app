@@ -1,8 +1,8 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/controllers/trip_controller.dart';
+import 'package:fuel_management_app/Controllers/trip_controller.dart';
 import 'package:fuel_management_app/models/trip.dart';
 import 'package:fuel_management_app/views/Widgets/custom_snackbar.dart';
 import 'package:get/get.dart';

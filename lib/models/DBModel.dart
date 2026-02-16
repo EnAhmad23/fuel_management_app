@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 import 'dart:io';
 
 import 'package:fuel_management_app/models/consumer.dart';
@@ -35,8 +35,23 @@ class DBModel {
     String dataBasePath = await getDatabasesPath();
     String path = join(dataBasePath, 'fuel_managment.db');
     log(path);
-    Database myDB = await openDatabase(path, onCreate: _onCreate, version: 1);
+    Database myDB = await openDatabase(path,
+        onCreate: _onCreate, onUpgrade: _onUpgrade, version: 2);
     return myDB;
+  }
+
+  _onUpgrade(Database database, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add role column to existing users table
+      try {
+        await database.execute(
+            "ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'operation_manager'");
+        log('Added role column to users table');
+      } catch (e) {
+        log('Role column may already exist: $e');
+      }
+      await _seedAdminUser(database);
+    }
   }
 
   delDatabase() async {
@@ -139,6 +154,7 @@ CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
+    role TEXT DEFAULT 'operation_manager',
     is_deleted INTEGER DEFAULT 0,
     remember_token TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -159,13 +175,41 @@ CREATE TABLE trips (
 );
 
  ''');
+    await _seedAdminUser(database);
     log('create database');
+  }
+
+  Future<void> _seedAdminUser(Database database) async {
+    // Check if new admin (1000) exists
+    List<Map<String, dynamic>> newAdminCheck = await database
+        .rawQuery("SELECT id FROM users WHERE username = '1000' LIMIT 1");
+
+    if (newAdminCheck.isEmpty) {
+      // Check if old admin exists and update it
+      List<Map<String, dynamic>> oldAdminCheck = await database
+          .rawQuery("SELECT id FROM users WHERE username = 'admin' LIMIT 1");
+
+      if (oldAdminCheck.isNotEmpty) {
+        // Update existing admin to new credentials
+        int adminId = oldAdminCheck.first['id'] as int;
+        await database.rawUpdate('''
+          UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?
+        ''', ['1000', '1000', 'admin', adminId]);
+        log('Existing admin user updated to 1000/1000');
+      } else {
+        // Create new admin user
+        await database.rawInsert('''
+          INSERT INTO users (username, password, role) VALUES (?, ?, ?)
+        ''', ['1000', '1000', 'admin']);
+        log('New admin user seeded: 1000/1000');
+      }
+    }
   }
 
   Future<List<Map<String, Object?>>> checkUser(User user) async {
     Database? database = await db;
     List<Map<String, Object?>> re = await database!.rawQuery(
-        '''Select id from users where username=? and password = ? and is_deleted=0
+        '''Select id, username, role from users where username=? and password = ? and is_deleted=0
      ''', [user.username, user.password]);
     log('${re.length}');
     return re;
@@ -176,6 +220,50 @@ CREATE TABLE trips (
     int re = await database!
         .rawInsert('''insert into users (username,password) values (?,?)
      ''', [name, password]);
+    return re;
+  }
+
+  // User management methods for role-based access
+  Future<List<Map<String, Object?>>> getUsers() async {
+    Database? database = await db;
+    List<Map<String, Object?>> re = await database!.rawQuery('''
+      SELECT id, username, role, created_at 
+      FROM users 
+      WHERE is_deleted = 0 
+      ORDER BY created_at DESC
+    ''');
+    return re;
+  }
+
+  Future<int> addUserWithRole(String name, String password, String role) async {
+    Database? database = await db;
+    int re = await database!.rawInsert('''
+      INSERT INTO users (username, password, role) VALUES (?, ?, ?)
+    ''', [name, password, role]);
+    return re;
+  }
+
+  Future<int> updateUser(int id, String username, String role) async {
+    Database? database = await db;
+    int re = await database!.rawUpdate('''
+      UPDATE users SET username = ?, role = ? WHERE id = ?
+    ''', [username, role, id]);
+    return re;
+  }
+
+  Future<int> updateUserPassword(int id, String newPassword) async {
+    Database? database = await db;
+    int re = await database!.rawUpdate('''
+      UPDATE users SET password = ? WHERE id = ?
+    ''', [newPassword, id]);
+    return re;
+  }
+
+  Future<int> deleteUser(int id) async {
+    Database? database = await db;
+    int re = await database!.rawUpdate('''
+      UPDATE users SET is_deleted = 1 WHERE id = ?
+    ''', [id]);
     return re;
   }
 

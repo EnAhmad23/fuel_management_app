@@ -1,4 +1,4 @@
-class AppConsumers {
+﻿class AppConsumers {
   int? id;
   String? name;
   int? subConsumerCount;

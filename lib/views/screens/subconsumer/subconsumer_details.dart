@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:fuel_management_app/models/subconsumerT.dart';
-import 'package:fuel_management_app/controllers/sub_controller.dart';
+import 'package:fuel_management_app/Controllers/sub_controller.dart';
 import 'package:fuel_management_app/views/Widgets/info_box.dart';
 import 'package:fuel_management_app/views/Widgets/movement_table.dart';
 import 'package:fuel_management_app/views/Widgets/operationTable.dart';

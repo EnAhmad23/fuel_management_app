@@ -1,4 +1,4 @@
-class Operation {
+﻿class Operation {
   int? id;
   int? subConsumerId;
   double? amount;

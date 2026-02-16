@@ -1,4 +1,4 @@
-class FuelAvailableAmount {
+﻿class FuelAvailableAmount {
   final String? fuelType;
   double? amount;
 

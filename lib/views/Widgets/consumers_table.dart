@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/models/consumer.dart';
 import 'package:fuel_management_app/views/screens/consumer/update_consumer.dart';
@@ -6,8 +6,8 @@ import 'package:fuel_management_app/views/screens/subconsumer/show_sub_of_con.da
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
-import 'package:fuel_management_app/controllers/sub_controller.dart';
-import 'package:fuel_management_app/controllers/db_controller.dart';
+import 'package:fuel_management_app/Controllers/sub_controller.dart';
+import 'package:fuel_management_app/Controllers/db_controller.dart';
 import '../../core/constant/app_colors.dart';
 
 class ConsumersTable extends StatelessWidget {

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fuel_management_app/models/operationT.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:fuel_management_app/controllers/op_controller.dart';
-import 'package:fuel_management_app/controllers/sub_controller.dart';
+import 'package:fuel_management_app/Controllers/op_controller.dart';
+import 'package:fuel_management_app/Controllers/sub_controller.dart';
 import 'package:fuel_management_app/core/constant/app_colors.dart';
 
 class OperationDetails extends StatelessWidget {

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/controllers/trip_controller.dart';
+import 'package:fuel_management_app/Controllers/trip_controller.dart';
 import 'package:fuel_management_app/core/constant/app_colors.dart';
 import 'package:fuel_management_app/views/Widgets/My_dropdown.dart';
 import 'package:fuel_management_app/views/Widgets/myTextFormField.dart';
@@ -188,14 +188,6 @@ class AddTrip extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'وجهة الرحلة',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textOnBackground,
-          ),
-        ),
         SizedBox(height: 8.h),
         MyTextFormField(
           validator: trip.roadValidator,
@@ -211,14 +203,6 @@ class AddTrip extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'سبب الرحلة',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textOnBackground,
-          ),
-        ),
         SizedBox(height: 8.h),
         MyTextFormField(
           labelText: 'سبب الرحلة',

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,6 +14,8 @@ class MyTextFormField extends StatelessWidget {
     this.keyboardType,
     this.fontSize,
     this.inputFormatters,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
   final String labelText;
   final TextInputType? keyboardType;
@@ -23,6 +25,8 @@ class MyTextFormField extends StatelessWidget {
   bool? obscureText;
   double? fontSize;
   final List<TextInputFormatter>? inputFormatters;
+  final TextInputAction? textInputAction;
+  final void Function(String)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +60,8 @@ class MyTextFormField extends StatelessWidget {
             ),
             textDirection: TextDirection.rtl,
             textAlign: TextAlign.right,
+            textInputAction: textInputAction,
+            onFieldSubmitted: onFieldSubmitted,
           ),
         ),
       ],

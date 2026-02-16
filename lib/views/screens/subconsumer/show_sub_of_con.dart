@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/controllers/db_controller.dart';
-import 'package:fuel_management_app/controllers/sub_controller.dart';
+import 'package:fuel_management_app/Controllers/db_controller.dart';
+import 'package:fuel_management_app/Controllers/sub_controller.dart';
 import 'package:fuel_management_app/views/Widgets/my_button.dart';
 import 'package:fuel_management_app/views/Widgets/sub_of_con_table.dart';
 import 'package:fuel_management_app/views/screens/subconsumer/add_subconsumer.dart';

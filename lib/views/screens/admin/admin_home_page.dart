@@ -4,6 +4,7 @@ import 'package:fuel_management_app/Controllers/db_controller.dart';
 import 'package:fuel_management_app/Controllers/op_controller.dart';
 import 'package:fuel_management_app/Controllers/sub_controller.dart';
 import 'package:fuel_management_app/Controllers/trip_controller.dart';
+import 'package:fuel_management_app/Controllers/login_controller.dart';
 import 'package:fuel_management_app/views/screens/consumer/add.dart';
 import 'package:fuel_management_app/views/screens/subconsumer/add_subconsumer.dart';
 import 'package:fuel_management_app/views/screens/trips/add_trip.dart';
@@ -17,23 +18,20 @@ import 'package:fuel_management_app/views/screens/subconsumer/show_subconsumer.d
 import 'package:fuel_management_app/views/screens/trips/show_trips.dart';
 import 'package:fuel_management_app/views/screens/operation/add_operation_sarf.dart';
 import 'package:fuel_management_app/views/screens/operation/add_operation_estrad.dart';
-import 'package:fuel_management_app/Controllers/login_controller.dart';
+import 'package:fuel_management_app/views/screens/admin/user_management_page.dart';
 import 'package:get/get.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
+import 'package:fuel_management_app/views/Widgets/home_page_card.dart';
+import 'package:fuel_management_app/views/Widgets/operationTable.dart';
+import 'package:fuel_management_app/core/constant/app_colors.dart';
 
-import '../Widgets/home_page_card.dart';
-import '../Widgets/operationTable.dart';
-import '../../core/constant/app_colors.dart';
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class AdminHomePage extends StatelessWidget {
+  const AdminHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final SideMenuController sideMenuController = SideMenuController();
     final loginController = Get.find<LoginController>();
-    final bool canManageTrips =
-        loginController.isAdmin || loginController.isTripManager;
 
     return Scaffold(
       body: SafeArea(
@@ -150,7 +148,7 @@ class HomePage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10.r),
                                   ),
                                   child: Icon(
-                                    Icons.person_rounded,
+                                    Icons.admin_panel_settings_rounded,
                                     color: Colors.white,
                                     size: 20.sp,
                                   ),
@@ -181,38 +179,7 @@ class HomePage extends StatelessWidget {
                               ],
                             ),
                           ),
-
-                          // Modern Logo Container
-                          // Container(
-                          //   width: 30.w,
-                          //   height: 30.h,
-                          //   decoration: BoxDecoration(
-                          //     gradient: LinearGradient(
-                          //       begin: Alignment.topLeft,
-                          //       end: Alignment.bottomRight,
-                          //       colors: [
-                          //         AppColors.accent,
-                          //         AppColors.accent.withOpacity(0.8),
-                          //       ],
-                          //     ),
-                          //     borderRadius: BorderRadius.circular(20.r),
-                          //     boxShadow: [
-                          //       BoxShadow(
-                          //         color: AppColors.accent.withOpacity(0.3),
-                          //         blurRadius: 16,
-                          //         offset: const Offset(0, 8),
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   child: Icon(
-                          //     Icons.local_gas_station_rounded,
-                          //     color: Colors.white,
-                          //     size: 30.sp,
-                          //   ),
-                          // ),
-
                           SizedBox(height: 20.h),
-                          // App Title
                           Text(
                             'نظام إدارة المحروقات',
                             style: TextStyle(
@@ -223,7 +190,6 @@ class HomePage extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          // SizedBox(height: 4.h),
                         ],
                       ),
                     ),
@@ -232,35 +198,32 @@ class HomePage extends StatelessWidget {
                         vertical: 16.h,
                         horizontal: 16.w,
                       ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 1,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.transparent,
-                                  AppColors.textOnPrimary.withOpacity(0.3),
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
+                      child: Container(
+                        height: 1,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              AppColors.textOnPrimary.withOpacity(0.3),
+                              Colors.transparent,
+                            ],
                           ),
-                          SizedBox(height: 16.h),
-                          // User Profile Section
-                        ],
+                        ),
                       ),
                     ),
                     items: [
-                      // Main Dashboard
                       SideMenuItem(
                         title: 'لوحة التحكم',
                         icon: const Icon(Icons.dashboard_rounded),
                         onTap: (index, _) {},
                       ),
-                      // Divider
-
-                      // Main Consumers
+                      SideMenuItem(
+                        title: 'إدارة المستخدمين',
+                        icon: const Icon(Icons.manage_accounts_rounded),
+                        onTap: (index, _) {
+                          Get.to(const UserManagementPage());
+                        },
+                      ),
                       SideMenuExpansionItem(
                         title: 'المستهلكين الرئيسين',
                         icon: const Icon(Icons.people_alt_rounded),
@@ -282,7 +245,6 @@ class HomePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // Sub Consumers
                       SideMenuExpansionItem(
                         title: 'المستهلكين الفرعين',
                         icon: const Icon(Icons.group_rounded),
@@ -307,7 +269,6 @@ class HomePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // Operations
                       SideMenuExpansionItem(
                         title: 'العمليات',
                         icon: const Icon(Icons.settings_rounded),
@@ -341,35 +302,30 @@ class HomePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // Trips
-                      if (canManageTrips)
-                        SideMenuExpansionItem(
-                          title: 'الرحلات',
-                          icon: const Icon(Icons.emoji_flags_rounded),
-                          children: [
-                            SideMenuItem(
-                              title: 'عرض الرحلات',
-                              icon: const Icon(Icons.visibility_rounded),
-                              onTap: (index, _) {
-                                Get.find<TripController>().getTrips();
-                                Get.to(const ShowTrips());
-                              },
-                            ),
-                            SideMenuItem(
-                              title: 'إضافة رحلة',
-                              icon: const Icon(Icons.add_circle_rounded),
-                              onTap: (index, _) {
-                                final pro = Get.find<TripController>();
-                                pro.clearFields();
-                                pro.getConusmersNames();
-                                Get.to(const AddTrip());
-                              },
-                            ),
-                          ],
-                        ),
-                      // Divider
-
-                      // Search
+                      SideMenuExpansionItem(
+                        title: 'الرحلات',
+                        icon: const Icon(Icons.emoji_flags_rounded),
+                        children: [
+                          SideMenuItem(
+                            title: 'عرض الرحلات',
+                            icon: const Icon(Icons.visibility_rounded),
+                            onTap: (index, _) {
+                              Get.find<TripController>().getTrips();
+                              Get.to(const ShowTrips());
+                            },
+                          ),
+                          SideMenuItem(
+                            title: 'إضافة رحلة',
+                            icon: const Icon(Icons.add_circle_rounded),
+                            onTap: (index, _) {
+                              final pro = Get.find<TripController>();
+                              pro.clearFields();
+                              pro.getConusmersNames();
+                              Get.to(const AddTrip());
+                            },
+                          ),
+                        ],
+                      ),
                       SideMenuItem(
                         title: 'البحث',
                         icon: const Icon(Icons.search_rounded),
@@ -381,7 +337,6 @@ class HomePage extends StatelessWidget {
                           Get.to(const SearchOperation());
                         },
                       ),
-                      // Close Month
                       SideMenuItem(
                         title: 'إغلاق الشهر',
                         icon: const Icon(Icons.book_rounded),
@@ -405,7 +360,6 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              // Main content
               Directionality(
                 textDirection: TextDirection.ltr,
                 child: Expanded(
@@ -415,7 +369,6 @@ class HomePage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          // User greeting section
                           Padding(
                             padding: EdgeInsets.only(
                                 right: 20.w, left: 20.w, bottom: 3.h),
@@ -426,7 +379,7 @@ class HomePage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      'مرحباً 👋',
+                                      'مرحباً Admin 👋',
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -438,7 +391,7 @@ class HomePage extends StatelessWidget {
                                     ),
                                     SizedBox(height: 4.h),
                                     Text(
-                                      'نظام إدارة المحروقات',
+                                      'نظام إدارة المحروقات - صلاحيات المدير',
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge
@@ -454,20 +407,18 @@ class HomePage extends StatelessWidget {
                                 CircleAvatar(
                                   radius: 32.r,
                                   backgroundColor: AppColors.accentLight,
-                                  child: Icon(Icons.person,
+                                  child: Icon(Icons.admin_panel_settings,
                                       color: AppColors.accentDark, size: 36.sp),
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(height: 18.h),
-                          // Summary cards area with shadow
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 24.w),
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(24.r),
-                                // No shadow
                               ),
                               child: GridView.count(
                                 crossAxisCount: MediaQuery.of(context)
@@ -568,7 +519,6 @@ class HomePage extends StatelessWidget {
                                       );
                                     },
                                   ),
-                                  // Fifth card example
                                   GetBuilder<OpController>(
                                     init: Get.find<OpController>(),
                                     builder: (opController) {
@@ -595,7 +545,6 @@ class HomePage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 15.h),
-                          // Section divider
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15.w),
                             child: Row(
@@ -620,8 +569,6 @@ class HomePage extends StatelessWidget {
                               ],
                             ),
                           ),
-                          // SizedBox(height: 5.h),
-                          // Operations table in a modern card
                           Padding(
                             padding: EdgeInsets.all(20.w),
                             child: GetBuilder<OpController>(

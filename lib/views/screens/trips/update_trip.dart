@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fuel_management_app/controllers/trip_controller.dart';
+import 'package:fuel_management_app/Controllers/trip_controller.dart';
 import 'package:fuel_management_app/core/constant/app_colors.dart';
 import 'package:fuel_management_app/views/Widgets/My_dropdown.dart';
 import 'package:fuel_management_app/views/Widgets/myTextFormField.dart';

@@ -1,4 +1,4 @@
-class SubConsumerT {
+﻿class SubConsumerT {
   int? id;
   String? consumerName;
   String? details;

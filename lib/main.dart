@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:fuel_management_app/controllers/db_controller.dart';
-import 'package:fuel_management_app/controllers/login_controller.dart';
-import 'package:fuel_management_app/controllers/op_controller.dart';
-import 'package:fuel_management_app/controllers/sub_controller.dart';
-import 'package:fuel_management_app/controllers/trip_controller.dart';
+import 'package:fuel_management_app/Controllers/db_controller.dart';
+import 'package:fuel_management_app/Controllers/login_controller.dart';
+import 'package:fuel_management_app/Controllers/op_controller.dart';
+import 'package:fuel_management_app/Controllers/sub_controller.dart';
+import 'package:fuel_management_app/Controllers/trip_controller.dart';
 import 'package:fuel_management_app/models/DBModel.dart';
-import 'package:fuel_management_app/views/screens/home_page.dart';
+import 'package:fuel_management_app/views/screens/login_page.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:window_manager/window_manager.dart';
 import 'core/constant/app_colors.dart';
 
 void main() async {
@@ -23,11 +23,6 @@ void main() async {
 
   await DBModel().intiDataBase();
   await DBModel().canselCloseMonth();
-  await windowManager.ensureInitialized();
-  windowManager.waitUntilReadyToShow().then((_) async {
-    await windowManager.maximize();
-    windowManager.show();
-  });
   // Initialize GetX controllers
   Get.put(TripController());
   Get.put(DbController());
@@ -35,6 +30,11 @@ void main() async {
   Get.put(OpController());
   Get.put(LoginController());
   runApp(const MyApp());
+
+  doWhenWindowReady(() {
+    appWindow.maximize();
+    appWindow.show();
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: const HomePage(),
+      child: const LoginPage(),
     );
   }
 }
